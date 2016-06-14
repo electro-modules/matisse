@@ -1,5 +1,5 @@
 <?php
-namespace Selenia\Matisse\Lib;
+namespace Selenia\Plugins\Matisse\Lib;
 
 use PhpKit\WebConsole\Lib\Debug;
 use Psr\Http\Message\ServerRequestInterface;
@@ -9,10 +9,10 @@ use Selenia\Interfaces\Navigation\NavigationInterface;
 use Selenia\Interfaces\Navigation\NavigationLinkInterface;
 use Selenia\Interfaces\RenderableInterface;
 use Selenia\Interfaces\SessionInterface;
-use Selenia\Matisse\Components\Base\Component;
-use Selenia\Matisse\Interfaces\DataBinderInterface;
-use Selenia\Matisse\Parser\DocumentContext;
-use Selenia\Matisse\Properties\Base\AbstractProperties;
+use Selenia\Plugins\Matisse\Components\Base\Component;
+use Selenia\Plugins\Matisse\Interfaces\DataBinderInterface;
+use Selenia\Plugins\Matisse\Parser\DocumentContext;
+use Selenia\Plugins\Matisse\Properties\Base\AbstractProperties;
 use Selenia\ViewEngine\Lib\ViewModel;
 
 /**

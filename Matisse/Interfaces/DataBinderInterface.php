@@ -1,10 +1,10 @@
 <?php
-namespace Selenia\Matisse\Interfaces;
+namespace Selenia\Plugins\Matisse\Interfaces;
 
-use Selenia\Matisse\Exceptions\DataBindingException;
-use Selenia\Matisse\Exceptions\FilterHandlerNotFoundException;
-use Selenia\Matisse\Parser\DocumentContext;
-use Selenia\Matisse\Properties\Base\AbstractProperties;
+use Selenia\Plugins\Matisse\Exceptions\DataBindingException;
+use Selenia\Plugins\Matisse\Exceptions\FilterHandlerNotFoundException;
+use Selenia\Plugins\Matisse\Parser\DocumentContext;
+use Selenia\Plugins\Matisse\Properties\Base\AbstractProperties;
 use Selenia\ViewEngine\Lib\ViewModel;
 
 /**

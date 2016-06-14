@@ -1,10 +1,10 @@
 <?php
-namespace Selenia\Matisse\Properties\TypeSystem;
+namespace Selenia\Plugins\Matisse\Properties\TypeSystem;
 
 use Iterator;
-use Selenia\Matisse\Exceptions\ReflectionException;
-use Selenia\Matisse\Exceptions\ReflectionPropertyException;
-use Selenia\Matisse\Interfaces\ComponentPropertiesInterface;
+use Selenia\Plugins\Matisse\Exceptions\ReflectionException;
+use Selenia\Plugins\Matisse\Exceptions\ReflectionPropertyException;
+use Selenia\Plugins\Matisse\Interfaces\ComponentPropertiesInterface;
 
 class ReflectionClass
 {

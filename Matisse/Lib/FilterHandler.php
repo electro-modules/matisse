@@ -1,7 +1,7 @@
 <?php
-namespace Selenia\Matisse\Lib;
+namespace Selenia\Plugins\Matisse\Lib;
 
-use Selenia\Matisse\Exceptions\FilterHandlerNotFoundException;
+use Selenia\Plugins\Matisse\Exceptions\FilterHandlerNotFoundException;
 use Selenia\Traits\InspectionTrait;
 
 /**

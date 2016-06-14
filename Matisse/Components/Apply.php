@@ -1,11 +1,11 @@
 <?php
-namespace Selenia\Matisse\Components;
+namespace Selenia\Plugins\Matisse\Components;
 
-use Selenia\Matisse\Components\Base\Component;
-use Selenia\Matisse\Components\Internal\Metadata;
-use Selenia\Matisse\Interfaces\PresetsInterface;
-use Selenia\Matisse\Properties\Base\ComponentProperties;
-use Selenia\Matisse\Properties\TypeSystem\type;
+use Selenia\Plugins\Matisse\Components\Base\Component;
+use Selenia\Plugins\Matisse\Components\Internal\Metadata;
+use Selenia\Plugins\Matisse\Interfaces\PresetsInterface;
+use Selenia\Plugins\Matisse\Properties\Base\ComponentProperties;
+use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
 
 class ApplyProperties extends ComponentProperties
 {

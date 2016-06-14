@@ -1,7 +1,7 @@
 <?php
-namespace Selenia\Matisse\Interfaces;
+namespace Selenia\Plugins\Matisse\Interfaces;
 
-use Selenia\Matisse\Components\Base\Component;
+use Selenia\Plugins\Matisse\Components\Base\Component;
 
 interface PresetsInterface
 {

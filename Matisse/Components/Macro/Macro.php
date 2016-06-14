@@ -1,11 +1,11 @@
 <?php
-namespace Selenia\Matisse\Components\Macro;
+namespace Selenia\Plugins\Matisse\Components\Macro;
 
-use Selenia\Matisse\Components\Base\Component;
-use Selenia\Matisse\Components\Internal\Metadata;
-use Selenia\Matisse\Exceptions\ComponentException;
-use Selenia\Matisse\Properties\Macro\MacroProperties;
-use Selenia\Matisse\Properties\TypeSystem\type;
+use Selenia\Plugins\Matisse\Components\Base\Component;
+use Selenia\Plugins\Matisse\Components\Internal\Metadata;
+use Selenia\Plugins\Matisse\Exceptions\ComponentException;
+use Selenia\Plugins\Matisse\Properties\Macro\MacroProperties;
+use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
 
 /**
  * The Macro component allows you to define a macro trasformation via markup.

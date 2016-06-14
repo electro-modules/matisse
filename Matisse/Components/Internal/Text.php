@@ -1,11 +1,11 @@
 <?php
-namespace Selenia\Matisse\Components\Internal;
+namespace Selenia\Plugins\Matisse\Components\Internal;
 
-use Selenia\Matisse\Components\Base\Component;
-use Selenia\Matisse\Parser\DocumentContext;
-use Selenia\Matisse\Parser\Expression;
-use Selenia\Matisse\Properties\Base\ComponentProperties;
-use Selenia\Matisse\Properties\TypeSystem\type;
+use Selenia\Plugins\Matisse\Components\Base\Component;
+use Selenia\Plugins\Matisse\Parser\DocumentContext;
+use Selenia\Plugins\Matisse\Parser\Expression;
+use Selenia\Plugins\Matisse\Properties\Base\ComponentProperties;
+use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
 
 class TextProperties extends ComponentProperties
 {

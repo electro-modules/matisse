@@ -1,10 +1,10 @@
 <?php
-namespace Selenia\Matisse\Components;
+namespace Selenia\Plugins\Matisse\Components;
 
-use Selenia\Matisse\Components\Base\CompositeComponent;
-use Selenia\Matisse\Exceptions\ComponentException;
-use Selenia\Matisse\Exceptions\FileIOException;
-use Selenia\Matisse\Properties\Base\MetadataProperties;
+use Selenia\Plugins\Matisse\Components\Base\CompositeComponent;
+use Selenia\Plugins\Matisse\Exceptions\ComponentException;
+use Selenia\Plugins\Matisse\Exceptions\FileIOException;
+use Selenia\Plugins\Matisse\Properties\Base\MetadataProperties;
 
 class IncludeProperties extends MetadataProperties
 {

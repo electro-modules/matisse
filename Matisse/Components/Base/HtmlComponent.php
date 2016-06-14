@@ -1,7 +1,7 @@
 <?php
-namespace Selenia\Matisse\Components\Base;
+namespace Selenia\Plugins\Matisse\Components\Base;
 
-use Selenia\Matisse\Properties\Base\HtmlComponentProperties;
+use Selenia\Plugins\Matisse\Properties\Base\HtmlComponentProperties;
 
 class HtmlComponent extends Component
 {

@@ -1,7 +1,7 @@
 <?php
-namespace Selenia\Matisse\Traits\Component;
+namespace Selenia\Plugins\Matisse\Traits\Component;
 
-use Selenia\Matisse\Components\Internal\DocumentFragment;
+use Selenia\Plugins\Matisse\Components\Internal\DocumentFragment;
 use Selenia\ViewEngine\Lib\ViewModel;
 
 trait ViewModelTrait

@@ -1,12 +1,12 @@
 <?php
-namespace Selenia\Matisse\Services;
+namespace Selenia\Plugins\Matisse\Services;
 
-use Selenia\Matisse\Components\Internal\DocumentFragment;
-use Selenia\Matisse\Components\Macro\Macro;
-use Selenia\Matisse\Exceptions\FileIOException;
-use Selenia\Matisse\Exceptions\ParseException;
-use Selenia\Matisse\Parser\DocumentContext;
-use Selenia\Matisse\Parser\Parser;
+use Selenia\Plugins\Matisse\Components\Internal\DocumentFragment;
+use Selenia\Plugins\Matisse\Components\Macro\Macro;
+use Selenia\Plugins\Matisse\Exceptions\FileIOException;
+use Selenia\Plugins\Matisse\Exceptions\ParseException;
+use Selenia\Plugins\Matisse\Parser\DocumentContext;
+use Selenia\Plugins\Matisse\Parser\Parser;
 
 /**
  * Manages macros loading, storage and retrieval.

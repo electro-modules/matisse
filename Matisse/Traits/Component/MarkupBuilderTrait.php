@@ -1,9 +1,9 @@
 <?php
-namespace Selenia\Matisse\Traits\Component;
+namespace Selenia\Plugins\Matisse\Traits\Component;
 
-use Selenia\Matisse\Exceptions\ComponentException;
-use Selenia\Matisse\Lib\Tag;
-use Selenia\Matisse\Parser\DocumentContext;
+use Selenia\Plugins\Matisse\Exceptions\ComponentException;
+use Selenia\Plugins\Matisse\Lib\Tag;
+use Selenia\Plugins\Matisse\Parser\DocumentContext;
 
 /**
  * Provides an API for generating structured HTML code.

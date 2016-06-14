@@ -1,10 +1,10 @@
 <?php
-namespace Selenia\Matisse\Properties\Base;
+namespace Selenia\Plugins\Matisse\Properties\Base;
 
-use Selenia\Matisse\Components\Base\Component;
-use Selenia\Matisse\Exceptions\ComponentException;
-use Selenia\Matisse\Properties\TypeSystem\Reflection;
-use Selenia\Matisse\Properties\TypeSystem\ReflectionClass;
+use Selenia\Plugins\Matisse\Components\Base\Component;
+use Selenia\Plugins\Matisse\Exceptions\ComponentException;
+use Selenia\Plugins\Matisse\Properties\TypeSystem\Reflection;
+use Selenia\Plugins\Matisse\Properties\TypeSystem\ReflectionClass;
 
 class ComponentProperties extends AbstractProperties
 {

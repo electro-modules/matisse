@@ -3,7 +3,7 @@
 //  Matisse-specific functions
 //------------------------------
 use Selenia\Interfaces\RenderableInterface;
-use Selenia\Matisse\Exceptions\MatisseException;
+use Selenia\Plugins\Matisse\Exceptions\MatisseException;
 
 /**
  * Represents text that should not be HTML-escaped when output.

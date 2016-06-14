@@ -1,16 +1,16 @@
 <?php
-namespace Selenia\Matisse\Components\Base;
+namespace Selenia\Plugins\Matisse\Components\Base;
 
 use Selenia\Interfaces\RenderableInterface;
-use Selenia\Matisse\Debug\ComponentInspector;
-use Selenia\Matisse\Exceptions\ComponentException;
-use Selenia\Matisse\Interfaces\PresetsInterface;
-use Selenia\Matisse\Parser\DocumentContext;
-use Selenia\Matisse\Properties\Base\AbstractProperties;
-use Selenia\Matisse\Traits\Component\DataBindingTrait;
-use Selenia\Matisse\Traits\Component\DOMNodeTrait;
-use Selenia\Matisse\Traits\Component\MarkupBuilderTrait;
-use Selenia\Matisse\Traits\Component\RenderingTrait;
+use Selenia\Plugins\Matisse\Debug\ComponentInspector;
+use Selenia\Plugins\Matisse\Exceptions\ComponentException;
+use Selenia\Plugins\Matisse\Interfaces\PresetsInterface;
+use Selenia\Plugins\Matisse\Parser\DocumentContext;
+use Selenia\Plugins\Matisse\Properties\Base\AbstractProperties;
+use Selenia\Plugins\Matisse\Traits\Component\DataBindingTrait;
+use Selenia\Plugins\Matisse\Traits\Component\DOMNodeTrait;
+use Selenia\Plugins\Matisse\Traits\Component\MarkupBuilderTrait;
+use Selenia\Plugins\Matisse\Traits\Component\RenderingTrait;
 
 /**
  * The base class from which all components derive.

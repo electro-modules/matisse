@@ -1,14 +1,14 @@
 <?php
-namespace Selenia\Matisse\Components\Macro;
+namespace Selenia\Plugins\Matisse\Components\Macro;
 
-use Selenia\Matisse\Components\Base\Component;
-use Selenia\Matisse\Components\Base\CompositeComponent;
-use Selenia\Matisse\Components\Internal\DocumentFragment;
-use Selenia\Matisse\Components\Internal\Metadata;
-use Selenia\Matisse\Exceptions\ComponentException;
-use Selenia\Matisse\Exceptions\FileIOException;
-use Selenia\Matisse\Properties\Macro\MacroCallProperties;
-use Selenia\Matisse\Properties\TypeSystem\type;
+use Selenia\Plugins\Matisse\Components\Base\Component;
+use Selenia\Plugins\Matisse\Components\Base\CompositeComponent;
+use Selenia\Plugins\Matisse\Components\Internal\DocumentFragment;
+use Selenia\Plugins\Matisse\Components\Internal\Metadata;
+use Selenia\Plugins\Matisse\Exceptions\ComponentException;
+use Selenia\Plugins\Matisse\Exceptions\FileIOException;
+use Selenia\Plugins\Matisse\Properties\Macro\MacroCallProperties;
+use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
 
 /**
  * A `MacroCall` is a component that can be represented via any tag that has the same name as the macro it refers to.

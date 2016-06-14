@@ -1,7 +1,7 @@
 <?php
-namespace Selenia\Matisse\Properties\Base;
+namespace Selenia\Plugins\Matisse\Properties\Base;
 
-use Selenia\Matisse\Properties\TypeSystem\type;
+use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
 
 /**
  * Properties shared by all {@see HtmlComponent} descendants.

@@ -1,14 +1,14 @@
 <?php
-namespace Selenia\Matisse\Traits\Component;
+namespace Selenia\Plugins\Matisse\Traits\Component;
 
 use PhpKit\WebConsole\ErrorConsole\ErrorConsole;
 use PhpKit\WebConsole\Lib\Debug;
-use Selenia\Matisse\Components\Base\Component;
-use Selenia\Matisse\Exceptions\ComponentException;
-use Selenia\Matisse\Exceptions\DataBindingException;
-use Selenia\Matisse\Interfaces\DataBinderInterface;
-use Selenia\Matisse\Parser\Expression;
-use Selenia\Matisse\Properties\Base\ComponentProperties;
+use Selenia\Plugins\Matisse\Components\Base\Component;
+use Selenia\Plugins\Matisse\Exceptions\ComponentException;
+use Selenia\Plugins\Matisse\Exceptions\DataBindingException;
+use Selenia\Plugins\Matisse\Interfaces\DataBinderInterface;
+use Selenia\Plugins\Matisse\Parser\Expression;
+use Selenia\Plugins\Matisse\Properties\Base\ComponentProperties;
 use Selenia\ViewEngine\Lib\ViewModel;
 
 /**

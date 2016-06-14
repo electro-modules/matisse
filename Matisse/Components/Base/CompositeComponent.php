@@ -1,10 +1,10 @@
 <?php
-namespace Selenia\Matisse\Components\Base;
+namespace Selenia\Plugins\Matisse\Components\Base;
 
 use Selenia\Interfaces\RenderableInterface;
 use Selenia\Interfaces\Views\ViewInterface;
-use Selenia\Matisse\Exceptions\ComponentException;
-use Selenia\Matisse\Traits\Component\ViewModelTrait;
+use Selenia\Plugins\Matisse\Exceptions\ComponentException;
+use Selenia\Plugins\Matisse\Traits\Component\ViewModelTrait;
 use Selenia\ViewEngine\Engines\MatisseEngine;
 
 /**

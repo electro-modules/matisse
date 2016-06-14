@@ -1,10 +1,10 @@
 <?php
-namespace Selenia\Matisse\Parser;
+namespace Selenia\Plugins\Matisse\Parser;
 
 use PhpCode;
 use RuntimeException;
-use Selenia\Matisse\Exceptions\DataBindingException;
-use Selenia\Matisse\Interfaces\DataBinderInterface;
+use Selenia\Plugins\Matisse\Exceptions\DataBindingException;
+use Selenia\Plugins\Matisse\Interfaces\DataBinderInterface;
 use Selenia\Traits\InspectionTrait;
 
 /**

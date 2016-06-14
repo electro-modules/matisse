@@ -1,13 +1,13 @@
 <?php
-namespace Selenia\Matisse\Parser;
+namespace Selenia\Plugins\Matisse\Parser;
 
 use Selenia\Interfaces\DI\InjectorInterface;
-use Selenia\Matisse\Interfaces\DataBinderInterface;
-use Selenia\Matisse\Interfaces\PresetsInterface;
-use Selenia\Matisse\Services\MacrosService;
-use Selenia\Matisse\Traits\Context\ComponentsAPITrait;
-use Selenia\Matisse\Traits\Context\FiltersAPITrait;
-use Selenia\Matisse\Traits\Context\ViewsAPITrait;
+use Selenia\Plugins\Matisse\Interfaces\DataBinderInterface;
+use Selenia\Plugins\Matisse\Interfaces\PresetsInterface;
+use Selenia\Plugins\Matisse\Services\MacrosService;
+use Selenia\Plugins\Matisse\Traits\Context\ComponentsAPITrait;
+use Selenia\Plugins\Matisse\Traits\Context\FiltersAPITrait;
+use Selenia\Plugins\Matisse\Traits\Context\ViewsAPITrait;
 use Selenia\Traits\InspectionTrait;
 use Selenia\ViewEngine\Services\AssetsService;
 use Selenia\ViewEngine\Services\BlocksService;

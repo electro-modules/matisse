@@ -1,8 +1,8 @@
 <?php
-namespace Selenia\Matisse\Components;
+namespace Selenia\Plugins\Matisse\Components;
 
-use Selenia\Matisse\Components\Base\HtmlComponent;
-use Selenia\Matisse\Properties\Base\GenericProperties;
+use Selenia\Plugins\Matisse\Components\Base\HtmlComponent;
+use Selenia\Plugins\Matisse\Properties\Base\GenericProperties;
 
 class GenericHtmlComponent extends HtmlComponent
 {

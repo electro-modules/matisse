@@ -1,10 +1,10 @@
 <?php
-namespace Selenia\Matisse\Components\Macro;
+namespace Selenia\Plugins\Matisse\Components\Macro;
 
-use Selenia\Matisse\Components\Base\Component;
-use Selenia\Matisse\Properties\Base\ComponentProperties;
-use Selenia\Matisse\Properties\TypeSystem\is;
-use Selenia\Matisse\Properties\TypeSystem\type;
+use Selenia\Plugins\Matisse\Components\Base\Component;
+use Selenia\Plugins\Matisse\Properties\Base\ComponentProperties;
+use Selenia\Plugins\Matisse\Properties\TypeSystem\is;
+use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
 
 class MacroParamProperties extends ComponentProperties
 {

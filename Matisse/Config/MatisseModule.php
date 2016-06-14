@@ -1,5 +1,5 @@
 <?php
-namespace Selenia\Matisse\Config;
+namespace Selenia\Plugins\Matisse\Config;
 
 use Selenia\Application;
 use Selenia\DefaultFilters;
@@ -7,11 +7,11 @@ use Selenia\Interfaces\DI\InjectorInterface;
 use Selenia\Interfaces\DI\ServiceProviderInterface;
 use Selenia\Interfaces\ModuleInterface;
 use Selenia\Interfaces\Views\ViewServiceInterface;
-use Selenia\Matisse\Interfaces\DataBinderInterface;
-use Selenia\Matisse\Lib\DataBinder;
-use Selenia\Matisse\Lib\FilterHandler;
-use Selenia\Matisse\Parser\DocumentContext;
-use Selenia\Matisse\Services\MacrosService;
+use Selenia\Plugins\Matisse\Interfaces\DataBinderInterface;
+use Selenia\Plugins\Matisse\Lib\DataBinder;
+use Selenia\Plugins\Matisse\Lib\FilterHandler;
+use Selenia\Plugins\Matisse\Parser\DocumentContext;
+use Selenia\Plugins\Matisse\Services\MacrosService;
 
 class MatisseModule implements ServiceProviderInterface, ModuleInterface
 {

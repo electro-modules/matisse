@@ -1,10 +1,10 @@
 <?php
-namespace Selenia\Matisse\Components;
+namespace Selenia\Plugins\Matisse\Components;
 
 use Interop\Container\Exception\NotFoundException;
-use Selenia\Matisse\Components\Base\Component;
-use Selenia\Matisse\Exceptions\ComponentException;
-use Selenia\Matisse\Properties\Base\ComponentProperties;
+use Selenia\Plugins\Matisse\Components\Base\Component;
+use Selenia\Plugins\Matisse\Exceptions\ComponentException;
+use Selenia\Plugins\Matisse\Properties\Base\ComponentProperties;
 
 class UseProperties extends ComponentProperties
 {
