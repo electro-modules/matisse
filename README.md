@@ -119,10 +119,10 @@ This was just a very short introduction to the Matisse template engine. Matisse 
 
 Matisse is already quite functional and it's being used right now on several projects at our company.
 
-We are sorry for the current lack of documentation. We are working on it, but we are also continually improving, not only Matisse, but also the containing ecosystem comprised by the Selenia framework and its many modules.
+We are sorry for the current lack of documentation. We are working on it, but we are also continually improving, not only Matisse, but also the containing ecosystem comprised of the Electro framework and its many modules.
 
 ## License
 
-The Selenia framework is open-source software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+The Electro framework is open-source software licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
-**Selenia framework** - Copyright &copy; 2015 Impactwave, Lda.
+**Electro framework** - Copyright &copy; Cláudio Silva and Impactwave, Lda.

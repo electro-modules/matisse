@@ -1,12 +1,13 @@
 {
-  "name": "selenia-plugins/matisse",
+  "name": "electro-modules/matisse",
   "description": "A component-based template engine for PHP web applications",
-  "type": "selenia-plugin",
+  "type": "electro-plugin",
   "keywords": [
     "plugin",
-    "selenia"
+    "electro"
   ],
   "license": "MIT",
+  "homepage": "https://github.com/electro-modules/matisse",
   "authors": [
     {
       "name": "Impactwave",
