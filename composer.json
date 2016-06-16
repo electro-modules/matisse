@@ -21,8 +21,9 @@
   ],
   "require": {
     "php": ">=5.6",
+    "electro/installers": "^1.0.0",
     "php-kit/tools": "dev-master",
-    "selenia/interop": "dev-master"
+    "electro/interop": "dev-master"
   },
   "autoload": {
     "psr-4": {
