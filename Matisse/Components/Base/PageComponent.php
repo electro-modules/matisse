@@ -27,7 +27,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionObject;
 use ReflectionProperty;
-use Selenia\Plugins\AdminInterface\Config\PlatformModule;
+use Selenia\Platform\Config\PlatformModule;
 
 /**
  * The base class for components that are web pages.

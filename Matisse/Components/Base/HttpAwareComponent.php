@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionException;
 use ReflectionObject;
-use Selenia\Plugins\AdminInterface\Config\PlatformModule;
+use Selenia\Platform\Config\PlatformModule;
 
 /**
  * The base class for components that are standalone HTML document fragments.
