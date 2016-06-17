@@ -1,17 +1,18 @@
 <?php
-namespace Selenia\Plugins\Matisse\Components\Base;
+namespace Electro\Plugins\Matisse\Components\Base;
 
+use Electro\Exceptions\FatalException;
+use Electro\Exceptions\Flash\FileException;
+use Electro\Exceptions\FlashMessageException;
+use Electro\Exceptions\FlashType;
+use Electro\Http\Lib\Http;
+use Electro\Interfaces\Http\RequestHandlerInterface;
+use Electro\ViewEngine\Lib\ViewModel;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionException;
 use ReflectionObject;
-use Selenia\Exceptions\FatalException;
-use Selenia\Exceptions\Flash\FileException;
-use Selenia\Exceptions\FlashMessageException;
-use Selenia\Exceptions\FlashType;
-use Selenia\Http\Lib\Http;
-use Selenia\Interfaces\Http\RequestHandlerInterface;
-use Selenia\ViewEngine\Lib\ViewModel;
+use Selenia\Plugins\AdminInterface\Config\PlatformModule;
 
 /**
  * The base class for components that are standalone HTML document fragments.
@@ -190,7 +191,7 @@ class HttpAwareComponent extends CompositeComponent implements RequestHandlerInt
 
   protected function getActionAndParam (&$action, &$param)
   {
-    $action = get ($_REQUEST, Http::ACTION_FIELD, '');
+    $action = get ($_REQUEST, PlatformModule::ACTION_FIELD, '');
     if (preg_match ('#(\w*):(.*)#', $action, $match)) {
       $action = $match[1];
       $param  = $match[2];

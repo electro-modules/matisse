@@ -1,15 +1,15 @@
 <?php
-namespace Selenia\Plugins\Matisse\Traits\Component;
+namespace Electro\Plugins\Matisse\Traits\Component;
 
 use PhpKit\WebConsole\ErrorConsole\ErrorConsole;
 use PhpKit\WebConsole\Lib\Debug;
-use Selenia\Plugins\Matisse\Components\Base\Component;
-use Selenia\Plugins\Matisse\Exceptions\ComponentException;
-use Selenia\Plugins\Matisse\Exceptions\DataBindingException;
-use Selenia\Plugins\Matisse\Interfaces\DataBinderInterface;
-use Selenia\Plugins\Matisse\Parser\Expression;
-use Selenia\Plugins\Matisse\Properties\Base\ComponentProperties;
-use Selenia\ViewEngine\Lib\ViewModel;
+use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Exceptions\DataBindingException;
+use Electro\Plugins\Matisse\Interfaces\DataBinderInterface;
+use Electro\Plugins\Matisse\Parser\Expression;
+use Electro\Plugins\Matisse\Properties\Base\ComponentProperties;
+use Electro\ViewEngine\Lib\ViewModel;
 
 /**
  * Provides an API for handling data binding on a component's properties.

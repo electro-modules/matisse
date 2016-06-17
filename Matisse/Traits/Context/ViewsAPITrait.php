@@ -1,9 +1,9 @@
 <?php
-namespace Selenia\Plugins\Matisse\Traits\Context;
+namespace Electro\Plugins\Matisse\Traits\Context;
 
-use Selenia\Interfaces\Views\ViewServiceInterface;
-use Selenia\Plugins\Matisse\Components;
-use Selenia\Plugins\Matisse\Parser\DocumentContext;
+use Electro\Interfaces\Views\ViewServiceInterface;
+use Electro\Plugins\Matisse\Components;
+use Electro\Plugins\Matisse\Parser\DocumentContext;
 
 /**
  * View-related services.

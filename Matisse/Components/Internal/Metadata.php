@@ -1,10 +1,10 @@
 <?php
-namespace Selenia\Plugins\Matisse\Components\Internal;
+namespace Electro\Plugins\Matisse\Components\Internal;
 
-use Selenia\Plugins\Matisse\Components\Base\Component;
-use Selenia\Plugins\Matisse\Parser\DocumentContext;
-use Selenia\Plugins\Matisse\Properties\Base\MetadataProperties;
-use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
+use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Parser\DocumentContext;
+use Electro\Plugins\Matisse\Properties\Base\MetadataProperties;
+use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 
 /**
  * A complex property that is expressed as a subtag.
@@ -49,8 +49,8 @@ class Metadata extends Component
    * Returns the main value of the metadata component.
    * For content-type metadata, this will be the children collection.
    *
-   * @return mixed|\Selenia\Plugins\Matisse\Components\Base\Component[]
-   * @throws \Selenia\Plugins\Matisse\Exceptions\ComponentException
+   * @return mixed|\Electro\Plugins\Matisse\Components\Base\Component[]
+   * @throws \Electro\Plugins\Matisse\Exceptions\ComponentException
    */
   public function getValue ()
   {

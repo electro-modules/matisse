@@ -1,11 +1,11 @@
 <?php
-namespace Selenia\Plugins\Matisse\Components\Base;
+namespace Electro\Plugins\Matisse\Components\Base;
 
-use Selenia\Interfaces\RenderableInterface;
-use Selenia\Interfaces\Views\ViewInterface;
-use Selenia\Plugins\Matisse\Exceptions\ComponentException;
-use Selenia\Plugins\Matisse\Traits\Component\ViewModelTrait;
-use Selenia\ViewEngine\Engines\MatisseEngine;
+use Electro\Interfaces\RenderableInterface;
+use Electro\Interfaces\Views\ViewInterface;
+use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Traits\Component\ViewModelTrait;
+use Electro\ViewEngine\Engines\MatisseEngine;
 
 /**
  * A component that delegates its rendering to a separate template (either internal or external to the component),

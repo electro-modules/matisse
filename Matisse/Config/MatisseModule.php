@@ -1,17 +1,17 @@
 <?php
-namespace Selenia\Plugins\Matisse\Config;
+namespace Electro\Plugins\Matisse\Config;
 
-use Selenia\Application;
-use Selenia\DefaultFilters;
-use Selenia\Interfaces\DI\InjectorInterface;
-use Selenia\Interfaces\DI\ServiceProviderInterface;
-use Selenia\Interfaces\ModuleInterface;
-use Selenia\Interfaces\Views\ViewServiceInterface;
-use Selenia\Plugins\Matisse\Interfaces\DataBinderInterface;
-use Selenia\Plugins\Matisse\Lib\DataBinder;
-use Selenia\Plugins\Matisse\Lib\FilterHandler;
-use Selenia\Plugins\Matisse\Parser\DocumentContext;
-use Selenia\Plugins\Matisse\Services\MacrosService;
+use Electro\Application;
+use Electro\DefaultFilters;
+use Electro\Interfaces\DI\InjectorInterface;
+use Electro\Interfaces\DI\ServiceProviderInterface;
+use Electro\Interfaces\ModuleInterface;
+use Electro\Interfaces\Views\ViewServiceInterface;
+use Electro\Plugins\Matisse\Interfaces\DataBinderInterface;
+use Electro\Plugins\Matisse\Lib\DataBinder;
+use Electro\Plugins\Matisse\Lib\FilterHandler;
+use Electro\Plugins\Matisse\Parser\DocumentContext;
+use Electro\Plugins\Matisse\Services\MacrosService;
 
 class MatisseModule implements ServiceProviderInterface, ModuleInterface
 {

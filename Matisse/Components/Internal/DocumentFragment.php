@@ -1,7 +1,7 @@
 <?php
-namespace Selenia\Plugins\Matisse\Components\Internal;
+namespace Electro\Plugins\Matisse\Components\Internal;
 
-use Selenia\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Components\Base\Component;
 
 /**
  * The root node of a component tree, which may be an entire document or just a part of one.

@@ -1,12 +1,12 @@
 <?php
-namespace Selenia\Plugins\Matisse\Services;
+namespace Electro\Plugins\Matisse\Services;
 
-use Selenia\Plugins\Matisse\Components\Internal\DocumentFragment;
-use Selenia\Plugins\Matisse\Components\Macro\Macro;
-use Selenia\Plugins\Matisse\Exceptions\FileIOException;
-use Selenia\Plugins\Matisse\Exceptions\ParseException;
-use Selenia\Plugins\Matisse\Parser\DocumentContext;
-use Selenia\Plugins\Matisse\Parser\Parser;
+use Electro\Plugins\Matisse\Components\Internal\DocumentFragment;
+use Electro\Plugins\Matisse\Components\Macro\Macro;
+use Electro\Plugins\Matisse\Exceptions\FileIOException;
+use Electro\Plugins\Matisse\Exceptions\ParseException;
+use Electro\Plugins\Matisse\Parser\DocumentContext;
+use Electro\Plugins\Matisse\Parser\Parser;
 
 /**
  * Manages macros loading, storage and retrieval.

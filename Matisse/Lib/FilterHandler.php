@@ -1,8 +1,8 @@
 <?php
-namespace Selenia\Plugins\Matisse\Lib;
+namespace Electro\Plugins\Matisse\Lib;
 
-use Selenia\Plugins\Matisse\Exceptions\FilterHandlerNotFoundException;
-use Selenia\Traits\InspectionTrait;
+use Electro\Plugins\Matisse\Exceptions\FilterHandlerNotFoundException;
+use Electro\Traits\InspectionTrait;
 
 /**
  * Resolves filter invocations to filter implementations,

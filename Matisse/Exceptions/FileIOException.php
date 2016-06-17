@@ -1,5 +1,5 @@
 <?php
-namespace Selenia\Plugins\Matisse\Exceptions;
+namespace Electro\Plugins\Matisse\Exceptions;
 
 class FileIOException extends MatisseException
 {

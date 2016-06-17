@@ -1,9 +1,9 @@
 <?php
-namespace Selenia\Plugins\Matisse\Traits\Component;
+namespace Electro\Plugins\Matisse\Traits\Component;
 
-use Selenia\Plugins\Matisse\Components\Base\Component;
-use Selenia\Plugins\Matisse\Exceptions\ComponentException;
-use Selenia\Plugins\Matisse\Interfaces\PresetsInterface;
+use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Interfaces\PresetsInterface;
 
 trait RenderingTrait
 {

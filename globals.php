@@ -2,8 +2,8 @@
 //------------------------------
 //  Matisse-specific functions
 //------------------------------
-use Selenia\Interfaces\RenderableInterface;
-use Selenia\Plugins\Matisse\Exceptions\MatisseException;
+use Electro\Interfaces\RenderableInterface;
+use Electro\Plugins\Matisse\Exceptions\MatisseException;
 
 /**
  * Represents text that should not be HTML-escaped when output.

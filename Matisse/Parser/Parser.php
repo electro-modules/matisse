@@ -1,11 +1,11 @@
 <?php
-namespace Selenia\Plugins\Matisse\Parser;
+namespace Electro\Plugins\Matisse\Parser;
 
-use Selenia\Plugins\Matisse\Components\Base\Component;
-use Selenia\Plugins\Matisse\Components\Internal\Metadata;
-use Selenia\Plugins\Matisse\Components\Internal\Text;
-use Selenia\Plugins\Matisse\Exceptions\ParseException;
-use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
+use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Components\Internal\Metadata;
+use Electro\Plugins\Matisse\Components\Internal\Text;
+use Electro\Plugins\Matisse\Exceptions\ParseException;
+use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 
 class Parser
 {

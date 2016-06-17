@@ -1,13 +1,13 @@
 <?php
-namespace Selenia\Plugins\Matisse\Middleware;
+namespace Electro\Plugins\Matisse\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Selenia\Exceptions\Fatal\FileNotFoundException;
-use Selenia\Interfaces\DI\InjectorInterface;
-use Selenia\Interfaces\Http\RequestHandlerInterface;
-use Selenia\Plugins\Matisse\Components\Base\PageComponent;
-use Selenia\Plugins\Matisse\Parser\DocumentContext;
+use Electro\Exceptions\Fatal\FileNotFoundException;
+use Electro\Interfaces\DI\InjectorInterface;
+use Electro\Interfaces\Http\RequestHandlerInterface;
+use Electro\Plugins\Matisse\Components\Base\PageComponent;
+use Electro\Plugins\Matisse\Parser\DocumentContext;
 
 /**
  * It allows a designer to rapidly prototype the application by automatically providing routing for URLs matching files
@@ -42,7 +42,7 @@ class AutoRoutingMiddleware implements RequestHandlerInterface
     if ($URL == '') $URL = 'index';
     elseif (substr ($URL, -1) == '/') $URL = $URL . 'index';
 
-    /** @var \Selenia\Plugins\Matisse\Components\Base\PageComponent $page */
+    /** @var \Electro\Plugins\Matisse\Components\Base\PageComponent $page */
     $page = $this->injector->make (PageComponent::class);
     $page->setup (null, $this->context); // Here we assume the templating engine is always Matisse.
     $page->templateUrl = "$URL.html";

@@ -1,5 +1,5 @@
 <?php
-namespace Selenia\Plugins\Matisse\Properties\TypeSystem;
+namespace Electro\Plugins\Matisse\Properties\TypeSystem;
 
 /**
  * Defines additional constants that can be used on the DSL of data type declarations of component properties.

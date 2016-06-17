@@ -1,8 +1,8 @@
 <?php
-namespace Selenia\Plugins\Matisse\Interfaces;
+namespace Electro\Plugins\Matisse\Interfaces;
 
-use Selenia\Plugins\Matisse\Components\Macro\Macro;
-use Selenia\Plugins\Matisse\Components\Macro\MacroCall;
+use Electro\Plugins\Matisse\Components\Macro\Macro;
+use Electro\Plugins\Matisse\Components\Macro\MacroCall;
 
 /**
  * Makes a component capable of performing macro transformations at template compile-time.

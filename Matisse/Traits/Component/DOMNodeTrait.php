@@ -1,12 +1,12 @@
 <?php
-namespace Selenia\Plugins\Matisse\Traits\Component;
+namespace Electro\Plugins\Matisse\Traits\Component;
 
-use Selenia\Plugins\Matisse\Components\Base\Component;
-use Selenia\Plugins\Matisse\Components\Internal\DocumentFragment;
-use Selenia\Plugins\Matisse\Components\Internal\Metadata;
-use Selenia\Plugins\Matisse\Debug\ComponentInspector;
-use Selenia\Plugins\Matisse\Exceptions\ComponentException;
-use Selenia\Plugins\Matisse\Properties\Base\ComponentProperties;
+use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Components\Internal\DocumentFragment;
+use Electro\Plugins\Matisse\Components\Internal\Metadata;
+use Electro\Plugins\Matisse\Debug\ComponentInspector;
+use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Properties\Base\ComponentProperties;
 
 /**
  * Provides an API for manipulating DOM nodes on a tree of components.

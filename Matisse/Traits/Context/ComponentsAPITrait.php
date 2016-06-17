@@ -1,15 +1,15 @@
 <?php
-namespace Selenia\Plugins\Matisse\Traits\Context;
+namespace Electro\Plugins\Matisse\Traits\Context;
 
-use Selenia\Interfaces\DI\InjectorInterface;
-use Selenia\Plugins\Matisse\Components;
-use Selenia\Plugins\Matisse\Components\Base\Component;
-use Selenia\Plugins\Matisse\Components\GenericHtmlComponent;
-use Selenia\Plugins\Matisse\Components\Macro\MacroCall;
-use Selenia\Plugins\Matisse\Exceptions\ComponentException;
-use Selenia\Plugins\Matisse\Exceptions\MatisseException;
-use Selenia\Plugins\Matisse\Parser\DocumentContext;
-use Selenia\Plugins\Matisse\Properties\Base\AbstractProperties;
+use Electro\Interfaces\DI\InjectorInterface;
+use Electro\Plugins\Matisse\Components;
+use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Components\GenericHtmlComponent;
+use Electro\Plugins\Matisse\Components\Macro\MacroCall;
+use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Exceptions\MatisseException;
+use Electro\Plugins\Matisse\Parser\DocumentContext;
+use Electro\Plugins\Matisse\Properties\Base\AbstractProperties;
 
 /**
  * Manages components on a rendering Context.

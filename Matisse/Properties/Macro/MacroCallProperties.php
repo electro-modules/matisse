@@ -1,12 +1,12 @@
 <?php
-namespace Selenia\Plugins\Matisse\Properties\Macro;
+namespace Electro\Plugins\Matisse\Properties\Macro;
 
-use Selenia\Plugins\Matisse\Components\Internal\Metadata;
-use Selenia\Plugins\Matisse\Components\Internal\Text;
-use Selenia\Plugins\Matisse\Components\Macro\Macro;
-use Selenia\Plugins\Matisse\Exceptions\ComponentException;
-use Selenia\Plugins\Matisse\Properties\Base\MetadataProperties;
-use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
+use Electro\Plugins\Matisse\Components\Internal\Metadata;
+use Electro\Plugins\Matisse\Components\Internal\Text;
+use Electro\Plugins\Matisse\Components\Macro\Macro;
+use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Properties\Base\MetadataProperties;
+use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 
 class MacroCallProperties extends MetadataProperties
 {

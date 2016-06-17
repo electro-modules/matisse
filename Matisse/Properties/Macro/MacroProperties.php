@@ -1,9 +1,9 @@
 <?php
-namespace Selenia\Plugins\Matisse\Properties\Macro;
+namespace Electro\Plugins\Matisse\Properties\Macro;
 
-use Selenia\Plugins\Matisse\Components\Internal\Metadata;
-use Selenia\Plugins\Matisse\Properties\Base\ComponentProperties;
-use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
+use Electro\Plugins\Matisse\Components\Internal\Metadata;
+use Electro\Plugins\Matisse\Properties\Base\ComponentProperties;
+use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 
 class MacroProperties extends ComponentProperties
 {

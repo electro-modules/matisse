@@ -1,6 +1,23 @@
 <?php
-namespace Selenia\Plugins\Matisse\Components\Base;
+namespace Electro\Plugins\Matisse\Components\Base;
 
+use Electro\Application;
+use Electro\Exceptions\Fatal\DataModelException;
+use Electro\Exceptions\FatalException;
+use Electro\Exceptions\Flash\FileException;
+use Electro\Exceptions\FlashMessageException;
+use Electro\Exceptions\FlashType;
+use Electro\Http\Lib\Http;
+use Electro\Interfaces\DI\InjectorInterface;
+use Electro\Interfaces\Http\RedirectionInterface;
+use Electro\Interfaces\Http\RequestHandlerInterface;
+use Electro\Interfaces\ModelControllerInterface;
+use Electro\Interfaces\Navigation\NavigationInterface;
+use Electro\Interfaces\Navigation\NavigationLinkInterface;
+use Electro\Interfaces\SessionInterface;
+use Electro\Plugins\Matisse\Parser\DocumentContext;
+use Electro\Plugins\Matisse\Parser\Expression;
+use Electro\Traits\PolymorphicInjectionTrait;
 use Exception;
 use PhpKit\WebConsole\DebugConsole\DebugConsole;
 use PhpKit\WebConsole\Lib\Debug;
@@ -10,23 +27,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionObject;
 use ReflectionProperty;
-use Selenia\Application;
-use Selenia\Exceptions\Fatal\DataModelException;
-use Selenia\Exceptions\FatalException;
-use Selenia\Exceptions\Flash\FileException;
-use Selenia\Exceptions\FlashMessageException;
-use Selenia\Exceptions\FlashType;
-use Selenia\Http\Lib\Http;
-use Selenia\Interfaces\DI\InjectorInterface;
-use Selenia\Interfaces\Http\RedirectionInterface;
-use Selenia\Interfaces\Http\RequestHandlerInterface;
-use Selenia\Interfaces\ModelControllerInterface;
-use Selenia\Interfaces\Navigation\NavigationInterface;
-use Selenia\Interfaces\Navigation\NavigationLinkInterface;
-use Selenia\Interfaces\SessionInterface;
-use Selenia\Plugins\Matisse\Parser\DocumentContext;
-use Selenia\Plugins\Matisse\Parser\Expression;
-use Selenia\Traits\PolymorphicInjectionTrait;
+use Selenia\Plugins\AdminInterface\Config\PlatformModule;
 
 /**
  * The base class for components that are web pages.
@@ -410,7 +411,7 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
 
   protected function getActionAndParam (&$action, &$param)
   {
-    $action = get ($_REQUEST, Http::ACTION_FIELD, '');
+    $action = get ($_REQUEST, PlatformModule::ACTION_FIELD, '');
     if (preg_match ('#(\w*):(.*)#', $action, $match)) {
       $action = $match[1];
       $param  = $match[2];

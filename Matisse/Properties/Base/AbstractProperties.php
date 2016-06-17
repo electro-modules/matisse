@@ -1,10 +1,10 @@
 <?php
-namespace Selenia\Plugins\Matisse\Properties\Base;
+namespace Electro\Plugins\Matisse\Properties\Base;
 
-use Selenia\Plugins\Matisse\Components\Base\Component;
-use Selenia\Plugins\Matisse\Exceptions\ComponentException;
-use Selenia\Plugins\Matisse\Interfaces\ComponentPropertiesInterface;
-use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
+use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Interfaces\ComponentPropertiesInterface;
+use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 
 abstract class AbstractProperties implements ComponentPropertiesInterface
 {
@@ -44,14 +44,14 @@ abstract class AbstractProperties implements ComponentPropertiesInterface
   /**
    * @param string $propName Property name.
    * @return mixed
-   * @throws \Selenia\Plugins\Matisse\Exceptions\ReflectionPropertyException
+   * @throws \Electro\Plugins\Matisse\Exceptions\ReflectionPropertyException
    */
   abstract function getDefaultValue ($propName);
 
   /**
    * @param string $propName Property name.
    * @return array Always returns an array, even if no enumeration is defined for the target property.
-   * @throws \Selenia\Plugins\Matisse\Exceptions\ReflectionPropertyException
+   * @throws \Electro\Plugins\Matisse\Exceptions\ReflectionPropertyException
    */
   abstract function getEnumOf ($propName);
 

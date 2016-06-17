@@ -1,8 +1,8 @@
 <?php
-namespace Selenia\Plugins\Matisse\Components;
+namespace Electro\Plugins\Matisse\Components;
 
-use Selenia\Plugins\Matisse\Components\Base\Component;
-use Selenia\Plugins\Matisse\Properties\Base\ComponentProperties;
+use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Properties\Base\ComponentProperties;
 
 class AssetsGroupProperties extends ComponentProperties
 {

@@ -1,9 +1,9 @@
 <?php
-namespace Selenia\Plugins\Matisse\Properties\Base;
+namespace Electro\Plugins\Matisse\Properties\Base;
 
 use JsonSerializable;
-use Selenia\Plugins\Matisse\Exceptions\ComponentException;
-use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
+use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 
 /**
  * Properties of a Metadata component.

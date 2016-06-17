@@ -27,7 +27,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Selenia\\Plugins\\Matisse\\": "Matisse/"
+      "Electro\\Plugins\\Matisse\\": "Matisse/"
     },
     "files": [
       "globals.php",

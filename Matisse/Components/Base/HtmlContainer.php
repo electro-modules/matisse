@@ -1,7 +1,7 @@
 <?php
-namespace Selenia\Plugins\Matisse\Components\Base;
+namespace Electro\Plugins\Matisse\Components\Base;
 
-use Selenia\Plugins\Matisse\Properties\Base\HtmlContainerProperties;
+use Electro\Plugins\Matisse\Properties\Base\HtmlContainerProperties;
 
 class HtmlContainer extends HtmlComponent
 {

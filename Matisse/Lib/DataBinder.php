@@ -1,19 +1,19 @@
 <?php
-namespace Selenia\Plugins\Matisse\Lib;
+namespace Electro\Plugins\Matisse\Lib;
 
 use PhpKit\WebConsole\Lib\Debug;
 use Psr\Http\Message\ServerRequestInterface;
-use Selenia\Application;
-use Selenia\Interfaces\CustomInspectionInterface;
-use Selenia\Interfaces\Navigation\NavigationInterface;
-use Selenia\Interfaces\Navigation\NavigationLinkInterface;
-use Selenia\Interfaces\RenderableInterface;
-use Selenia\Interfaces\SessionInterface;
-use Selenia\Plugins\Matisse\Components\Base\Component;
-use Selenia\Plugins\Matisse\Interfaces\DataBinderInterface;
-use Selenia\Plugins\Matisse\Parser\DocumentContext;
-use Selenia\Plugins\Matisse\Properties\Base\AbstractProperties;
-use Selenia\ViewEngine\Lib\ViewModel;
+use Electro\Application;
+use Electro\Interfaces\CustomInspectionInterface;
+use Electro\Interfaces\Navigation\NavigationInterface;
+use Electro\Interfaces\Navigation\NavigationLinkInterface;
+use Electro\Interfaces\RenderableInterface;
+use Electro\Interfaces\SessionInterface;
+use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Interfaces\DataBinderInterface;
+use Electro\Plugins\Matisse\Parser\DocumentContext;
+use Electro\Plugins\Matisse\Properties\Base\AbstractProperties;
+use Electro\ViewEngine\Lib\ViewModel;
 
 /**
  * Manages the view's data-binding context.

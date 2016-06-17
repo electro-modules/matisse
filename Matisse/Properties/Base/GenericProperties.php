@@ -1,5 +1,5 @@
 <?php
-namespace Selenia\Plugins\Matisse\Properties\Base;
+namespace Electro\Plugins\Matisse\Properties\Base;
 
 /**
  * Generic Attributes allow a component instance to have any tag attributes, without them having to be specifically

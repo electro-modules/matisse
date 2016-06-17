@@ -1,5 +1,5 @@
 <?php
-namespace Selenia\Plugins\Matisse\Interfaces;
+namespace Electro\Plugins\Matisse\Interfaces;
 
 /**
  * Marks a class as being reflection-enabled for component properties.

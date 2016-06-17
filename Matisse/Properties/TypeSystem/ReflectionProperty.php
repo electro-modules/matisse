@@ -1,5 +1,5 @@
 <?php
-namespace Selenia\Plugins\Matisse\Properties\TypeSystem;
+namespace Electro\Plugins\Matisse\Properties\TypeSystem;
 
 class ReflectionProperty
 {

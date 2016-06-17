@@ -1,8 +1,8 @@
 <?php
-namespace Selenia\Plugins\Matisse\Properties\Base;
+namespace Electro\Plugins\Matisse\Properties\Base;
 
-use Selenia\Plugins\Matisse\Components\Internal\Metadata;
-use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
+use Electro\Plugins\Matisse\Components\Internal\Metadata;
+use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 
 /**
  * Html containers are components that wrap their content with other markup.

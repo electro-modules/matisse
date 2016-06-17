@@ -1,5 +1,5 @@
 <?php
-namespace Selenia\Plugins\Matisse\Exceptions;
+namespace Electro\Plugins\Matisse\Exceptions;
 
 /**
  * Indicates that a handler function/method for the required filter function is not defined.

@@ -1,10 +1,10 @@
 <?php
-namespace Selenia\Plugins\Matisse\Components;
+namespace Electro\Plugins\Matisse\Components;
 
 use Interop\Container\Exception\NotFoundException;
-use Selenia\Plugins\Matisse\Components\Base\Component;
-use Selenia\Plugins\Matisse\Exceptions\ComponentException;
-use Selenia\Plugins\Matisse\Properties\Base\ComponentProperties;
+use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Properties\Base\ComponentProperties;
 
 class UseProperties extends ComponentProperties
 {
@@ -54,7 +54,7 @@ class UseProperties extends ComponentProperties
  *
  * Instead of typing the fully qualified service class name (which, by the way, is not refactor-friendly), you may
  * instead refer to a previously defined service alias.
- * <p>Selenia already provides some predefined aliases for the most common services.
+ * <p>Electro already provides some predefined aliases for the most common services.
  * <p>You may also set additional service alias mappings using {@see InjectorInterface::set()} or
  * {@see InjectorInterface::share()}.
  */

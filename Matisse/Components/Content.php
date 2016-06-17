@@ -1,10 +1,10 @@
 <?php
-namespace Selenia\Plugins\Matisse\Components;
+namespace Electro\Plugins\Matisse\Components;
 
-use Selenia\Plugins\Matisse\Components\Base\Component;
-use Selenia\Plugins\Matisse\Exceptions\ComponentException;
-use Selenia\Plugins\Matisse\Properties\Base\ComponentProperties;
-use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
+use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Properties\Base\ComponentProperties;
+use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 
 class ContentProperties extends ComponentProperties
 {

@@ -1,5 +1,5 @@
 <?php
-namespace Selenia\Plugins\Matisse\Lib;
+namespace Electro\Plugins\Matisse\Lib;
 
 class JavascriptCodeGen
 {

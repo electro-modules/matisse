@@ -1,17 +1,17 @@
 <?php
-namespace Selenia\Plugins\Matisse\Debug;
+namespace Electro\Plugins\Matisse\Debug;
 
 use PhpKit\Html5Tools\HtmlSyntaxHighlighter;
 use PhpKit\WebConsole\DebugConsole\DebugConsole;
 use PhpKit\WebConsole\Lib\Debug;
-use Selenia\Plugins\Matisse\Components\Base\Component;
-use Selenia\Plugins\Matisse\Components\Base\CompositeComponent;
-use Selenia\Plugins\Matisse\Components\Internal\DocumentFragment;
-use Selenia\Plugins\Matisse\Components\Internal\Text;
-use Selenia\Plugins\Matisse\Exceptions\ComponentException;
-use Selenia\Plugins\Matisse\Parser\Expression;
-use Selenia\Plugins\Matisse\Properties\Base\ComponentProperties;
-use Selenia\Plugins\Matisse\Properties\TypeSystem\type;
+use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Components\Base\CompositeComponent;
+use Electro\Plugins\Matisse\Components\Internal\DocumentFragment;
+use Electro\Plugins\Matisse\Components\Internal\Text;
+use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Parser\Expression;
+use Electro\Plugins\Matisse\Properties\Base\ComponentProperties;
+use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 use SplObjectStorage;
 
 /**

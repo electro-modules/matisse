@@ -1,11 +1,11 @@
 <?php
-namespace Selenia\Plugins\Matisse\Interfaces;
+namespace Electro\Plugins\Matisse\Interfaces;
 
-use Selenia\Plugins\Matisse\Exceptions\DataBindingException;
-use Selenia\Plugins\Matisse\Exceptions\FilterHandlerNotFoundException;
-use Selenia\Plugins\Matisse\Parser\DocumentContext;
-use Selenia\Plugins\Matisse\Properties\Base\AbstractProperties;
-use Selenia\ViewEngine\Lib\ViewModel;
+use Electro\Plugins\Matisse\Exceptions\DataBindingException;
+use Electro\Plugins\Matisse\Exceptions\FilterHandlerNotFoundException;
+use Electro\Plugins\Matisse\Parser\DocumentContext;
+use Electro\Plugins\Matisse\Properties\Base\AbstractProperties;
+use Electro\ViewEngine\Lib\ViewModel;
 
 /**
  * Provides a data context for evaluating expressions and methods to manage that context.

@@ -1,11 +1,11 @@
 <?php
-namespace Selenia\Plugins\Matisse\Parser;
+namespace Electro\Plugins\Matisse\Parser;
 
 use PhpCode;
 use RuntimeException;
-use Selenia\Plugins\Matisse\Exceptions\DataBindingException;
-use Selenia\Plugins\Matisse\Interfaces\DataBinderInterface;
-use Selenia\Traits\InspectionTrait;
+use Electro\Plugins\Matisse\Exceptions\DataBindingException;
+use Electro\Plugins\Matisse\Interfaces\DataBinderInterface;
+use Electro\Traits\InspectionTrait;
 
 /**
  * Represents a Matisse databinding expression.

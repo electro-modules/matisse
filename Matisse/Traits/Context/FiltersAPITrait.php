@@ -1,8 +1,8 @@
 <?php
-namespace Selenia\Plugins\Matisse\Traits\Context;
+namespace Electro\Plugins\Matisse\Traits\Context;
 
-use Selenia\Plugins\Matisse\Components;
-use Selenia\Plugins\Matisse\Exceptions\FilterHandlerNotFoundException;
+use Electro\Plugins\Matisse\Components;
+use Electro\Plugins\Matisse\Exceptions\FilterHandlerNotFoundException;
 
 /**
  * Manages Matisse rendering filters.

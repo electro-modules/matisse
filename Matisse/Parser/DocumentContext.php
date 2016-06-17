@@ -1,16 +1,16 @@
 <?php
-namespace Selenia\Plugins\Matisse\Parser;
+namespace Electro\Plugins\Matisse\Parser;
 
-use Selenia\Interfaces\DI\InjectorInterface;
-use Selenia\Plugins\Matisse\Interfaces\DataBinderInterface;
-use Selenia\Plugins\Matisse\Interfaces\PresetsInterface;
-use Selenia\Plugins\Matisse\Services\MacrosService;
-use Selenia\Plugins\Matisse\Traits\Context\ComponentsAPITrait;
-use Selenia\Plugins\Matisse\Traits\Context\FiltersAPITrait;
-use Selenia\Plugins\Matisse\Traits\Context\ViewsAPITrait;
-use Selenia\Traits\InspectionTrait;
-use Selenia\ViewEngine\Services\AssetsService;
-use Selenia\ViewEngine\Services\BlocksService;
+use Electro\Interfaces\DI\InjectorInterface;
+use Electro\Plugins\Matisse\Interfaces\DataBinderInterface;
+use Electro\Plugins\Matisse\Interfaces\PresetsInterface;
+use Electro\Plugins\Matisse\Services\MacrosService;
+use Electro\Plugins\Matisse\Traits\Context\ComponentsAPITrait;
+use Electro\Plugins\Matisse\Traits\Context\FiltersAPITrait;
+use Electro\Plugins\Matisse\Traits\Context\ViewsAPITrait;
+use Electro\Traits\InspectionTrait;
+use Electro\ViewEngine\Services\AssetsService;
+use Electro\ViewEngine\Services\BlocksService;
 
 /**
  * A Matisse rendering context.
@@ -74,7 +74,7 @@ class DocumentContext
    */
   private $assetsService;
   /**
-   * @var \Selenia\ViewEngine\Services\BlocksService
+   * @var \Electro\ViewEngine\Services\BlocksService
    */
   private $blocksService;
   /**
@@ -126,7 +126,7 @@ class DocumentContext
   }
 
   /**
-   * @return \Selenia\ViewEngine\Services\BlocksService
+   * @return \Electro\ViewEngine\Services\BlocksService
    */
   public function getBlocksService ()
   {

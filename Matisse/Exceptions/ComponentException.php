@@ -1,7 +1,7 @@
 <?php
-namespace Selenia\Plugins\Matisse\Exceptions;
+namespace Electro\Plugins\Matisse\Exceptions;
 
-use Selenia\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Components\Base\Component;
 
 class ComponentException extends MatisseException
 {

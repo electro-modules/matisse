@@ -1,7 +1,7 @@
 <?php
-namespace Selenia\Plugins\Matisse\Properties\TypeSystem;
+namespace Electro\Plugins\Matisse\Properties\TypeSystem;
 
-use Selenia\Plugins\Matisse\Components\Internal\Metadata;
+use Electro\Plugins\Matisse\Components\Internal\Metadata;
 
 /**
  * Represents the available data types of component properties and provides an API for working with both the types
