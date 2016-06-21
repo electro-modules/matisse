@@ -4,8 +4,8 @@ namespace Electro\Plugins\Matisse\Components\Base;
 use Electro\Interfaces\RenderableInterface;
 use Electro\Interfaces\Views\ViewInterface;
 use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Lib\MatisseEngine;
 use Electro\Plugins\Matisse\Traits\Component\ViewModelTrait;
-use Electro\ViewEngine\Engines\MatisseEngine;
 
 /**
  * A component that delegates its rendering to a separate template (either internal or external to the component),
@@ -128,7 +128,8 @@ class CompositeComponent extends Component
     if (!isset($this->shadowDOM)) {
       if ($this->templateUrl) {
         $this->assertContext ();
-        $this->view = $this->context->viewService->loadFromFile ($this->templateUrl);
+        $path       = $this->context->viewService->resolveTemplatePath ($this->templateUrl);
+        $this->view = $this->context->viewService->loadFromFile ($path);
         $this->view->compile ();
       }
       elseif ($this->template) {

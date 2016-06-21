@@ -10,6 +10,7 @@ use Electro\Interfaces\Views\ViewServiceInterface;
 use Electro\Plugins\Matisse\Interfaces\DataBinderInterface;
 use Electro\Plugins\Matisse\Lib\DataBinder;
 use Electro\Plugins\Matisse\Lib\FilterHandler;
+use Electro\Plugins\Matisse\Lib\MatisseEngine;
 use Electro\Plugins\Matisse\Parser\DocumentContext;
 use Electro\Plugins\Matisse\Services\MacrosService;
 
@@ -53,7 +54,10 @@ class MatisseModule implements ServiceProviderInterface, ModuleInterface
         $macrosService->macrosExt         = '.html';
       })
       ->share (MacrosService::class)
-      ->alias (DataBinderInterface::class, DataBinder::class);
+      ->alias (DataBinderInterface::class, DataBinder::class)
+      ->prepare (ViewServiceInterface::class, function (ViewServiceInterface $viewService) {
+        $viewService->register (MatisseEngine::class, '/\.html$/');
+      });;
   }
 
 }
