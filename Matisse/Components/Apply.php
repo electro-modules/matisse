@@ -51,9 +51,8 @@ class Apply extends Component implements PresetsInterface
 
   function applyPresets (Component $component)
   {
-    if ($component->getTagName () == $this->props->where) {
-      $component->props->apply ($this->applyProps);
-    }
+    if ($component->getTagName () == $this->props->where)
+      $component->props->applyDefaults ($this->applyProps);
   }
 
   protected function render ()

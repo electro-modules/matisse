@@ -190,7 +190,7 @@ abstract class Component implements RenderableInterface
   function applyPresetsOnSelf ()
   {
     if ($this->context)
-      foreach ($this->context->presets as $preset)
+      foreach (array_reverse_iterator ($this->context->presets) as $preset)
         if ($preset instanceof PresetsInterface)
           $preset->applyPresets ($this);
         elseif (method_exists ($preset, $this->className))

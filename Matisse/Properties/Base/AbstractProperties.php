@@ -104,6 +104,19 @@ abstract class AbstractProperties implements ComponentPropertiesInterface
   }
 
   /**
+   * Mass-assigns a set of properties, but only to those properties that are not yet modified.
+   *
+   * @param array $props
+   */
+  function applyDefaults (array $props)
+  {
+    $this->beingAssigned = $props;
+    foreach ($props as $k => $v)
+      if (!$this->isModified($k))
+        $this->set ($k, $v);
+  }
+
+  /**
    * Checks if a property can be specified on markup as a subtag.
    *
    * @param string $propName
@@ -225,7 +238,7 @@ abstract class AbstractProperties implements ComponentPropertiesInterface
    */
   function isModified ($propName)
   {
-    return $this->$propName != $this->getDefaultValue ($propName);
+    return $this->get ($propName) !== $this->getDefaultValue ($propName);
   }
 
   /**
