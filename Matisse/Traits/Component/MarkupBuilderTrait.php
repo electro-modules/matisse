@@ -23,7 +23,7 @@ trait MarkupBuilderTrait
     'area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source',
     'track', 'wbr',
   ];
-  
+
   private $tag;
   private $tags = [];
 
@@ -133,13 +133,12 @@ trait MarkupBuilderTrait
     if (is_null ($this->tag))
       throw new ComponentException($this, "Unbalanced beginTag() / endTag() pairs.");
     $name = $this->tag->name;
-    $x    = $this->context->debugMode ? "\n" : '';
     if ($this->tag->isContentSet)
-      echo "</$name>$x";
+      echo "</$name>";
     elseif (array_search ($name, self::$VOID_ELEMENTS) !== false)
-      echo "/>$x";
+      echo "/>";
     else
-      echo "></$name>$x";
+      echo "></$name>";
     $this->tag = array_pop ($this->tags);
   }
 
