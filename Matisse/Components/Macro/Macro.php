@@ -40,10 +40,10 @@ class Macro extends Component
     (\| [^\}]* )?   # capture filters (if any)
     \}
   %xu';
-  const allowsChildren = true;
-  
+  const allowsChildren                 = true;
+
   const propertiesClass = MacroProperties::class;
-  
+
   /** @var MacroProperties */
   public $props;
 
@@ -130,6 +130,13 @@ class Macro extends Component
   {
     $this->props->name = normalizeTagName ($this->props->name);
     $this->context->getMacrosService ()->addMacro ($this);
+    $assets = $this->context->getAssetsService ();
+    foreach ($this->props->style as $style) {
+      if ($style->props->src)
+        $assets->addStylesheet ($style->props->src);
+      else $assets->addInlineCss ($style->runAndGetContent (), $style->props->name);
+    }
   }
+
 
 }
