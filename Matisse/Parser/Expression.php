@@ -1,11 +1,11 @@
 <?php
 namespace Electro\Plugins\Matisse\Parser;
 
-use PhpCode;
-use RuntimeException;
 use Electro\Plugins\Matisse\Exceptions\DataBindingException;
 use Electro\Plugins\Matisse\Interfaces\DataBinderInterface;
 use Electro\Traits\InspectionTrait;
+use PhpCode;
+use RuntimeException;
 
 /**
  * Represents a Matisse databinding expression.
@@ -40,7 +40,11 @@ use Electro\Traits\InspectionTrait;
  *   - `"string"` or `'string'`
  *   - `true, false, null`
  *   - any PHP constant defined via `define()` or `const`
- *   - `namespace\class::constant` (`self::` or `static::` are not valid)
+ *   - `namespace\class::constant` - note: `self::` or `static::` are not valid.
+ *
+ * ### Static method calls
+ * A static method reference has the following syntax:
+ *   - `namespace\class::method` - note: `self::` or `static::` are not valid).
  *
  * ### Filters
  * Syntax: `filterName arg1,...argN`
@@ -71,7 +75,8 @@ class Expression
 /
   ^\s*                # ignore white space at the beginning
   (                   # capture either
-    !*[@#]?[:\w]+     # a constant name, a property name (ex: "prop", "@prop"), a block name (ex: "#prop") or a class constant (ex: MyClass::myConstant)
+    !*[@#]?[\w:\\\\]+ # a constant name, a property name (ex: "prop", "@prop"), a block name (ex: "#prop") or a class
+                      # constant or static method (ex: Namespace\SomeClass::someConstant or Namespace\SomeClass::someMethod)
     |                 # or
     '(?:\\'|[^'])*'   # a quoted string constant (supports escaped quotes inside the string)
     |                 # or
@@ -159,7 +164,7 @@ REGEXP;
   /**
    * Pre-compiles the given simple binding expression.
    *
-   * <p>Simple expressions do not have operators or filters. They are comprised of constants of property access chains
+   * <p>Simple expressions do not have operators or filters. They are comprised of constants or property access chains
    * only.
    *
    * <p>**Ex:** `'a.b.c'`, `'123'`, `'"text"'`, `'false'`, `'Class::constant'`, '&#64;prop', `'#block'`.
@@ -181,6 +186,8 @@ REGEXP;
 
       PhpCode::evalConstant ($seg, $ok);
       if ($ok) return $seg;
+      if (is_callable ($seg))
+        return "$seg()";
     }
 
     $exp = $unary = '';
