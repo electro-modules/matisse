@@ -2,6 +2,7 @@
 namespace Electro\Plugins\Matisse\Components;
 
 use Electro\Plugins\Matisse\Components\Base\Component;
+use Electro\Plugins\Matisse\Components\Base\HtmlComponent;
 use Electro\Plugins\Matisse\Components\Internal\Metadata;
 use Electro\Plugins\Matisse\Interfaces\PresetsInterface;
 use Electro\Plugins\Matisse\Properties\Base\ComponentProperties;
@@ -30,13 +31,17 @@ class ApplyProperties extends ComponentProperties
  *
  * ##### Syntax:
  * ```
- * <Apply [where="tag-name"]>
+ * <Apply [where="selector"]>
  *   <Set prop1="value1" ... propN="valueN"/>
  *   content
  * </Apply>
  *  ```
  * <p>If no filter is provided, nothing will happen.
  * > **Note:** you can use data bindings on the property values of `<Set>`
+ *
+ * <p>The selector is partially CSS-compatible.
+ * <p>Valid values have the following syntax:
+ * >`tagName` | `.className` | `tagName.className`
  */
 class Apply extends Component implements PresetsInterface
 {
@@ -47,12 +52,23 @@ class Apply extends Component implements PresetsInterface
   /** @var ApplyProperties */
   public $props;
 
+  /** @var array */
   private $applyProps;
+  /** @var string */
+  private $matchClass;
+  /** @var string */
+  private $matchTag;
 
   function applyPresets (Component $component)
   {
-    if ($component->getTagName () == $this->props->where)
-      $component->props->applyDefaults ($this->applyProps);
+    if ($this->matchTag && $this->matchTag !== $component->getTagName ())
+      return;
+    inspect($this->matchClass,$component->props && $component->props->defines('class')? $component->props->class : null);
+    if ($this->matchClass &&
+        (!$component instanceof HtmlComponent || !preg_match ($this->matchClass, $component->props->class))
+    )
+      return;
+    $component->props->applyDefaults ($this->applyProps);
   }
 
   protected function render ()
@@ -61,6 +77,11 @@ class Apply extends Component implements PresetsInterface
     $setterProp->databind ();
     $this->applyProps         = $setterProp->props->getAll ();
     $this->context->presets[] = $this;
+    $rule                     = $this->props->where;
+    $this->matchTag           = str_extract ($rule, '/^[\w\-]+/');
+    $class                    = str_extract ($rule, '/^\.([\w\-]+)/');
+    if ($class)
+      $this->matchClass = sprintf ('/(?:^| )%s(?:$| )/', preg_quote ($class));
     $this->runChildren ();
     array_pop ($this->context->presets);
   }
