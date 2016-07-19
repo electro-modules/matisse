@@ -43,7 +43,7 @@ class FilterHandler
         return call_user_func_array ([$this->fallbackHandler, $method], $args);
     }
     throw new FilterHandlerNotFoundException(sprintf ("<p><p>Handler method: <kbd>%s</kbd><p>Arguments: <kbd>%s</kbd>",
-      $method, var_export ($args, true)));
+      $method, print_r (map ($args, function ($e) { return typeInfoOf($e);}), true)));
   }
 
   function registerFallbackHandler ($handler)
