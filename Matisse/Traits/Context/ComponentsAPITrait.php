@@ -25,7 +25,7 @@ trait ComponentsAPITrait
    * @var array string => string
    */
   private static $coreTags = [
-    'Apply'             => Components\Apply::class,
+    'Presets'           => Components\Presets::class,
     'AssetsGroup'       => Components\AssetsGroup::class,
     'Content'           => Components\Content::class,
     'If'                => Components\If_::class,

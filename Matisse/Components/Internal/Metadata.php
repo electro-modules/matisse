@@ -18,9 +18,9 @@ use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 class Metadata extends Component
 {
   const allowsChildren = true;
-  
+
   const propertiesClass = MetadataProperties::class;
-  
+
   /** @var MetadataProperties */
   public $props;
   /**
@@ -43,6 +43,36 @@ class Metadata extends Component
     $this->type = $type;
     $this->setTagName ($tagName);
     $this->setup (null, $context, $props);
+  }
+
+  /**
+   * Converts an array of Metadata components to actual content that can be rendered.
+   *
+   * @param self[]    $content
+   * @param Component $parent
+   */
+  public static function compile (array $content, Component $parent)
+  {
+    foreach ($content as $item) {
+      if (!$item instanceof self) {
+        $parent->addChild (clone $item);
+        continue;
+      }
+      $tag      = $item->getTagName ();
+      $propName = lcfirst ($tag);
+      inspect ($propName);
+      if ($parent->props && !($parent instanceof self) && $parent->props->defines ($propName)) {
+        $comp = new self ($parent->context, $tag, $parent->props->getTypeOf ($propName), $item->props->getAll ());
+        $parent->props->set ($propName, $comp);
+      }
+      else {
+        if ($tag === 'Text')
+          $comp = Text::from ($parent->context, $item->value);
+        else $comp = $parent->context->createComponentFromTag ($tag, $parent, $item->props->getAll (), $item->bindings);
+        $parent->addChild ($comp);
+      }
+      self::compile ($item->getChildren (), $comp);
+    };
   }
 
   /**

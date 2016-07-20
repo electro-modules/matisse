@@ -192,6 +192,8 @@ class type
         return !!preg_match ('#^[\w\-]+$#', $v);
 
       case type::content:
+        return $v instanceof Metadata || is_string ($v); // Note: content props can be specified in attribute syntax.
+
       case type::metadata:
         return $v instanceof Metadata;
 

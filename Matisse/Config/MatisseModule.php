@@ -31,6 +31,7 @@ class MatisseModule implements ServiceProviderInterface, ModuleInterface
     $injector
       ->prepare (DocumentContext::class,
         function (DocumentContext $ctx, InjectorInterface $injector) {
+          /** @var Application $app */
           $app         = $injector->make (Application::class);
           $viewService = $injector->make (ViewServiceInterface::class);
           $ctx->registerTags ($app->tags);

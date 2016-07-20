@@ -134,7 +134,7 @@ class Parser
 
         if ($this->currentScalarProperty)
           $this->parsingError ("Invalid tag <kbd>$tag</kbd>; components are not allowed inside the <kbd>{$this->current->getTagName()}</kbd> scalar property.");
-
+        
         if (isset($this->metadataContainer) || $this->subtag_check ($tag))
           $this->parse_subtag ($tag, $attrs);
 
@@ -233,7 +233,6 @@ class Parser
     if (!$this->current->allowsChildren ())
       $this->parsingError ("Neither the <b>{$this->current->getTagName()}</b> tag allows children, neither <b>$tag</b> is a subtag of <b>{$this->current->getTagName()}</b>");
 
-    /** @var Metadata|boolean $defParam */
     $this->parse_attributes ($attrs, $attributes, $bindings, true);
     $component = $this->current->context->createComponentFromTag ($tag, $this->current, $attributes, $bindings,
       false /*TODO: support HTML components*/);
@@ -266,8 +265,8 @@ class Parser
       $current->onParsingComplete (); //Note: calling this method may unset the 'parent' property (ex. with macros, which are immediately removed from the DOM).
 
       // Check if the metadata context is being closed.
-      if (isset($this->metadataContainer) && $this->current == $this->metadataContainer)
-        unset ($this->metadataContainer);
+      if (isset($this->metadataContainer) && $this->current === $this->metadataContainer)
+        $this->metadataContainer = null;
 
       $this->current = $parent; //also discards the current scalar parameter, if that is the case.
     }
@@ -390,7 +389,8 @@ does not support the specified parameter <b>$tag</b>.
     if ($type == type::string)
       $this->currentScalarProperty = $propName;
     else {
-      $this->current = $param = new Metadata ($component->context, $tagName, $type, $attributes);
+      $relatedType   = $type == type::collection ? $component->props->getRelatedTypeOf ($propName) : '';
+      $this->current = $param = new Metadata ($component->context, $tagName, $relatedType ?: $type, $attributes);
       $param->attachTo ($component);
       switch ($type) {
         case type::content:
@@ -400,13 +400,16 @@ does not support the specified parameter <b>$tag</b>.
         case type::metadata:
           $component->props->$propName = $param;
           $param->setBindings ($bindings);
-          $this->metadataContainer = $param;
+          if (!$this->metadataContainer)
+            $this->metadataContainer = $param;
           break;
         case type::collection:
           if (isset($component->props->$propName))
             $component->props->{$propName}[] = $param;
           else $component->props->$propName = [$param];
           $param->setBindings ($bindings);
+          if ($relatedType == type::metadata)
+            $this->metadataContainer = $param;
           break;
         default:
           $this->parsingError ("Invalid subtag <kbd>$tagName</kbd>");
@@ -417,7 +420,7 @@ does not support the specified parameter <b>$tag</b>.
   private function subtag_createSlotSubcontent ($name, $tagName, array $attributes = null, array $bindings = null)
   {
     $param         = $this->current;
-    $this->current = $subparam = new Metadata($param->context, $tagName, type::content, $attributes);
+    $this->current = $subparam = new Metadata($param->context, $tagName, $this->metadataContainer->type, $attributes);
     $subparam->setBindings ($bindings);
     $param->addChild ($subparam);
   }
