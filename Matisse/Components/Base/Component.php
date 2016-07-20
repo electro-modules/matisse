@@ -156,7 +156,7 @@ abstract class Component implements RenderableInterface
 
   function __debugInfo ()
   {
-    $props = object_publicProps ($this);
+    $props = array_merge (['tagName' => $this->tagName], object_publicProps ($this));
     unset ($props['parent']);
     unset ($props['context']);
     unset ($props['children']);
@@ -246,6 +246,13 @@ abstract class Component implements RenderableInterface
   function setContext ($context)
   {
     $this->context = $context;
+  }
+
+  function setContextRecursive ($context)
+  {
+    $this->context = $context;
+    foreach ($this->children as $child)
+      $child->setContextRecursive($context);
   }
 
   /**

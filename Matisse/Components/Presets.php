@@ -2,9 +2,9 @@
 namespace Electro\Plugins\Matisse\Components;
 
 use Electro\Plugins\Matisse\Components\Base\Component;
-use Electro\Plugins\Matisse\Components\Base\HtmlComponent;
 use Electro\Plugins\Matisse\Components\Internal\Metadata;
 use Electro\Plugins\Matisse\Interfaces\PresetsInterface;
+use Electro\Plugins\Matisse\Lib\Preset;
 use Electro\Plugins\Matisse\Properties\Base\ComponentProperties;
 use Electro\Plugins\Matisse\Properties\TypeSystem\is;
 use Electro\Plugins\Matisse\Properties\TypeSystem\type;
@@ -17,32 +17,6 @@ class PresetsProperties extends ComponentProperties
   public $where = [type::collection, is::of, type::metadata];
 }
 
-class Preset
-{
-  /** @var Component[] */
-  public $content;
-  /** @var string A regular expression. */
-  public $matchClass;
-  /** @var string A tag name. */
-  public $matchTag;
-  /** @var array A map. */
-  public $props;
-
-  /**
-   * Preset constructor.
-   *
-   * @param string $rule A CSS-compatible selector, supporting tag and class names.
-   */
-  public function __construct ($rule)
-  {
-    $this->matchTag = str_extract ($rule, '/^[\w\-]+/');
-    $class          = str_extract ($rule, '/^\.([\w\-]+)/');
-    if ($class)
-      $this->matchClass = sprintf ('/(?:^| )%s(?:$| )/', preg_quote ($class));
-  }
-
-}
-
 /**
  * A component that defines preset property values for some of its children, which are targeted by tag name and/or
  * CSS class name.
@@ -52,7 +26,13 @@ class Preset
  * <Preset>
  *   <Where match="selector">
  *     <Set prop1="value1" ... propN="valueN"/>
- *     optional content to be appended to the target
+ *     <Prepend>
+ *       optional content to be prepended to the target
+ *     </Prepend>
+ *     <Append>
+ *       optional content to be appended to the target
+ *     </Append>
+ *     optional content to be replaced on the target
  *   </Where>
  *   <Where...>...</Where>
  *   content to be precessed
@@ -63,7 +43,11 @@ class Preset
  *
  * <p>The selector is partially CSS-compatible.
  * <p>Valid values have the following syntax:
- * >`tagName` | `.className` | `tagName.className`
+ * >`tagName` | `.className` | `[prop]` | `[prop=value]` or a combination of these, on this order.
+ * ><p>Ex: `tagName[prop=value]`
+ *
+ * ><p>Note: `tagName[prop]` matches any `tagName` that has a non-empty `prop` property.
+ * ><p>Note that `<tag prop>` is equivalent to `<tag prop=true>`, not to `<tag prop="">`.
  */
 class Presets extends Component implements PresetsInterface
 {
@@ -75,26 +59,14 @@ class Presets extends Component implements PresetsInterface
   public $props;
 
   /**
-   * @var Preset[]
+   * @var \Electro\Plugins\Matisse\Lib\Preset[]
    */
   private $presets;
 
   function applyPresets (Component $component)
   {
-    foreach ($this->presets as $preset) {
-      if ($preset->matchTag && $preset->matchTag !== $component->getTagName ())
-        continue;
-      if ($preset->matchClass &&
-          (!$component instanceof HtmlComponent || !preg_match ($preset->matchClass, $component->props->class))
-      )
-        continue;
-      if ($preset->props)
-        $component->props->applyDefaults ($preset->props);
-      if ($preset->content) {
-        Metadata::compile ($preset->content, $component);
-        inspect ($component);
-      }
-    }
+    foreach ($this->presets as $preset)
+      $preset->ifMatchesApply ($component);
   }
 
   protected function render ()
@@ -103,17 +75,36 @@ class Presets extends Component implements PresetsInterface
     /** @var Metadata $where */
     foreach ($this->props->where as $where) {
       $whereSubtags = $where->getChildren ();
-      if (!$whereSubtags) continue;
+      if (!$whereSubtags)
+        continue;
       $where->databind ();
       $rule = $where->props->match;
-      if (!$rule) continue;
-      $preset = new Preset ($rule);
-      if ($whereSubtags[0]->getTagName () == 'Set') {
-        $Set = array_shift ($whereSubtags);
-        $Set->databind ();
-        $preset->props = $Set->props->getAll ();
+      if (!$rule)
+        continue;
+      $preset  = new Preset ($rule);
+      $append  = [];
+      $prepend = [];
+      $replace = [];
+      foreach ($whereSubtags as $subTag) {
+        switch ($subTag->getTagName ()) {
+          case 'Set':
+            $subTag->databind ();
+            $newProps      = $subTag->props->getAll ();
+            $preset->props = isset($preset->props) ? array_merge ($preset->props, $newProps) : $newProps;
+            break;
+          case 'Prepend':
+            array_mergeInto ($prepend, $subTag->getChildren ());
+            break;
+          case 'Append':
+            array_mergeInto ($append, $subTag->getChildren ());
+            break;
+          default: //overwrite
+            $replace[] = $subTag;
+        }
       }
-      $preset->content = $whereSubtags;
+      $preset->prepend = $prepend;
+      $preset->append  = $append;
+      $preset->content = $replace;
       $this->presets[] = $preset;
     }
     $stack                    = $this->context->presets; // Save a copy of the current presets stack.

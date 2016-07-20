@@ -6,7 +6,9 @@ use Electro\Plugins\Matisse\Components\Internal\DocumentFragment;
 use Electro\Plugins\Matisse\Components\Internal\Metadata;
 use Electro\Plugins\Matisse\Debug\ComponentInspector;
 use Electro\Plugins\Matisse\Exceptions\ComponentException;
+use Electro\Plugins\Matisse\Parser\DocumentContext;
 use Electro\Plugins\Matisse\Properties\Base\ComponentProperties;
+use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 
 /**
  * Provides an API for manipulating DOM nodes on a tree of components.
@@ -90,11 +92,14 @@ trait DOMNodeTrait
 
   /**
    * @param Component $child
+   * @param bool      $prepend When true, the child is prepended to the existing content
    */
-  public function addChild (Component $child)
+  public function addChild (Component $child, $prepend = false)
   {
     if ($child) {
-      $this->children[] = $child;
+      if ($prepend)
+        array_unshift ($this->children, $child);
+      else $this->children[] = $child;
       $this->attach ($child);
     }
   }
@@ -139,9 +144,33 @@ trait DOMNodeTrait
    */
   public function attachTo (Component $parent)
   {
-    $this->parent  = $parent;
+    $this->parent = $parent;
     if (!$this->context)
       $this->context = $parent->context;
+  }
+
+  /**
+   * @param DocumentContext $context
+   * @return Component
+   */
+  public function cloneWithContext (DocumentContext $context)
+  {
+    $c = clone $this;
+    $c->detach ();
+    $c->setContext ($context);
+    foreach ($this->getChildren () as $child)
+      $child->setContextRecursive ($context);
+    if ($this->supportsProperties ()) {
+      /** @var Metadata $meta */
+      foreach ($c->props->getPropertiesOf (type::metadata) as $meta)
+        $meta->setContextRecursive ($context);
+      /** @var Component[] $col */
+      foreach ($c->props->getPropertiesOf (type::collection) as $col)
+        foreach ($col as $item)
+          $item->setContextRecursive ($context);
+    }
+    /** @var Component $c */
+    return $c;
   }
 
   /**

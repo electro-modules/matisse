@@ -37,40 +37,56 @@ class Metadata extends Component
    */
   public $value;
 
-  public function __construct (DocumentContext $context, $tagName, $type, array $props = null)
+  public function __construct (DocumentContext $context, $tagName, $type, array $props = null, array $bindings = null)
   {
     parent::__construct ();
     $this->type = $type;
     $this->setTagName ($tagName);
-    $this->setup (null, $context, $props);
+    $this->setup (null, $context, $props, $bindings);
   }
 
   /**
-   * Converts an array of Metadata components to actual content that can be rendered.
+   * Converts an array of Metadata trees to actual content that can be rendered.
    *
-   * @param self[]    $content
-   * @param Component $parent
+   * @param self[]    $metadata The metadata to be converted.
+   * @param Component $parent   The content will be assigned to this component and will inherit its context.
+   * @param bool      $prepend  When true, children are prepended to the existing content, or the the beginning of a
+   *                            collection property.
    */
-  public static function compile (array $content, Component $parent)
+  public static function compile (array $metadata, Component $parent, $prepend = false)
   {
-    foreach ($content as $item) {
+    foreach ($metadata as $item) {
       if (!$item instanceof self) {
-        $parent->addChild (clone $item);
+        $parent->addChild ($item->cloneWithContext ($parent->context), $prepend);
         continue;
       }
       $tag      = $item->getTagName ();
       $propName = lcfirst ($tag);
-      inspect ($propName);
+      // Insert metadata
       if ($parent->props && !($parent instanceof self) && $parent->props->defines ($propName)) {
-        $comp = new self ($parent->context, $tag, $parent->props->getTypeOf ($propName), $item->props->getAll ());
-        $parent->props->set ($propName, $comp);
+        if ($parent->props->getTypeOf ($propName) == type::collection) {
+          $comp =
+            new self ($parent->context, $tag, $parent->props->getRelatedTypeOf ($propName), $item->props->getAll (),
+              $item->bindings);
+          if ($prepend)
+            array_unshift ($parent->props->$propName, $comp);
+          else array_push ($parent->props->$propName, $comp);
+        }
+        else {
+          $comp = new self ($parent->context, $tag, $parent->props->getTypeOf ($propName), $item->props->getAll (),
+            $item->bindings);
+          $parent->props->set ($propName, $comp);
+        }
       }
+      // Insert content
       else {
-        if ($tag === 'Text')
+        if ($tag === 'Text') {
           $comp = Text::from ($parent->context, $item->value);
+        }
         else $comp = $parent->context->createComponentFromTag ($tag, $parent, $item->props->getAll (), $item->bindings);
-        $parent->addChild ($comp);
+        $parent->addChild ($comp, $prepend);
       }
+      // Now, compile the children.
       self::compile ($item->getChildren (), $comp);
     };
   }

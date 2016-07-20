@@ -92,8 +92,10 @@ trait RenderingTrait
   {
     $firstRendering = !$this->renderCount++;
     if ($this->isVisible ()) {
-      if ($firstRendering)
+      if ($firstRendering) {
+        $this->applyPresetsOnSelf ();
         $this->setupFirstRun ();
+      }
       else $this->setupRepeatedRun ();
       $this->databind ();       // This is done on the data binding context of the component's parent.
       if ($firstRendering) {
@@ -121,8 +123,6 @@ trait RenderingTrait
   {
     if (!$this->context)
       throw new ComponentException($this, self::ERR_NO_CONTEXT);
-
-    $this->applyPresetsOnSelf ();
 
     if ($this->isVisible ()) {
       $this->preRun ();
