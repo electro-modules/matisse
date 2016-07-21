@@ -6,6 +6,7 @@ use Electro\Plugins\Matisse\Components\Internal\Metadata;
 use Electro\Plugins\Matisse\Exceptions\ComponentException;
 use Electro\Plugins\Matisse\Properties\Macro\MacroProperties;
 use Electro\Plugins\Matisse\Properties\TypeSystem\type;
+use Electro\ViewEngine\Lib\ViewModel;
 
 /**
  * The Macro component allows you to define a macro trasformation via markup.
@@ -126,6 +127,33 @@ class Macro extends Component
     return $names;
   }
 
+  public function importServices (ViewModel $viewModel)
+  {
+    $prop     = $this->props->import;
+    if (!$prop)
+      return;
+    $props = $prop->props;
+    $services = $props->service ?: $props->services;
+    if ($services) {
+      $injector = $this->context->injector;
+      $aliases  = preg_split ('/\s+/', $services, -1, PREG_SPLIT_NO_EMPTY);
+
+      if (exists ($as = $props->as)) {
+        if (count ($aliases) > 1)
+          throw new ComponentException ($this,
+            "When using the <kbd>as</kbd> property, you can only specify one value for the <kbd>service</kbd> property");
+        $service        = $injector->make ($services);
+        $viewModel->$as = $service;
+      }
+      else {
+        foreach ($aliases as $alias) {
+          $service           = $injector->get ($alias);
+          $viewModel->$alias = $service;
+        }
+      }
+    }
+  }
+
   public function onParsingComplete ()
   {
     $this->props->name = normalizeTagName ($this->props->name);
@@ -137,6 +165,5 @@ class Macro extends Component
       else $assets->addInlineCss ($style->runAndGetContent (), $style->props->name);
     }
   }
-
 
 }

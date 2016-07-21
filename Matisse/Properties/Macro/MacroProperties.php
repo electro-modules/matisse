@@ -24,4 +24,8 @@ class MacroProperties extends ComponentProperties
    * @var Metadata[]
    */
   public $style = [type::collection, is::of, type::content];
+  /**
+   * @var Metadata
+   */
+  public $import = type::metadata;
 }

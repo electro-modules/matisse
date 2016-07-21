@@ -9,6 +9,7 @@ use Electro\Plugins\Matisse\Exceptions\ComponentException;
 use Electro\Plugins\Matisse\Exceptions\FileIOException;
 use Electro\Plugins\Matisse\Properties\Macro\MacroCallProperties;
 use Electro\Plugins\Matisse\Properties\TypeSystem\type;
+use Electro\ViewEngine\Lib\ViewModel;
 
 /**
  * A `MacroCall` is a component that can be represented via any tag that has the same name as the macro it refers to.
@@ -98,5 +99,11 @@ class MacroCall extends CompositeComponent
 //    foreach ($this->props->getPropertiesOf (type::content, type::metadata, type::collection) as $prop => $v)
 //      $this->props->$prop->preRun();
 //  }
+  protected function viewModel (ViewModel $viewModel)
+  {
+    parent::viewModel ($viewModel);
+    $this->macroInstance->importServices ($viewModel);
+  }
+
 
 }
