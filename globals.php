@@ -82,8 +82,10 @@ function normalizeAttributeName ($name)
  * Unified interface for retrieving a value by property/method name from an object or by key from an array.
  *
  * ### On an object
- * - If a property is inaccessible, it calls `getProperty()` if it exists, otherwise it returns the default value.
- * - If a property does not exist, it tries to call `property()` if it exists, otherwise, it returns the default value.
+ * - If a property XXX is inaccessible, it calls `getXXX()` if it exists.
+ * - If a property XXX does not exist, it tries to call `XXX()` if it exists.
+ * - If the object is indexable, it returns `$obj['XXX']` if it exists.
+ * - Otherwise it returns the default value.
  *
  * ### On an array
  * - Returns the item at the specified key, or the default value if the key doesn't exist.
