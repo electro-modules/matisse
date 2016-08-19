@@ -97,6 +97,19 @@ class DefaultFilters
   }
 
   /**
+   * Sends a value to the debugging console/log, if one exists.
+   *
+   * @param string $v
+   * @return string Empty string.
+   */
+  function filter_log ($v)
+  {
+    if (function_exists ('inspect'))
+      inspect ($v);
+    return '';
+  }
+
+  /**
    * Converts line breaks to `<br>` tags.
    *
    * @param $v
