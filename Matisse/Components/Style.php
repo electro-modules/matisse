@@ -22,14 +22,18 @@ class StyleProperties extends ComponentProperties
    * @var string
    */
   public $src = '';
+  /**
+   * @var bool
+   */
+  public $prepend = false;
 }
 
 class Style extends Component
 {
   const allowsChildren = true;
-  
+
   const propertiesClass = StyleProperties::class;
-  
+
   /** @var StyleProperties */
   public $props;
 
@@ -40,9 +44,9 @@ class Style extends Component
   {
     $prop = $this->props;
     if (exists ($prop->src))
-      $this->context->getAssetsService ()->addStylesheet ($prop->src);
+      $this->context->getAssetsService ()->addStylesheet ($prop->src, $this->props->prepend);
     else if ($this->hasChildren ())
-      $this->context->getAssetsService ()->addInlineCss ($this, $prop->name);
+      $this->context->getAssetsService ()->addInlineCss ($this, $prop->name, $this->props->prepend);
   }
 }
 

@@ -22,14 +22,18 @@ class ScriptProperties extends ComponentProperties
    * @var string
    */
   public $src = '';
+  /**
+   * @var bool
+   */
+  public $prepend = false;
 }
 
 class Script extends Component
 {
   const allowsChildren = true;
-  
+
   const propertiesClass = ScriptProperties::class;
-  
+
   /** @var ScriptProperties */
   public $props;
 
@@ -40,9 +44,9 @@ class Script extends Component
   {
     $prop = $this->props;
     if (exists ($prop->src))
-      $this->context->getAssetsService ()->addScript ($prop->src);
+      $this->context->getAssetsService ()->addScript ($prop->src, $this->props->prepend);
     else if ($this->hasChildren ())
-      $this->context->getAssetsService ()->addInlineScript ($this, $prop->name);
+      $this->context->getAssetsService ()->addInlineScript ($this, $prop->name, $this->props->prepend);
   }
 }
 
