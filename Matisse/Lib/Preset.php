@@ -15,6 +15,8 @@ class Preset
   public $prepend = null;
   /** @var array|null A map. */
   public $props = null;
+  /** @var string[]|null A list of property names. */
+  public $unset = null;
 
   /** @var string A regular expression. Empty string = match any */
   private $matchClass = '';
@@ -33,9 +35,14 @@ class Preset
   public function __construct ($selector)
   {
     $this->matchTag = str_extract ($selector, '/^[\w\-]+/');
-    $class          = str_extract ($selector, '/^\.([\w\-]+)/');
-    if ($class)
-      $this->matchClass = sprintf ('/(?:^| )%s(?:$| )/', preg_quote ($class));
+    $classes = '';
+    do {
+      $class = str_extract ($selector, '/^\.([\w\-]+)/');
+      if ($class)
+        $classes .= sprintf ('(?=.*\b%s\b)', preg_quote ($class));
+    }
+    while ($class);
+    $this->matchClass = $classes ? "/^$classes/" : '';
     $prop = str_extract ($selector, '/^\[([\w\-]+)/');
     if ($prop) {
       $this->matchPropName  = $prop;
@@ -50,9 +57,11 @@ class Preset
    */
   function apply (Component $component)
   {
-//    dump($this,$this->content[0]->getTagName(),$this->prepend[0]->getTagName());exit;
     if ($this->props)
       $component->props->applyDefaults ($this->props);
+    if ($this->unset)
+      foreach ($this->unset as $prop)
+        unset ($component->props->$prop);
     if ($this->content) {
       $component->removeChildren();
       Metadata::compile ($this->content, $component);

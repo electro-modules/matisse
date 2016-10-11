@@ -26,6 +26,7 @@ class PresetsProperties extends ComponentProperties
  * <Preset>
  *   <Where match="selector">
  *     <Set prop1="value1" ... propN="valueN"/>
+ *     <Unset prop1 ... propN/>
  *     <Prepend>
  *       optional content to be prepended to the target
  *     </Prepend>
@@ -85,12 +86,20 @@ class Presets extends Component implements PresetsInterface
       $append  = [];
       $prepend = [];
       $replace = [];
+      $unset   = [];
       foreach ($whereSubtags as $subTag) {
         switch ($subTag->getTagName ()) {
           case 'Set':
             $subTag->databind ();
             $newProps      = $subTag->props->getAll ();
             $preset->props = isset($preset->props) ? array_merge ($preset->props, $newProps) : $newProps;
+            break;
+          case 'Unset':
+            if (isset($preset->props)) {
+              $subTag->databind ();
+              $newProps = array_keys ($subTag->props->getAll ());
+              array_mergeInto ($unset, $newProps);
+            }
             break;
           case 'Prepend':
             array_mergeInto ($prepend, $subTag->getChildren ());
@@ -105,6 +114,7 @@ class Presets extends Component implements PresetsInterface
       $preset->prepend = $prepend;
       $preset->append  = $append;
       $preset->content = $replace;
+      $preset->unset   = $unset;
       $this->presets[] = $preset;
     }
     $stack                    = $this->context->presets; // Save a copy of the current presets stack.
