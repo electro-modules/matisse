@@ -23,7 +23,7 @@
     "php": ">=5.6",
     "electro/installers": "^1.0.0",
     "php-kit/tools": "dev-master",
-    "electro/interop": "dev-1.x"
+    "electro/interop": "1.x-dev"
   },
   "autoload": {
     "psr-4": {
