@@ -13,6 +13,11 @@ class JavascriptCodeGen
   static function makeOptions (array $options, $indent = '')
   {
     $o = mapAndFilter ($options, function ($v, $k) use ($indent) {
+      if (is_object($v)) {
+        if (method_exists($v, 'toArray'))
+          $v = $v->toArray ();
+        else $v = (array)$v;
+      }
       return exists ($v) ? ("$k: " . var_export ($v, true)) : null;
     });
     return "{\n$indent  " . implode (",\n$indent  ", $o) . "\n$indent}";
