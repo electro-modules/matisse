@@ -14,9 +14,9 @@ use Electro\ViewEngine\Lib\ViewModel;
  * <p>A macro is composed by metadata elements and a template.
  * - With metadata you can define macro parameters, stylesheets and scripts.
  * - All child elements that are not metadata define the template that will be transformed and replace a
- * {@see MacroInstance} that refers to the Macro.
+ * {@see MacroCall} that refers to the Macro.
  *
- * > A `MacroInstance` is a component that can be represented via any tag that has the same name as the macro it refers
+ * > A `MacroCall` is a component that can be represented via any tag that has the same name as the macro it refers
  * to.
  */
 class Macro extends Component

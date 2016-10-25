@@ -102,6 +102,8 @@ class MacroCall extends CompositeComponent
   protected function viewModel (ViewModel $viewModel)
   {
     parent::viewModel ($viewModel);
+    // Import the container's model (if any) to the macro's view model
+    $viewModel->model = $this->parent->getViewModel()->model;
     $this->macroInstance->importServices ($viewModel);
   }
 

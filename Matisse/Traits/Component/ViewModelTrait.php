@@ -17,7 +17,7 @@ trait ViewModelTrait
    * >#####Important
    * >On a composite component, the view model data is set on the shadow DOM's view model,
    * **NOT** on the component's own view model!
-   * <p>If the view is not a Matisse template (amd therefore there is no shadow DOM), an alternate view model is used
+   * <p>If the view is not a Matisse template (and therefore there is no shadow DOM), an alternate view model is used
    * (see {@see $shadowViewModel}).
    * ><p>This method overrides {@see DataBindingTrait} to implement that behavior.
    *
