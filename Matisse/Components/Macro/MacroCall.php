@@ -103,7 +103,7 @@ class MacroCall extends CompositeComponent
   {
     parent::viewModel ($viewModel);
     // Import the container's model (if any) to the macro's view model
-    $viewModel->model = $this->parent->getViewModel()->model;
+    $viewModel->model = $this->context->getDataBinder()->getViewModel()->model;
     $this->macroInstance->importServices ($viewModel);
   }
 
