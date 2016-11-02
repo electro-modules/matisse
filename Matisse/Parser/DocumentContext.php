@@ -2,6 +2,7 @@
 namespace Electro\Plugins\Matisse\Parser;
 
 use Electro\Interfaces\DI\InjectorInterface;
+use Electro\Interfaces\Views\ViewServiceInterface;
 use Electro\Plugins\Matisse\Config\MatisseSettings;
 use Electro\Plugins\Matisse\Interfaces\DataBinderInterface;
 use Electro\Plugins\Matisse\Interfaces\PresetsInterface;
@@ -92,15 +93,17 @@ class DocumentContext
   /**
    * DocumentContext constructor.
    *
-   * @param AssetsService       $assetsService
-   * @param BlocksService       $blocksService
-   * @param MacrosService       $macrosService
-   * @param DataBinderInterface $dataBinder
-   * @param InjectorInterface   $injector
-   * @param MatisseSettings     $settings
+   * @param AssetsService        $assetsService
+   * @param BlocksService        $blocksService
+   * @param MacrosService        $macrosService
+   * @param DataBinderInterface  $dataBinder
+   * @param InjectorInterface    $injector
+   * @param MatisseSettings      $settings
+   * @param ViewServiceInterface $viewService
    */
   function __construct (AssetsService $assetsService, BlocksService $blocksService, MacrosService $macrosService,
-                        DataBinderInterface $dataBinder, InjectorInterface $injector, MatisseSettings $settings)
+                        DataBinderInterface $dataBinder, InjectorInterface $injector, MatisseSettings $settings,
+                        ViewServiceInterface $viewService)
   {
     $this->tags          = self::$coreTags;
     $this->dataBinder    = $dataBinder;
@@ -108,6 +111,7 @@ class DocumentContext
     $this->blocksService = $blocksService;
     $this->macrosService = $macrosService;
     $this->injector      = $injector;
+    $this->viewService   = $viewService;
     $this->presets       = map ($settings->getPresets (), function ($class) {
       return $this->injector->make ($class);
     });

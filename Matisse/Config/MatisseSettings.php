@@ -74,19 +74,14 @@ class MatisseSettings
    * @var ViewEngineSettings
    */
   private $viewEngineSettings;
-  /**
-   * @var ViewServiceInterface
-   */
-  private $viewService;
 
   public function __construct (Application $app, MacrosService $macrosService, AssetsService $assetsService,
-                               ViewServiceInterface $viewService, ViewEngineSettings $viewEngineSettings, $debugMode)
+                               ViewEngineSettings $viewEngineSettings, $debugMode)
   {
     $this->app                = $app;
     $this->macrosService      = $macrosService;
     $this->assetsService      = $assetsService;
     $this->debugMode          = $debugMode;
-    $this->viewService        = $viewService;
     $this->viewEngineSettings = $viewEngineSettings;
   }
 
@@ -111,7 +106,6 @@ class MatisseSettings
     $ctx->debugMode            = $this->debugMode;
     $ctx->controllers          = $this->controllers;
     $ctx->controllerNamespaces = $this->controllerNamespaces;
-    $ctx->viewService          = $this->viewService;
     $ctx->registerTags ($this->tags);
     $ctx->setFilterHandler (new FilterHandler (new DefaultFilters));
     $ctx->getDataBinder ()->setContext ($ctx);
