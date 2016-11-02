@@ -32,6 +32,22 @@ class FilterHandler
    */
   private $filters = [];
 
+  /**
+   * Register a set of filters for use on databinding expressions when rendering.
+   *
+   * @param array|object $filters Either a map of filter names to filter implementation functions or an instance of a
+   *                              class where each public method (except the constructor) is a named filter function.
+   */
+  function __construct ($filters)
+  {
+    if (is_object ($filters)) {
+      $keys    = array_diff (get_class_methods ($filters), ['__construct']);
+      $values  = array_map (function ($v) use ($filters) { return [$filters, $v]; }, $keys);
+      $filters = array_combine ($keys, $values);
+    };
+    $this->filters = array_merge ($this->filters, $filters);
+  }
+
   function __call ($name, $args)
   {
     $method = "filter_$name";
@@ -43,28 +59,12 @@ class FilterHandler
         return call_user_func_array ([$this->fallbackHandler, $method], $args);
     }
     throw new FilterHandlerNotFoundException(sprintf ("<p><p>Handler method: <kbd>%s</kbd><p>Arguments: <kbd>%s</kbd>",
-      $method, print_r (map ($args, function ($e) { return typeInfoOf($e);}), true)));
+      $method, print_r (map ($args, function ($e) { return typeInfoOf ($e); }), true)));
   }
 
   function registerFallbackHandler ($handler)
   {
     $this->fallbackHandler = $handler;
-  }
-
-  /**
-   * Register a set of filters for use on databinding expressions when rendering.
-   *
-   * @param array|object $filters Either a map of filter names to filter implementation functions or an instance of a
-   *                              class where each public method (except the constructor) is a named filter function.
-   */
-  function registerFilters ($filters)
-  {
-    if (is_object ($filters)) {
-      $keys    = array_diff (get_class_methods ($filters), ['__construct']);
-      $values  = array_map (function ($v) use ($filters) { return [$filters, $v]; }, $keys);
-      $filters = array_combine ($keys, $values);
-    };
-    $this->filters = array_merge ($this->filters, $filters);
   }
 
 }

@@ -1,8 +1,6 @@
 <?php
 namespace Electro\Plugins\Matisse\Lib;
 
-use Electro\Application;
-use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\Views\ViewEngineInterface;
 use Electro\Interfaces\Views\ViewServiceInterface;
 use Electro\Plugins\Matisse\Components\Internal\DocumentFragment;
@@ -13,39 +11,20 @@ use Electro\Plugins\Matisse\Parser\Parser;
 class MatisseEngine implements ViewEngineInterface
 {
   /**
-   * @var Application
-   */
-  private $app;
-  /**
    * The current rendering context.
    *
    * @var DocumentContext
    */
   private $context;
   /**
-   * @var FilterHandler
-   */
-  private $filterHandler;
-  /**
-   * The injector allows the creation of components with yet unknown dependencies.
-   *
-   * @var InjectorInterface
-   */
-  private $injector;
-  /**
    * @var ViewServiceInterface
    */
   private $view;
 
-  function __construct (FilterHandler $filterHandler, Application $app, InjectorInterface $injector,
-                        ViewServiceInterface $view, DocumentContext $context)
+  function __construct (ViewServiceInterface $view, DocumentContext $context)
   {
-    $this->filterHandler = $filterHandler;
-    $this->app           = $app;
-    $this->injector      = $injector;
-    $this->view          =
-      $view; // The view is always the owner if this engine, as long as the parameter is called $view
-    $this->context       = clone $context;
+    $this->view    = $view; // The view is always the owner if this engine, as long as the parameter is called $view
+    $this->context = clone $context;
   }
 
   function compile ($src)

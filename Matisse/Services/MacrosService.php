@@ -14,6 +14,11 @@ use Electro\Plugins\Matisse\Parser\Parser;
 class MacrosService
 {
   /**
+   * Directories where macros can be found.
+   * <p>They will be search in order until the requested macro is found.
+   * <p>These paths will be registered on the templating engine.
+   * <p>This is preinitialized to the application macro's path.
+   *
    * @var string[]
    */
   public $macrosDirectories = [];

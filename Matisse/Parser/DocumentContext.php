@@ -2,6 +2,7 @@
 namespace Electro\Plugins\Matisse\Parser;
 
 use Electro\Interfaces\DI\InjectorInterface;
+use Electro\Plugins\Matisse\Config\MatisseSettings;
 use Electro\Plugins\Matisse\Interfaces\DataBinderInterface;
 use Electro\Plugins\Matisse\Interfaces\PresetsInterface;
 use Electro\Plugins\Matisse\Services\MacrosService;
@@ -95,15 +96,22 @@ class DocumentContext
    * @param BlocksService       $blocksService
    * @param MacrosService       $macrosService
    * @param DataBinderInterface $dataBinder
+   * @param InjectorInterface   $injector
+   * @param MatisseSettings     $settings
    */
   function __construct (AssetsService $assetsService, BlocksService $blocksService, MacrosService $macrosService,
-                        DataBinderInterface $dataBinder)
+                        DataBinderInterface $dataBinder, InjectorInterface $injector, MatisseSettings $settings)
   {
     $this->tags          = self::$coreTags;
     $this->dataBinder    = $dataBinder;
     $this->assetsService = $assetsService;
     $this->blocksService = $blocksService;
     $this->macrosService = $macrosService;
+    $this->injector      = $injector;
+    $this->presets       = map ($settings->getPresets (), function ($class) {
+      return $this->injector->make ($class);
+    });
+    $settings->initContext ($this);
   }
 
   /**
@@ -155,7 +163,7 @@ class DocumentContext
   {
     $sub = clone $this;
     // Sub-contexts inherit the parent's presets (without this, the Apply component will not work)
-    $sub->presets    =& $this->presets;
+    $sub->presets =& $this->presets;
 
     $sub->dataBinder = $this->dataBinder->makeNew ();
     $sub->dataBinder->setContext ($sub);
