@@ -1,9 +1,8 @@
 <?php
 namespace Electro\Plugins\Matisse\Config;
 
-use Electro\Application;
-use Electro\Core\Assembly\ModuleInfo;
-use Electro\Interfaces\Views\ViewServiceInterface;
+use Electro\Kernel\Config\KernelSettings;
+use Electro\Kernel\Lib\ModuleInfo;
 use Electro\Plugins\Matisse\Lib\DefaultFilters;
 use Electro\Plugins\Matisse\Lib\FilterHandler;
 use Electro\Plugins\Matisse\Parser\DocumentContext;
@@ -24,9 +23,9 @@ class MatisseSettings
   use ConfigurationTrait;
 
   /**
-   * @var Application
+   * @var KernelSettings
    */
-  private $app;
+  private $kernelSettings;
   /**
    * @var AssetsService
    */
@@ -75,10 +74,10 @@ class MatisseSettings
    */
   private $viewEngineSettings;
 
-  public function __construct (Application $app, MacrosService $macrosService, AssetsService $assetsService,
+  public function __construct (KernelSettings $kernelSettings, MacrosService $macrosService, AssetsService $assetsService,
                                ViewEngineSettings $viewEngineSettings, $debugMode)
   {
-    $this->app                = $app;
+    $this->kernelSettings     = $kernelSettings;
     $this->macrosService      = $macrosService;
     $this->assetsService      = $assetsService;
     $this->debugMode          = $debugMode;
@@ -126,7 +125,7 @@ class MatisseSettings
    */
   function registerAssets (ModuleInfo $moduleInfo, $assets)
   {
-    $publicUrl = "{$this->app->modulesPublishingPath}/$moduleInfo->name";
+    $publicUrl = "{$this->kernelSettings->modulesPublishingPath}/$moduleInfo->name";
     // TODO: handle assets on a sub-directory of resources.
     foreach ($assets as $path) {
       $path = "$publicUrl/$path";
@@ -200,7 +199,7 @@ class MatisseSettings
    */
   function registerMacros (ModuleInfo $moduleInfo)
   {
-    $path = "{$this->app->baseDirectory}/$moduleInfo->path/{$this->moduleMacrosPath}";
+    $path = "{$this->kernelSettings->baseDirectory}/$moduleInfo->path/{$this->moduleMacrosPath}";
     if (fileExists ($path)) {
       $all = FilesystemFlow::from ($path)->onlyDirectories ()->keys ()->all ();
       array_unshift ($all, $path);

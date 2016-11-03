@@ -1,19 +1,19 @@
 <?php
 namespace Electro\Plugins\Matisse\Lib;
 
-use PhpKit\WebConsole\Lib\Debug;
-use Psr\Http\Message\ServerRequestInterface;
-use Electro\Application;
 use Electro\Interfaces\CustomInspectionInterface;
 use Electro\Interfaces\Navigation\NavigationInterface;
 use Electro\Interfaces\Navigation\NavigationLinkInterface;
 use Electro\Interfaces\RenderableInterface;
 use Electro\Interfaces\SessionInterface;
+use Electro\Kernel\Config\KernelSettings;
 use Electro\Plugins\Matisse\Components\Base\Component;
 use Electro\Plugins\Matisse\Interfaces\DataBinderInterface;
 use Electro\Plugins\Matisse\Parser\DocumentContext;
 use Electro\Plugins\Matisse\Properties\Base\AbstractProperties;
 use Electro\ViewEngine\Lib\ViewModel;
+use PhpKit\WebConsole\Lib\Debug;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Manages the view's data-binding context.
@@ -79,7 +79,7 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
   function inspect ()
   {
     $VMFilter = function ($k, $v, $o) {
-      if ($v instanceof Application ||
+      if ($v instanceof KernelSettings ||
           $v instanceof NavigationInterface ||
           $v instanceof NavigationLinkInterface ||
           $v instanceof SessionInterface ||
