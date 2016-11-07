@@ -18,7 +18,7 @@ class JavascriptCodeGen
           $v = $v->toArray ();
         else $v = (array)$v;
       }
-      return exists ($v) ? ("$k: " . var_export ($v, true)) : null;
+      return exists ($v) ? ("$k: " . json_encode ($v, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)) : null;
     });
     return "{\n$indent  " . implode (",\n$indent  ", $o) . "\n$indent}";
   }
