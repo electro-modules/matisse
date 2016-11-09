@@ -122,7 +122,7 @@ class ComponentInspector
             return;
           }
           if (!is_string ($v)) {
-            echo typeInfoOf ($v);
+            echo Debug::typeInfoOf ($v);
             return;
           }
         }
@@ -199,7 +199,7 @@ class ComponentInspector
                 break;
               default:
                 if (is_object ($v))
-                  echo sprintf ("<i style='color:$COLOR_CONST'>%s</i>", typeInfoOf ($v));
+                  echo sprintf ("<i style='color:$COLOR_CONST'>%s</i>", Debug::typeInfoOf ($v));
                 elseif (is_array ($v))
                   echo sprintf ("<i style='color:$COLOR_CONST'>array(%d)</i>", count ($v));
                 else {
@@ -259,7 +259,7 @@ class ComponentInspector
             else if (is_array ($v))
               echo "<i style='color:$COLOR_INFO'>[]</i>";
             else if (isset($v))
-              printf ("<b style='color:red'>WRONG TYPE: %s</b>", typeInfoOf ($v));
+              printf ("<b style='color:red'>WRONG TYPE: %s</b>", Debug::typeInfoOf ($v));
             else echo "<i style='color:$COLOR_INFO'>null</i>";
             echo '</tr>';
           }

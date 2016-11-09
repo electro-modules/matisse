@@ -7,6 +7,7 @@ use Electro\Plugins\Matisse\Components\Internal\Text;
 use Electro\Plugins\Matisse\Exceptions\ComponentException;
 use Electro\Plugins\Matisse\Interfaces\ComponentPropertiesInterface;
 use Electro\Plugins\Matisse\Properties\TypeSystem\type;
+use PhpKit\WebConsole\Lib\Debug;
 
 abstract class AbstractProperties implements ComponentPropertiesInterface
 {
@@ -150,7 +151,7 @@ abstract class AbstractProperties implements ComponentPropertiesInterface
     if (!$this->defines ($propName)) {
       throw new ComponentException(
         $this->component,
-        sprintf ("Invalid property <kbd>%s</kbd> specified for a %s instance.", $propName, typeInfoOf ($this))
+        sprintf ("Invalid property <kbd>%s</kbd> specified for a %s instance.", $propName, Debug::typeInfoOf ($this))
       );
     }
   }

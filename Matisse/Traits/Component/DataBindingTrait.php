@@ -236,7 +236,7 @@ trait DataBindingTrait
       Debug::grid ([
         'Expression' => Debug::RAW_TEXT . "<kbd>$exp</kbd>",
         'Compiled'   => sprintf ('%s<code>%s</code>', Debug::RAW_TEXT, \PhpCode::highlight ("$exp->translated")),
-        'Error'      => sprintf ('%s%s %s', Debug::RAW_TEXT, typeInfoOf ($e), $e->getMessage ()),
+        'Error'      => sprintf ('%s%s %s', Debug::RAW_TEXT, Debug::typeInfoOf ($e), $e->getMessage ()),
         'At'         => sprintf ('%s%s, line <b>%s</b>', Debug::RAW_TEXT,
           ErrorConsole::errorLink ($e->getFile (), $e->getLine ()), $e->getLine ()),
       ], 'Error while evaluating data-binding expression')

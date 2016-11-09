@@ -4,6 +4,7 @@
 //------------------------------
 use Electro\Interfaces\RenderableInterface;
 use Electro\Plugins\Matisse\Exceptions\MatisseException;
+use PhpKit\WebConsole\Lib\Debug;
 
 /**
  * Represents text that should not be HTML-escaped when output.
@@ -21,7 +22,7 @@ class RawText
       return;
     }
     elseif (!is_string ($s))
-      throw new MatisseException ("A <kbd>RawText</kbd> instance must hold a string value, not a " . typeInfoOf ($s));
+      throw new MatisseException ("A <kbd>RawText</kbd> instance must hold a string value, not a " . Debug::typeInfoOf ($s));
     $this->s = $s;
   }
 

@@ -3,6 +3,7 @@ namespace Electro\Plugins\Matisse\Lib;
 
 use Electro\Plugins\Matisse\Exceptions\FilterHandlerNotFoundException;
 use Electro\Traits\InspectionTrait;
+use PhpKit\WebConsole\Lib\Debug;
 
 /**
  * Resolves filter invocations to filter implementations,
@@ -59,7 +60,7 @@ class FilterHandler
         return call_user_func_array ([$this->fallbackHandler, $method], $args);
     }
     throw new FilterHandlerNotFoundException(sprintf ("<p><p>Handler method: <kbd>%s</kbd><p>Arguments: <kbd>%s</kbd>",
-      $method, print_r (map ($args, function ($e) { return typeInfoOf ($e); }), true)));
+      $method, print_r (map ($args, function ($e) { return Debug::typeInfoOf ($e); }), true)));
   }
 
   function registerFallbackHandler ($handler)

@@ -5,6 +5,7 @@ use Iterator;
 use Electro\Plugins\Matisse\Exceptions\ReflectionException;
 use Electro\Plugins\Matisse\Exceptions\ReflectionPropertyException;
 use Electro\Plugins\Matisse\Interfaces\ComponentPropertiesInterface;
+use PhpKit\WebConsole\Lib\Debug;
 
 class ReflectionClass
 {
@@ -24,8 +25,8 @@ class ReflectionClass
   function __construct ($className)
   {
     if (!implementsInterface ($className, ComponentPropertiesInterface::class))
-      throw new ReflectionException ("Class %s does not implement %s", formatClassName ($className),
-        formatClassName (ComponentPropertiesInterface::class));
+      throw new ReflectionException ("Class %s does not implement %s", Debug::formatClassName ($className),
+        Debug::formatClassName (ComponentPropertiesInterface::class));
     $this->name = $className;
   }
 

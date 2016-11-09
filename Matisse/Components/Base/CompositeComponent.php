@@ -6,6 +6,7 @@ use Electro\Interfaces\Views\ViewInterface;
 use Electro\Plugins\Matisse\Exceptions\ComponentException;
 use Electro\Plugins\Matisse\Lib\MatisseEngine;
 use Electro\Plugins\Matisse\Traits\Component\ViewModelTrait;
+use PhpKit\WebConsole\Lib\Debug;
 
 /**
  * A component that delegates its rendering to a separate template (either internal or external to the component),
@@ -165,7 +166,7 @@ class CompositeComponent extends Component
     if (!$this->context)
       throw new ComponentException($this,
         sprintf ("Can't render the component's template because the rendering context is not set.
-<p>See <kbd>%s</kbd>", formatClassName (RenderableInterface::class)));
+<p>See <kbd>%s</kbd>", Debug::formatClassName (RenderableInterface::class)));
   }
 
 }

@@ -2,6 +2,7 @@
 namespace Electro\Plugins\Matisse\Exceptions;
 
 use Electro\Plugins\Matisse\Components\Base\Component;
+use PhpKit\WebConsole\Lib\Debug;
 
 class ComponentException extends MatisseException
 {
@@ -14,7 +15,7 @@ class ComponentException extends MatisseException
       $props = isset($component->props) ? $component->props->getBeingAssigned () : [];
       $o     = $props ? self::properties ($props) : '';
       $id    = $component->supportsProperties () && isset($component->props->id) ? $component->props->id : null;
-      $class = typeInfoOf ($component);
+      $class = Debug::typeInfoOf ($component);
       // Append a period, if applicable.
       if (ctype_alnum (substr ($msg, -1)))
         $msg .= '.';

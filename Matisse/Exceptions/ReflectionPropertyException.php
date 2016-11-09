@@ -1,6 +1,8 @@
 <?php
 namespace Electro\Plugins\Matisse\Exceptions;
 
+use PhpKit\WebConsole\Lib\Debug;
+
 class ReflectionPropertyException extends ReflectionException
 {
   /**
@@ -12,7 +14,7 @@ class ReflectionPropertyException extends ReflectionException
    */
   public function __construct ($className, $propertyName, $message, ...$args)
   {
-    array_push ($args, formatClassName ($className), $propertyName);
+    array_push ($args, Debug::formatClassName ($className), $propertyName);
     parent::__construct (sprintf ("$message.<p>Property %s-&gt;<kbd>%s</kbd>.", ...$args));
   }
 
