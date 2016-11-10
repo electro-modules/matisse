@@ -1,6 +1,7 @@
 <?php
 namespace Electro\Plugins\Matisse\Lib;
 
+use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\Views\ViewEngineInterface;
 use Electro\Interfaces\Views\ViewServiceInterface;
 use Electro\Plugins\Matisse\Components\Internal\DocumentFragment;
@@ -17,14 +18,19 @@ class MatisseEngine implements ViewEngineInterface
    */
   private $context;
   /**
+   * @var InjectorInterface
+   */
+  private $injector;
+  /**
    * @var ViewServiceInterface
    */
   private $view;
 
-  function __construct (ViewServiceInterface $view, DocumentContext $context)
+  function __construct (ViewServiceInterface $view, DocumentContext $context, InjectorInterface $injector)
   {
     $this->view    = $view; // The view is always the owner if this engine, as long as the parameter is called $view
     $this->context = clone $context;
+    $this->injector = $injector;
   }
 
   function compile ($src)
@@ -39,6 +45,17 @@ class MatisseEngine implements ViewEngineInterface
 
     $parser = new Parser;
     $parser->parse ($src, $root);
+
+//    echo "<div style='white-space:pre-wrap'>";
+//    echo serialize ($root);exit;
+
+//    $ser = serialize ($root);
+
+//    global $usrlz_ctx, $usrlz_inj;
+//    $usrlz_ctx = $root->context;
+//    $usrlz_inj = $this->injector;
+//    $root = unserialize($ser);
+
     return $root;
   }
 

@@ -28,6 +28,19 @@ class MacroCall extends CompositeComponent
    */
   protected $macroInstance;
 
+  public function export ()
+  {
+    $a       = parent::export ();
+    $a['MI'] = $this->macroInstance;
+    return $a;
+  }
+
+  public function import ($a)
+  {
+    $this->macroInstance = $a['MI'];
+    parent::import ($a);
+  }
+
   function onParsingComplete ()
   {
     // Move children to default parameter.
@@ -73,7 +86,8 @@ class MacroCall extends CompositeComponent
       $doc           = new DocumentFragment;
       $shadowContext = $this->context->makeSubcontext ();
       $doc->setContext ($shadowContext);
-      $macro = $this->context->getMacrosService ()->getMacro ($name, $shadowContext);
+      // macroInstance will be already set if the macroCall is being unserialized
+      $macro = $this->macroInstance ?: $this->context->getMacrosService ()->getMacro ($name, $shadowContext);
       if (is_null ($macro))
         try {
           // A macro with the given name is not defined yet.
@@ -103,7 +117,7 @@ class MacroCall extends CompositeComponent
   {
     parent::viewModel ($viewModel);
     // Import the container's model (if any) to the macro's view model
-    $viewModel->model = $this->context->getDataBinder()->getViewModel()->model;
+    $viewModel->model = $this->context->getDataBinder ()->getViewModel ()->model;
     $this->macroInstance->importServices ($viewModel);
   }
 

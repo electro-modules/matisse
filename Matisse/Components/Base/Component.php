@@ -1,6 +1,7 @@
 <?php
 namespace Electro\Plugins\Matisse\Components\Base;
 
+use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\RenderableInterface;
 use Electro\Plugins\Matisse\Debug\ComponentInspector;
 use Electro\Plugins\Matisse\Exceptions\ComponentException;
@@ -15,7 +16,7 @@ use Electro\Plugins\Matisse\Traits\Component\RenderingTrait;
 /**
  * The base class from which all components derive.
  */
-abstract class Component implements RenderableInterface
+abstract class Component implements RenderableInterface, \Serializable
 {
   use MarkupBuilderTrait, DataBindingTrait, DOMNodeTrait, RenderingTrait;
 
@@ -197,6 +198,16 @@ abstract class Component implements RenderableInterface
           $preset->{$this->className} ($this);
   }
 
+  public function export ()
+  {
+    return [
+      'P' => $this->parent,
+      'A' => $this->props ? $this->props->getAll () : null,
+      'C' => $this->children,
+      'B' => $this->bindings,
+    ];
+  }
+
   function getContextClass ()
   {
     return DocumentContext::class;
@@ -228,6 +239,24 @@ abstract class Component implements RenderableInterface
     $this->tagName = $name;
   }
 
+  public function import ($a)
+  {
+    /** @var DocumentContext $usrlz_ctx */
+    /** @var InjectorInterface $usrlz_inj */
+    global $usrlz_ctx, $usrlz_inj;
+
+    $parent   = $a['P'];
+    $props    = $a['A'];
+    $children = $a['C'];
+    $bindings = $a['B'];;
+
+    if ((new \ReflectionMethod(static::class, '__construct'))->getNumberOfParameters ())
+      $usrlz_inj->execute ([$this, '__construct']);
+    else $this->__construct ();
+    $this->setup ($parent, $usrlz_ctx, $props, $bindings);
+    $this->children = $children; // We must not call setChildren() here
+  }
+
   function inspect ($deep = false)
   {
     return ComponentInspector::inspect ($this, $deep);
@@ -243,6 +272,11 @@ abstract class Component implements RenderableInterface
     //implementation is specific to each component type.
   }
 
+  public function serialize ()
+  {
+    return serialize ($this->export ());
+  }
+
   function setContext ($context)
   {
     $this->context = $context;
@@ -252,7 +286,7 @@ abstract class Component implements RenderableInterface
   {
     $this->context = $context;
     foreach ($this->children as $child)
-      $child->setContextRecursive($context);
+      $child->setContextRecursive ($context);
   }
 
   /**
@@ -283,7 +317,8 @@ abstract class Component implements RenderableInterface
    * @param DocumentContext               $context  A rendering context.
    * @param array|AbstractProperties|null $props    A map of property names to property values.
    *                                                Properties specified via this argument come only from markup
-   *                                                attributes, not from subtags.
+   *                                                attributes, not from subtags. If it's a properties object, it is
+   *                                                assigned as is.
    * @param array|null                    $bindings A map of attribute names and corresponding databinding
    *                                                expressions.
    * @return Component Component instance.
@@ -311,6 +346,11 @@ abstract class Component implements RenderableInterface
   function supportsProperties ()
   {
     return (bool)static::propertiesClass;
+  }
+
+  public function unserialize ($s)
+  {
+    $this->import (unserialize ($s));
   }
 
   protected function getUniqueId ()

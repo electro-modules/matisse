@@ -55,7 +55,7 @@ use RuntimeException;
  *   "onj.prop | format '%.3f' | json"
  * ```
  */
-class Expression
+class Expression implements \Serializable
 {
   use InspectionTrait;
 
@@ -331,7 +331,8 @@ REGEXP;
         $this->compiled = $fn;
       else {
         // translate to PHP.
-        $this->translated = self::translate ($this->expression);
+        if (!$this->translated) // if the expression was unserialized, this will already be set
+          $this->translated = self::translate ($this->expression);
         // Compile to native code.
         try {
           $fn = $this->compiled = PhpCode::compile ($this->translated,
@@ -348,6 +349,16 @@ REGEXP;
       }
     }
     return $fn ($binder);
+  }
+
+  public function serialize ()
+  {
+    return serialize ([$this->expression, $this->translated ?: self::translate ($this->expression)]);
+  }
+
+  public function unserialize ($serialized)
+  {
+    list ($this->expression, $this->translated) = unserialize ($serialized);
   }
 
 }

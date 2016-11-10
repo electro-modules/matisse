@@ -59,6 +59,14 @@ class IncludeProperties extends MetadataProperties
    * @var string
    */
   public $view = '';
+
+  function getAll ()
+  {
+    $o = object_publicProps ($this);
+    foreach ($this->props as $k=>$v)
+      $o["@$k"] = $v;
+    return $o;
+  }
 }
 
 /**

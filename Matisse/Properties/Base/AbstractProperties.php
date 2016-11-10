@@ -9,7 +9,7 @@ use Electro\Plugins\Matisse\Interfaces\ComponentPropertiesInterface;
 use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 use PhpKit\WebConsole\Lib\Debug;
 
-abstract class AbstractProperties implements ComponentPropertiesInterface
+abstract class AbstractProperties implements ComponentPropertiesInterface, \JsonSerializable
 {
   /**
    * The component who owns these properties.
@@ -25,6 +25,16 @@ abstract class AbstractProperties implements ComponentPropertiesInterface
   function __construct (Component $ownerComponent)
   {
     $this->component = $ownerComponent;
+  }
+
+  /**
+   * **Note:** this is useful for the `json` filter, for instance.
+   *
+   * @return array
+   */
+  function jsonSerialize ()
+  {
+    return $this->getAll ();
   }
 
   /**

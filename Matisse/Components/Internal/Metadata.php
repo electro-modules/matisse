@@ -91,6 +91,14 @@ class Metadata extends Component
     };
   }
 
+  public function export ()
+  {
+    $a       = parent::export ();
+    $a['TG'] = $this->getTagName ();
+    $a['TP'] = $this->type;
+    return $a;
+  }
+
   /**
    * Returns the main value of the metadata component.
    * For content-type metadata, this will be the children collection.
@@ -103,6 +111,22 @@ class Metadata extends Component
     if ($this->type == type::content)
       return $this->getChildren ();
     return $this->value;
+  }
+
+  public function import ($a)
+  {
+    global $usrlz_ctx;
+
+    $this->parent = $a['P'];
+    $props        = $a['A'];
+    $children     = $a['C'];
+    $bindings     = $a['B'];
+    $tag          = $a['TG'];
+    $type         = $a['TP'];
+
+    $this->__construct ($usrlz_ctx, $tag, $type, $props, $bindings);
+    $ch = $this->getChildrenRef (); // We must not call setChildren() here
+    $ch = $children;
   }
 
   protected function render ()

@@ -134,7 +134,7 @@ class Parser
 
         if ($this->currentScalarProperty)
           $this->parsingError ("Invalid tag <kbd>$tag</kbd>; components are not allowed inside the <kbd>{$this->current->getTagName()}</kbd> scalar property.");
-        
+
         if (isset($this->metadataContainer) || $this->subtag_check ($tag))
           $this->parse_subtag ($tag, $attrs);
 

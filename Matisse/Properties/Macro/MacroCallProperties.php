@@ -57,10 +57,13 @@ class MacroCallProperties extends MetadataProperties
   function getAll ()
   {
     $names = $this->getPropertyNames ();
-    return map ($names, function ($v, &$k) {
+    // We must expose the 'macro' property on this method only, so that that macros can be correctly unserialized
+    $names[] = 'macro';
+    $x       = map ($names, function ($v, &$k) {
       $k = $v;
       return $this->$k;
     });
+    return $x;
   }
 
   function getDefaultValue ($name)

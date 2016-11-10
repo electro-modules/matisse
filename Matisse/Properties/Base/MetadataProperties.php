@@ -1,14 +1,13 @@
 <?php
 namespace Electro\Plugins\Matisse\Properties\Base;
 
-use JsonSerializable;
 use Electro\Plugins\Matisse\Exceptions\ComponentException;
 use Electro\Plugins\Matisse\Properties\TypeSystem\type;
 
 /**
  * Properties of a Metadata component.
  */
-class MetadataProperties extends AbstractProperties implements JsonSerializable
+class MetadataProperties extends AbstractProperties
 {
   /**
    * Dynamic set of attributes, as specified on the source markup.
@@ -105,16 +104,6 @@ class MetadataProperties extends AbstractProperties implements JsonSerializable
   function isScalar ($name)
   {
     return isset($this->name) ? is_scalar ($this->name) : true;
-  }
-
-  /**
-   * **Note:** this is useful for the `json` filter, for instance.
-   *
-   * @return array
-   */
-  function jsonSerialize ()
-  {
-    return $this->getAll ();
   }
 
   function set ($name, $value)

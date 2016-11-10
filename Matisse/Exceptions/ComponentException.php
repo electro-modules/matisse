@@ -47,7 +47,7 @@ class ComponentException extends MatisseException
 <table class=grid>
 " . str_replace (["'", '...'], ["<i>'</i>", '<i>...</i>'], implode ('',
       map ($props, function ($v, $k) {
-        return "<tr><th>$k<td>" . (is_string ($v) ? "'" . htmlspecialchars (trimText($v, 300, '...')) . "'" : var_export ($v, true));
+        return "<tr><th>$k<td>" . (is_string ($v) ? "'" . htmlspecialchars (trimText($v, 300, '...')) . "'" : Debug::toString($v));
       })), $o) . "
 </table>";
   }
