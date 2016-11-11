@@ -157,7 +157,7 @@ class MatisseSettings
   /**
    * Registers a map of relative view file paths to PHP controller class names.
    *
-   * <p>The array keys are file paths which, by default, are relative to the current module's base directory.
+   * <p>The array keys are file paths which, by default, are relative to the current module's views directory.
    *
    * @param ModuleInfo $moduleInfo
    * @param array      $mappings
