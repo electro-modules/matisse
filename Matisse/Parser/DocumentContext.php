@@ -33,7 +33,7 @@ class DocumentContext
     'condenseLiterals',
     'controllerNamespaces',
     'controllers',
-    'debugMode',
+    'devEnv',
     'presets',
     'dataBinder',
     'viewService',
@@ -53,7 +53,7 @@ class DocumentContext
    *
    * @var bool
    */
-  public $debugMode = false;
+  public $devEnv = false;
   /**
    * The injector allows the creation of components with yet unknown dependencies.
    *

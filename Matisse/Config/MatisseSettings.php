@@ -15,17 +15,13 @@ use PhpKit\Flow\FilesystemFlow;
 /**
  * Configuration settings for the Matisse rendering engine.
  *
- * @method $this|bool debugMode (bool $v = null)
+ * @method $this|bool devEnv (bool $v = null)
  * @method $this|string moduleMacrosPath (string $v = null) The relative path of the macros folder inside a module
  */
 class MatisseSettings
 {
   use ConfigurationTrait;
 
-  /**
-   * @var KernelSettings
-   */
-  private $kernelSettings;
   /**
    * @var AssetsService
    */
@@ -50,7 +46,11 @@ class MatisseSettings
    *
    * @var bool
    */
-  private $debugMode = false;
+  private $devEnv = false;
+  /**
+   * @var KernelSettings
+   */
+  private $kernelSettings;
   /**
    * @var MacrosService
    */
@@ -74,13 +74,14 @@ class MatisseSettings
    */
   private $viewEngineSettings;
 
-  public function __construct (KernelSettings $kernelSettings, MacrosService $macrosService, AssetsService $assetsService,
-                               ViewEngineSettings $viewEngineSettings, $debugMode)
+  public function __construct (KernelSettings $kernelSettings, MacrosService $macrosService,
+                               AssetsService $assetsService,
+                               ViewEngineSettings $viewEngineSettings, $devEnv)
   {
     $this->kernelSettings     = $kernelSettings;
     $this->macrosService      = $macrosService;
     $this->assetsService      = $assetsService;
-    $this->debugMode          = $debugMode;
+    $this->devEnv             = $devEnv;
     $this->viewEngineSettings = $viewEngineSettings;
   }
 
@@ -101,8 +102,8 @@ class MatisseSettings
    */
   function initContext (DocumentContext $ctx)
   {
-    $ctx->condenseLiterals     = !$this->debugMode;
-    $ctx->debugMode            = $this->debugMode;
+    $ctx->condenseLiterals     = !$this->devEnv;
+    $ctx->devEnv               = $this->devEnv;
     $ctx->controllers          = $this->controllers;
     $ctx->controllerNamespaces = $this->controllerNamespaces;
     $ctx->registerTags ($this->tags);
