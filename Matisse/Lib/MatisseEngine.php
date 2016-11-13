@@ -45,17 +45,16 @@ class MatisseEngine implements ViewEngineInterface
 
     $parser = new Parser;
     $parser->parse ($src, $root);
+//    return $root;
 
 //    echo "<div style='white-space:pre-wrap'>";
 //    echo serialize ($root);exit;
 
-//    $ser = serialize ($root);
-
-//    global $usrlz_ctx, $usrlz_inj;
-//    $usrlz_ctx = $root->context;
-//    $usrlz_inj = $this->injector;
-//    $root = unserialize($ser);
-
+    $ser = serialize ($root);
+    global $usrlz_ctx, $usrlz_inj;
+    $usrlz_ctx = $root->context;
+    $usrlz_inj = $this->injector;
+    $root = unserialize($ser);
     return $root;
   }
 

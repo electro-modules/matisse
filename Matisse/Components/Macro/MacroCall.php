@@ -87,7 +87,8 @@ class MacroCall extends CompositeComponent
       $shadowContext = $this->context->makeSubcontext ();
       $doc->setContext ($shadowContext);
       // macroInstance will be already set if the macroCall is being unserialized
-      $macro = $this->macroInstance ?: $this->context->getMacrosService ()->getMacro ($name, $shadowContext);
+//      $macro = $this->macroInstance ?: $this->context->getMacrosService ()->getMacro ($name, $shadowContext);
+      $macro = $this->context->getMacrosService ()->getMacro ($name, $shadowContext);
       if (is_null ($macro))
         try {
           // A macro with the given name is not defined yet.

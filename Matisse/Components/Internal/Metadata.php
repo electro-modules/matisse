@@ -80,10 +80,9 @@ class Metadata extends Component
       }
       // Insert content
       else {
-        if ($tag === 'Text') {
-          $comp = Text::from ($parent->context, $item->value);
-        }
-        else $comp = $parent->context->createComponentFromTag ($tag, $parent, $item->props->getAll (), $item->bindings);
+        $comp = $tag === 'Text'
+          ? Text::from ($parent->context, $item->value)
+          : $parent->context->createComponentFromTag ($tag, $parent, $item->props->getAll (), $item->bindings);
         $parent->addChild ($comp, $prepend);
       }
       // Now, compile the children.

@@ -22,7 +22,8 @@ class RawText
       return;
     }
     elseif (!is_string ($s))
-      throw new MatisseException ("A <kbd>RawText</kbd> instance must hold a string value, not a " . Debug::typeInfoOf ($s));
+      throw new MatisseException ("A <kbd>RawText</kbd> instance must hold a string value, not a " .
+                                  Debug::typeInfoOf ($s));
     $this->s = $s;
   }
 
@@ -39,7 +40,10 @@ class RawText
 }
 
 /**
- * Returns escaped text, except if the given argument is a {@see RawText} instance.
+ * Extracts and escapes text from the given value, for outputting to the HTTP client.
+ *
+ * <p>Note: this returns escaped text, except if the given argument is a {@see RawText} instance, in which case it
+ * returns raw text.
  *
  * @param string|RawText $s
  * @return string

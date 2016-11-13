@@ -292,7 +292,7 @@ abstract class Component implements RenderableInterface, \Serializable
   /**
    * Initializes a newly created component with the given properties, if any.
    *
-   * > **Warning:** for some components this method will not be called (ex: Literal).
+   * > **Warning:** for some components this method will not be called (ex: Text).
    *
    * @param array|null $props A map of the component instance's properties being applied.
    * @throws ComponentException

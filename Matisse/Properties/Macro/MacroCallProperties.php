@@ -45,6 +45,17 @@ class MacroCallProperties extends MetadataProperties
    */
   function get ($name, $default = null)
   {
+//    global $DEBUG;
+//    if ($DEBUG) {
+//      if (property_exists ($this, $name))
+//        inspect ("GET $name=",$this->name);
+//      elseif (array_key_exists ($name, $this->props))
+//        inspect ("GET $name=",$this->props [$name]);
+//
+//      elseif (isset($default)) inspect ("GET $name=",$default);
+//      else inspect ("GET $name=",$this->getDefaultValue ($name));
+//
+//    }
     if (property_exists ($this, $name))
       return $this->$name;
     if (array_key_exists ($name, $this->props))

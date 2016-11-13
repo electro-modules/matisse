@@ -440,16 +440,16 @@ does not support the specified parameter <b>$tag</b>.
           $content = preg_replace (self::TRIM_LITERAL_CONTENT, '', $content);
           break;
       }
-    if (strlen ($content)) {
+    if ($content != '') {
       if (isset($this->currentScalarProperty)) {
         $this->currentScalarValue .= $content; //Note: data binding will be taken care of later.
       }
       else {
         if ($content[0] == '{') {
-          $lit = new Text ($context);
+          $lit = Text::from ($context);
           $lit->setBindings (['value' => new Expression ($content)]);
         }
-        else $lit = new Text ($context, ['value' => $content]);
+        else $lit = Text::from ($context, $content);
         $this->current->addChild ($lit);
       }
     }

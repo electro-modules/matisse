@@ -18,18 +18,12 @@ final class Text extends Component
   /** @var TextProperties */
   public $props;
 
-  public function __construct (DocumentContext $context = null, $props = null)
+  public static function from (DocumentContext $context = null, $content = '')
   {
-    parent::__construct ();
-    if ($context)
-      $this->setContext ($context);
-    $this->setTagName ('Text');
-    $this->setProps ($props);
-  }
-
-  public static function from (DocumentContext $context = null, $text)
-  {
-    return new Text($context, ['value' => $text]);
+    assert (is_string ($content));
+    $text = new static;
+    $text->setup (null, $context, $content != '' ? ['value' => $content] : null);
+    return $text;
   }
 
   protected function evalBinding (Expression $exp)
