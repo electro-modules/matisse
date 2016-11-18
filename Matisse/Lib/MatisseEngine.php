@@ -45,7 +45,7 @@ class MatisseEngine implements ViewEngineInterface
 
     $parser = new Parser;
     $parser->parse ($src, $root);
-//    return $root;
+    return $root;
 
 //    echo "<div style='white-space:pre-wrap'>";
 //    echo serialize ($root);exit;

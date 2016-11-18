@@ -87,7 +87,7 @@ class MacroCallProperties extends MetadataProperties
 <p>Available parameters: <b>" . implode (', ', $this->component->props->getPropertyNames ()) . '</b>');
 
     $v = $param->getComputedPropValue ('default');
-    if ($param->props->type == 'content') {
+    if (isset($v) && $v !== '' && $param->props->type == 'content') {
       $meta = new Metadata ($this->macroInstance->context, ucfirst ($name), type::content);
       $meta->attachTo ($this->component);
       $meta->addChild (Text::from ($this->macroInstance->context, $v));

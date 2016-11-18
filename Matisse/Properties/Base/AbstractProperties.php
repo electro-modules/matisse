@@ -28,16 +28,6 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
   }
 
   /**
-   * **Note:** this is useful for the `json` filter, for instance.
-   *
-   * @return array
-   */
-  function jsonSerialize ()
-  {
-    return $this->getAll ();
-  }
-
-  /**
    * Checks if the component supports setting/getting a specific attribute.
    *
    * @param string $propName
@@ -184,7 +174,7 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
    *
    * @return array
    */
-  public function getBeingAssigned ()
+  function getBeingAssigned ()
   {
     return $this->beingAssigned;
   }
@@ -244,6 +234,17 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
   }
 
   /**
+   * Checks if a property exists and its value is not empty (null or '').
+   *
+   * @param string $propName
+   * @return bool
+   */
+  function has ($propName)
+  {
+    return $this->defines ($propName) ? exists ($this->get ($propName)) : false;
+  }
+
+  /**
    * Checks if a property's value is different from the default one, or if it has been explicitly set.
    *
    * @param string $propName Property name.
@@ -265,6 +266,16 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
     $type = $this->getTypeOf ($propName);
     return $type == type::bool || $type == type::id || $type == type::number ||
            $type == type::string;
+  }
+
+  /**
+   * **Note:** this is useful for the `json` filter, for instance.
+   *
+   * @return array
+   */
+  function jsonSerialize ()
+  {
+    return $this->getAll ();
   }
 
   /**
