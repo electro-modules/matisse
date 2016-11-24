@@ -1,6 +1,7 @@
 <?php
 namespace Electro\Plugins\Matisse\Lib;
 
+use Electro\Caching\Lib\CachingFileCompiler;
 use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\Views\ViewEngineInterface;
 use Electro\Interfaces\Views\ViewServiceInterface;
@@ -28,8 +29,8 @@ class MatisseEngine implements ViewEngineInterface
 
   function __construct (ViewServiceInterface $view, DocumentContext $context, InjectorInterface $injector)
   {
-    $this->view    = $view; // The view is always the owner if this engine, as long as the parameter is called $view
-    $this->context = clone $context;
+    $this->view     = $view; // The view is always the owner if this engine, as long as the parameter is called $view
+    $this->context  = clone $context;
     $this->injector = $injector;
   }
 
@@ -50,12 +51,6 @@ class MatisseEngine implements ViewEngineInterface
 //    echo "<div style='white-space:pre-wrap'>";
 //    echo serialize ($root);exit;
 
-    $ser = serialize ($root);
-    global $usrlz_ctx, $usrlz_inj;
-    $usrlz_ctx = $root->context;
-    $usrlz_inj = $this->injector;
-    $root = unserialize($ser);
-    return $root;
   }
 
   function configure ($options)
@@ -63,6 +58,18 @@ class MatisseEngine implements ViewEngineInterface
 //    if (!$options instanceof Context)
 //      throw new \InvalidArgumentException ("The argument must be an instance of " . formatClassName (Context::class));
 //    $this->context = $options;
+  }
+
+  function loadFromCache (CachingFileCompiler $cache, $sourceFile)
+  {
+    global $usrlz_ctx, $usrlz_inj;
+
+    $usrlz_ctx = $this->context->makeSubcontext ();
+    $usrlz_inj = $this->injector;
+
+    return $cache->get ($sourceFile, function ($source) {
+      return $this->compile ($source);
+    });
   }
 
   function render ($compiled, $data = null)
