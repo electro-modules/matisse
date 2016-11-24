@@ -129,10 +129,10 @@ class Macro extends Component
 
   public function importServices (ViewModel $viewModel)
   {
-    $prop     = $this->props->import;
+    $prop = $this->props->import;
     if (!$prop)
       return;
-    $props = $prop->props;
+    $props    = $prop->props;
     $services = $props->service ?: $props->services;
     if ($services) {
       $injector = $this->context->injector;
@@ -157,7 +157,11 @@ class Macro extends Component
   public function onParsingComplete ()
   {
     $this->props->name = normalizeTagName ($this->props->name);
-    $this->context->getMacrosService ()->addMacro ($this);
+  }
+
+  protected function init ()
+  {
+    parent::init ();
     $assets = $this->context->getAssetsService ();
     foreach ($this->props->style as $style) {
       if ($style->props->src)

@@ -6,6 +6,7 @@ use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\Views\ViewEngineInterface;
 use Electro\Interfaces\Views\ViewServiceInterface;
 use Electro\Plugins\Matisse\Components\Internal\DocumentFragment;
+use Electro\Plugins\Matisse\Components\Macro\Macro;
 use Electro\Plugins\Matisse\Exceptions\MatisseException;
 use Electro\Plugins\Matisse\Parser\DocumentContext;
 use Electro\Plugins\Matisse\Parser\Parser;

@@ -1,12 +1,11 @@
 <?php
 namespace Electro\Plugins\Matisse\Services;
 
+use Electro\Interfaces\Views\ViewServiceInterface;
 use Electro\Plugins\Matisse\Components\Internal\DocumentFragment;
 use Electro\Plugins\Matisse\Components\Macro\Macro;
 use Electro\Plugins\Matisse\Exceptions\FileIOException;
-use Electro\Plugins\Matisse\Exceptions\ParseException;
-use Electro\Plugins\Matisse\Parser\DocumentContext;
-use Electro\Plugins\Matisse\Parser\Parser;
+use Electro\Plugins\Matisse\Exceptions\MatisseException;
 
 /**
  * Manages macros loading, storage and retrieval.
@@ -29,70 +28,42 @@ class MacrosService
    */
   public $macrosExt = '.html';
   /**
-   * A list of memorized macros for the current request.
-   *
-   * @var string[]
+   * @var ViewServiceInterface
    */
-  private $macros = [];
-  /**
-   * @var Macro
-   */
-  private $loadedMacro = null;
+  private $viewService;
 
-  function addMacro (Macro $macro)
+  public function __construct (ViewServiceInterface $viewService)
   {
-    $this->loadedMacro = $macro;
-//    if (isset($this->macros[$name]))
-//      throw new ParseException("Can't redefine the <kbd>$name</kbd> macro");
-//    $this->macros[$name] = $macro;
-
-    // Remove macro from its original location. It now lives on only as a detached template.
-    $macro->remove ();
-  }
-
-  /**
-   * @param string    $name
-   * @param DocumentContext $context
-   * @return Macro
-   * @throws ParseException
-   */
-  function getMacro ($name, DocumentContext $context)
-  {
-    $content = get ($this->macros, $name);
-    if (!$content) return null;
-    $parser   = new Parser;
-    $root = new DocumentFragment;
-    $root->setContext ($context);
-    $parser->parse ($content, $root);
-    $macro = $this->loadedMacro;
-    $this->loadedMacro = null;
-    return $macro;
+    $this->viewService = $viewService;
   }
 
   /**
    * Searches for a file defining a macro for the given tag name.
    *
-   * @param string    $tagName
-   * @param DocumentContext $context
-   * @param string    $filename [optional] Outputs the filename that was searched for.
+   * @param string $tagName
+   * @param string $filename [optional] Outputs the filename that was searched for.
    * @return Macro
-   * @throws FileIOException
-   * @throws ParseException
+   * @throws MatisseException
    */
-  function loadMacro ($tagName, DocumentContext $context, &$filename = null)
+  function loadMacro ($tagName, &$filename = null)
   {
     $tagName  = normalizeTagName ($tagName);
     $filename = $tagName . $this->macrosExt;
-    $content  = $this->loadMacroFile ($filename);
-    $this->macros[$tagName] = $content;
-    return $this->getMacro ($tagName, $context);
+    /** @var DocumentFragment $doc */
+    $doc = $this->loadMacroFile ($filename);
+    $c   = $doc->getFirstChild ();
+    inspect (typeOf ($c));
+    if ($c instanceof Macro)
+      return $c;
+    throw new MatisseException("File <path>$filename</path> doesn't define a macro called <kbd>$tagName</kbd>");
   }
 
   private function loadMacroFile ($filename)
   {
     foreach ($this->macrosDirectories as $dir) {
-      $f = loadFile ("$dir/$filename", false);
-      if ($f) return $f;
+      $path = "$dir/$filename";
+      if (file_exists ($path))
+        return $this->viewService->loadFromFile ($path)->getCompiled ();
     }
     throw new FileIOException($filename);
   }

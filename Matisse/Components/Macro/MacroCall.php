@@ -28,19 +28,19 @@ class MacroCall extends CompositeComponent
    */
   protected $macroInstance;
 
-  public function export ()
-  {
-    $a       = parent::export ();
-    $a['MI'] = $this->macroInstance;
-    return $a;
-  }
-
-  public function import ($a)
-  {
-    $this->macroInstance = $a['MI'];
-    parent::import ($a);
-  }
-
+//  public function export ()
+//  {
+//    $a       = parent::export ();
+//    $a['MI'] = $this->macroInstance;
+//    return $a;
+//  }
+//
+//  public function import ($a)
+//  {
+//    $this->macroInstance = $a['MI'];
+//    parent::import ($a);
+//  }
+//
   function onParsingComplete ()
   {
     // Move children to default parameter.
@@ -86,19 +86,15 @@ class MacroCall extends CompositeComponent
       $doc           = new DocumentFragment;
       $shadowContext = $this->context->makeSubcontext ();
       $doc->setContext ($shadowContext);
-      // macroInstance will be already set if the macroCall is being unserialized
-//      $macro = $this->macroInstance ?: $this->context->getMacrosService ()->getMacro ($name, $shadowContext);
-      $macro = $this->context->getMacrosService ()->getMacro ($name, $shadowContext);
-      if (is_null ($macro))
-        try {
-          // A macro with the given name is not defined yet.
-          // Try to load it now.
-          $macro = $this->context->getMacrosService ()->loadMacro ($name, $shadowContext, $filename);
-        }
-        catch (FileIOException $e) {
-          /** @noinspection PhpUndefinedVariableInspection */
-          self::throwUnknownComponent ($this->context, $name, $parent, $filename);
-        }
+      try {
+        // A macro with the given name is not defined yet.
+        // Try to load it now.
+        $macro = $this->context->getMacrosService ()->loadMacro ($name, $filename);
+      }
+      catch (FileIOException $e) {
+        /** @noinspection PhpUndefinedVariableInspection */
+        self::throwUnknownComponent ($this->context, $name, $parent, $filename);
+      }
       $this->macroInstance = $macro;
       if (isset($this->props))
         $this->props->setMacro ($macro);
