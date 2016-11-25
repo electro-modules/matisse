@@ -11,9 +11,15 @@ use Electro\Plugins\Matisse\Lib\DataBinder;
 use Electro\Plugins\Matisse\Lib\MatisseEngine;
 use Electro\Plugins\Matisse\Parser\DocumentContext;
 use Electro\Plugins\Matisse\Services\MacrosService;
+use Electro\Profiles\WebProfile;
 
 class MatisseModule implements ModuleInterface
 {
+  static function getCompatibleProfiles ()
+  {
+    return [WebProfile::class];
+  }
+
   static function startUp (KernelInterface $kernel, ModuleInfo $moduleInfo)
   {
     $kernel->onRegisterServices (
