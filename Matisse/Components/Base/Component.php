@@ -200,12 +200,16 @@ abstract class Component implements RenderableInterface, \Serializable
 
   public function export ()
   {
-    return [
-      'P' => $this->parent,
-      'A' => $this->props ? $this->props->getAll () : null,
-      'C' => $this->children,
-      'B' => $this->bindings,
-    ];
+    $o = [];
+    if ($this->parent)
+      $o[MPARENT] = $this->parent;
+    if ($this->props)
+      $o[MPROPS] = $this->props ? $this->props->getAll () : null;
+    if ($this->children)
+      $o[MCHILDREN] = $this->children;
+    if ($this->bindings)
+      $o[MBINDINGS] = $this->bindings;
+    return $o;
   }
 
   function getContextClass ()
@@ -245,10 +249,10 @@ abstract class Component implements RenderableInterface, \Serializable
     /** @var InjectorInterface $usrlz_inj */
     global $usrlz_ctx, $usrlz_inj;
 
-    $parent   = $a['P'];
-    $props    = $a['A'];
-    $children = $a['C'];
-    $bindings = $a['B'];;
+    $parent   = isset($a[MPARENT]) ? $a[MPARENT] : null;
+    $props    = isset($a[MPROPS]) ? $a[MPROPS] : null;
+    $children = isset($a[MCHILDREN]) ? $a[MCHILDREN] : null;
+    $bindings = isset($a[MBINDINGS]) ? $a[MBINDINGS] : null;
 
     if ((new \ReflectionMethod(static::class, '__construct'))->getNumberOfParameters ())
       $usrlz_inj->execute ([$this, '__construct']);

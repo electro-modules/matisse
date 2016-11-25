@@ -26,6 +26,24 @@ final class Text extends Component
     return $text;
   }
 
+  public function export ()
+  {
+    $o = parent::export ();
+    // Replace the properties array by a shorter string, or remove it completely if no value is set
+    unset ($o[MPROPS]);
+    if ($this->props->value)
+      $o[0] = $this->props->value;
+    return $o;
+  }
+
+  public function import ($a)
+  {
+    // Expand the string content into a properties array
+    if (isset($a[0]))
+      $a[MPROPS] = ['value' => $a[0]];
+    parent::import ($a);
+  }
+
   protected function evalBinding (Expression $exp)
   {
     return _e (parent::evalBinding ($exp));

@@ -92,9 +92,9 @@ class Metadata extends Component
 
   public function export ()
   {
-    $a       = parent::export ();
-    $a['TG'] = $this->getTagName ();
-    $a['TP'] = $this->type;
+    $a          = parent::export ();
+    $a['@tag']  = $this->getTagName ();
+    $a['@type'] = $this->type;
     return $a;
   }
 
@@ -116,12 +116,12 @@ class Metadata extends Component
   {
     global $usrlz_ctx;
 
-    $this->parent = $a['P'];
-    $props        = $a['A'];
-    $children     = $a['C'];
-    $bindings     = $a['B'];
-    $tag          = $a['TG'];
-    $type         = $a['TP'];
+    $parent   = isset($a[MPARENT]) ? $a[MPARENT] : null;
+    $props    = isset($a[MPROPS]) ? $a[MPROPS] : null;
+    $children = isset($a[MCHILDREN]) ? $a[MCHILDREN] : null;
+    $bindings = isset($a[MBINDINGS]) ? $a[MBINDINGS] : null;
+    $tag      = $a['@tag'];
+    $type     = $a['@type'];
 
     $this->__construct ($usrlz_ctx, $tag, $type, $props, $bindings);
     $ch = $this->getChildrenRef (); // We must not call setChildren() here
