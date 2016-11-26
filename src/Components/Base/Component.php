@@ -12,6 +12,7 @@ use Matisse\Traits\Component\DataBindingTrait;
 use Matisse\Traits\Component\DOMNodeTrait;
 use Matisse\Traits\Component\MarkupBuilderTrait;
 use Matisse\Traits\Component\RenderingTrait;
+use PhpKit\WebConsole\DebugConsole\DebugConsole;
 
 /**
  * The base class from which all components derive.
@@ -198,11 +199,14 @@ abstract class Component implements RenderableInterface, \Serializable
           $preset->{$this->className} ($this);
   }
 
+  /**
+   * @return array Associative array of data to be exported.
+   */
   public function export ()
   {
     $o = [];
-    if ($this->parent)
-      $o[MPARENT] = $this->parent;
+//    if ($this->parent)
+//      $o[MPARENT] = $this->parent;
     if ($this->props)
       $o[MPROPS] = $this->props ? $this->props->getAll () : null;
     if ($this->children)
@@ -243,6 +247,9 @@ abstract class Component implements RenderableInterface, \Serializable
     $this->tagName = $name;
   }
 
+  /**
+   * @param array $a Associative array of data to be imported.
+   */
   public function import ($a)
   {
     /** @var DocumentContext $usrlz_ctx */
@@ -264,6 +271,11 @@ abstract class Component implements RenderableInterface, \Serializable
   function inspect ($deep = false)
   {
     return ComponentInspector::inspect ($this, $deep);
+  }
+
+  function inspectOnConsole ($deep = true)
+  {
+    DebugConsole::defaultLogger ()->write ($this->inspect ($deep));
   }
 
   /**

@@ -3,7 +3,7 @@ namespace Matisse\Lib;
 
 use Matisse\Components\Base\Component;
 use Matisse\Components\Base\HtmlComponent;
-use Matisse\Components\Internal\Metadata;
+use Matisse\Components\Metadata;
 
 class Preset
 {

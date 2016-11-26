@@ -116,12 +116,13 @@ class CompositeComponent extends Component
    */
   function provideShadowDOM ()
   {
-    return $this->shadowDOM
+    $sh= $this->shadowDOM
       ?: (
       $this->view && $this->view->getEngine () instanceof MatisseEngine
         ? $this->view->getCompiled ()
-        : null
+        : null // Shadow DOMs are only available for Matisse templates.
       );
+    return $sh;
   }
 
   protected function createView ()
@@ -131,12 +132,10 @@ class CompositeComponent extends Component
         $this->assertContext ();
         $path       = $this->context->viewService->resolveTemplatePath ($this->templateUrl);
         $this->view = $this->context->viewService->loadFromFile ($path);
-        $this->view->compile ();
       }
       elseif ($this->template) {
         $this->assertContext ();
         $this->view = $this->context->viewService->loadFromString ($this->template, $this->viewEngineClass);
-        $this->view->compile ();
       }
     }
     // Else assume the shadowDOM is already attached to this; it will be, if set via setShadowDOM().

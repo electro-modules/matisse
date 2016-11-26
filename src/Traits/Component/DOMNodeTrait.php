@@ -2,8 +2,8 @@
 namespace Matisse\Traits\Component;
 
 use Matisse\Components\Base\Component;
-use Matisse\Components\Internal\DocumentFragment;
-use Matisse\Components\Internal\Metadata;
+use Matisse\Components\DocumentFragment;
+use Matisse\Components\Metadata;
 use Matisse\Debug\ComponentInspector;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Parser\DocumentContext;
@@ -161,7 +161,7 @@ trait DOMNodeTrait
     foreach ($this->getChildren () as $child)
       $child->setContextRecursive ($context);
     if ($this->supportsProperties ()) {
-      /** @var Metadata $meta */
+      /** @var \Matisse\Components\Metadata $meta */
       foreach ($c->props->getPropertiesOf (type::metadata) as $meta)
         $meta->setContextRecursive ($context);
       /** @var Component[] $col */

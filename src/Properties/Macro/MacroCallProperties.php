@@ -1,9 +1,9 @@
 <?php
 namespace Matisse\Properties\Macro;
 
-use Matisse\Components\Internal\Metadata;
-use Matisse\Components\Internal\Text;
 use Matisse\Components\Macro\Macro;
+use Matisse\Components\Metadata;
+use Matisse\Components\Text;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Properties\Base\MetadataProperties;
 use Matisse\Properties\TypeSystem\type;

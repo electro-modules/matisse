@@ -1,15 +1,15 @@
 <?php
 namespace Matisse\Components\Macro;
 
+use Electro\ViewEngine\Lib\ViewModel;
 use Matisse\Components\Base\Component;
 use Matisse\Components\Base\CompositeComponent;
-use Matisse\Components\Internal\DocumentFragment;
-use Matisse\Components\Internal\Metadata;
+use Matisse\Components\DocumentFragment;
+use Matisse\Components\Metadata;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Exceptions\FileIOException;
 use Matisse\Properties\Macro\MacroCallProperties;
 use Matisse\Properties\TypeSystem\type;
-use Electro\ViewEngine\Lib\ViewModel;
 
 /**
  * A `MacroCall` is a component that can be represented via any tag that has the same name as the macro it refers to.

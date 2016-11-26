@@ -1,8 +1,8 @@
 <?php
 namespace Matisse\Traits\Component;
 
-use Matisse\Components\Internal\DocumentFragment;
 use Electro\ViewEngine\Lib\ViewModel;
+use Matisse\Components\DocumentFragment;
 
 trait ViewModelTrait
 {
@@ -43,7 +43,7 @@ trait ViewModelTrait
 
     $this->viewModel ($this->getViewModel ());
 
-    /** @var DocumentFragment $shadowDOM */
+    /** @var \Matisse\Components\DocumentFragment $shadowDOM */
     $shadowDOM = $this->getShadowDOM ();
     if ($shadowDOM)
       $shadowDOM->getDataBinder ()->setProps ($this->props ?: $this->getDataBinder ()->getProps ());

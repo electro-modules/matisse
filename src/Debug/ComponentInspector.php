@@ -1,17 +1,17 @@
 <?php
 namespace Matisse\Debug;
 
-use PhpKit\Html5Tools\HtmlSyntaxHighlighter;
-use PhpKit\WebConsole\DebugConsole\DebugConsole;
-use PhpKit\WebConsole\Lib\Debug;
 use Matisse\Components\Base\Component;
 use Matisse\Components\Base\CompositeComponent;
-use Matisse\Components\Internal\DocumentFragment;
-use Matisse\Components\Internal\Text;
+use Matisse\Components\DocumentFragment;
+use Matisse\Components\Text;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Parser\Expression;
 use Matisse\Properties\Base\ComponentProperties;
 use Matisse\Properties\TypeSystem\type;
+use PhpKit\Html5Tools\HtmlSyntaxHighlighter;
+use PhpKit\WebConsole\DebugConsole\DebugConsole;
+use PhpKit\WebConsole\Lib\Debug;
 use SplObjectStorage;
 
 /**

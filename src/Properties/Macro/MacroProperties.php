@@ -1,7 +1,7 @@
 <?php
 namespace Matisse\Properties\Macro;
 
-use Matisse\Components\Internal\Metadata;
+use Matisse\Components\Metadata;
 use Matisse\Properties\Base\ComponentProperties;
 use Matisse\Properties\TypeSystem\is;
 use Matisse\Properties\TypeSystem\type;
@@ -25,7 +25,7 @@ class MacroProperties extends ComponentProperties
    */
   public $style = [type::collection, is::of, type::content];
   /**
-   * @var Metadata
+   * @var \Matisse\Components\Metadata
    */
   public $import = type::metadata;
 }

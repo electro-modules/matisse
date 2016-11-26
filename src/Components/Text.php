@@ -1,5 +1,5 @@
 <?php
-namespace Matisse\Components\Internal;
+namespace Matisse\Components;
 
 use Matisse\Components\Base\Component;
 use Matisse\Parser\DocumentContext;
@@ -31,6 +31,7 @@ final class Text extends Component
     $o = parent::export ();
     // Replace the properties array by a shorter string, or remove it completely if no value is set
     unset ($o[MPROPS]);
+    unset ($o[MPARENT]);
     if ($this->props->value)
       $o[0] = $this->props->value;
     return $o;
@@ -38,6 +39,7 @@ final class Text extends Component
 
   public function import ($a)
   {
+
     // Expand the string content into a properties array
     if (isset($a[0]))
       $a[MPROPS] = ['value' => $a[0]];

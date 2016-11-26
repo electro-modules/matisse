@@ -2,7 +2,6 @@
 namespace Matisse\Components;
 
 use Matisse\Components\Base\Component;
-use Matisse\Components\Internal\Metadata;
 use Matisse\Interfaces\PresetsInterface;
 use Matisse\Lib\Preset;
 use Matisse\Properties\Base\ComponentProperties;

@@ -1,12 +1,12 @@
 <?php
 namespace Matisse\Components\Macro;
 
+use Electro\ViewEngine\Lib\ViewModel;
 use Matisse\Components\Base\Component;
-use Matisse\Components\Internal\Metadata;
+use Matisse\Components\Metadata;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Properties\Macro\MacroProperties;
 use Matisse\Properties\TypeSystem\type;
-use Electro\ViewEngine\Lib\ViewModel;
 
 /**
  * The Macro component allows you to define a macro trasformation via markup.

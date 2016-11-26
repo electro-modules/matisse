@@ -2,8 +2,8 @@
 namespace Matisse\Parser;
 
 use Matisse\Components\Base\Component;
-use Matisse\Components\Internal\Metadata;
-use Matisse\Components\Internal\Text;
+use Matisse\Components\Metadata;
+use Matisse\Components\Text;
 use Matisse\Exceptions\ParseException;
 use Matisse\Properties\TypeSystem\type;
 

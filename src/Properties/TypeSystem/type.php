@@ -1,7 +1,7 @@
 <?php
 namespace Matisse\Properties\TypeSystem;
 
-use Matisse\Components\Internal\Metadata;
+use Matisse\Components\Metadata;
 
 /**
  * Represents the available data types of component properties and provides an API for working with both the types

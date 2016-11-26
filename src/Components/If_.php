@@ -2,7 +2,6 @@
 namespace Matisse\Components;
 
 use Matisse\Components\Base\Component;
-use Matisse\Components\Internal\Metadata;
 use Matisse\Parser\Parser;
 use Matisse\Properties\Base\ComponentProperties;
 use Matisse\Properties\TypeSystem\type;

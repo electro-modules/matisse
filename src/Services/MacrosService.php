@@ -2,10 +2,11 @@
 namespace Matisse\Services;
 
 use Electro\Interfaces\Views\ViewServiceInterface;
-use Matisse\Components\Internal\DocumentFragment;
 use Matisse\Components\Macro\Macro;
 use Matisse\Exceptions\FileIOException;
 use Matisse\Exceptions\MatisseException;
+use PhpKit\WebConsole\DebugConsole\DebugConsole;
+use PhpKit\WebConsole\Loggers\ConsoleLogger;
 
 /**
  * Manages macros loading, storage and retrieval.
@@ -49,23 +50,28 @@ class MacrosService
   {
     $tagName  = normalizeTagName ($tagName);
     $filename = $tagName . $this->macrosExt;
-    /** @var DocumentFragment $doc */
+    /** @var \Matisse\Components\DocumentFragment $doc */
     $doc = $this->loadMacroFile ($filename);
     $c   = $doc->getFirstChild ();
-    inspect (typeOf ($c));
     if ($c instanceof Macro)
       return $c;
-    throw new MatisseException("File <path>$filename</path> doesn't define a macro called <kbd>$tagName</kbd>");
+    $filename = $this->findMacroFile ($filename);
+    throw new MatisseException("File <path>$filename</path> doesn't define a macro called <kbd>$tagName</kbd> right at the beginning of the file");
   }
 
-  private function loadMacroFile ($filename)
+  private function findMacroFile ($filename)
   {
     foreach ($this->macrosDirectories as $dir) {
       $path = "$dir/$filename";
       if (file_exists ($path))
-        return $this->viewService->loadFromFile ($path)->getCompiled ();
+        return $path;
     }
     throw new FileIOException($filename);
+  }
+
+  private function loadMacroFile ($filename)
+  {
+    return $this->viewService->loadFromFile ($this->findMacroFile ($filename))->getCompiled ();
   }
 
 }

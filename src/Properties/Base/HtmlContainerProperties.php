@@ -1,7 +1,7 @@
 <?php
 namespace Matisse\Properties\Base;
 
-use Matisse\Components\Internal\Metadata;
+use Matisse\Components\Metadata;
 use Matisse\Properties\TypeSystem\type;
 
 /**

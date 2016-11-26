@@ -1,5 +1,5 @@
 <?php
-namespace Matisse\Components\Internal;
+namespace Matisse\Components;
 
 use Matisse\Components\Base\Component;
 use Matisse\Parser\DocumentContext;
