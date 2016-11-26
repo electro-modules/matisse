@@ -3,8 +3,8 @@
 //  Matisse-specific functions
 //------------------------------
 use Electro\Interfaces\RenderableInterface;
-use Electro\Plugins\Matisse\Components\Internal\Text;
-use Electro\Plugins\Matisse\Exceptions\MatisseException;
+use Matisse\Components\Internal\Text as TextComponent;
+use Matisse\Exceptions\MatisseException;
 use PhpKit\WebConsole\Lib\Debug;
 
 const MPARENT   = '@parent';
@@ -12,7 +12,7 @@ const MPROPS    = '@props';
 const MCHILDREN = '@nodes';
 const MBINDINGS = '@bind';
 
-class_alias(Text::class, 'TEXT', true);
+//class_alias(TextComponent::class, 'Text', true);
 
 /**
  * Represents text that should not be HTML-escaped when output.
