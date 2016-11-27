@@ -124,8 +124,8 @@ class Metadata extends Component
     $type     = $a['@type'];
 
     $this->__construct ($usrlz_ctx, $tag, $type, $props, $bindings);
-    $ch = $this->getChildrenRef (); // We must not call setChildren() here
-    $ch = $children;
+    $ch =& $this->getChildrenRef (); // We must NOT call setChildren() here!
+    $ch = $children; // Assign via reference.
   }
 
   protected function render ()

@@ -2,11 +2,10 @@
 namespace Matisse\Services;
 
 use Electro\Interfaces\Views\ViewServiceInterface;
+use Matisse\Components\DocumentFragment;
 use Matisse\Components\Macro\Macro;
 use Matisse\Exceptions\FileIOException;
 use Matisse\Exceptions\MatisseException;
-use PhpKit\WebConsole\DebugConsole\DebugConsole;
-use PhpKit\WebConsole\Loggers\ConsoleLogger;
 
 /**
  * Manages macros loading, storage and retrieval.
@@ -38,29 +37,10 @@ class MacrosService
     $this->viewService = $viewService;
   }
 
-  /**
-   * Searches for a file defining a macro for the given tag name.
-   *
-   * @param string $tagName
-   * @param string $filename [optional] Outputs the filename that was searched for.
-   * @return Macro
-   * @throws MatisseException
-   */
-  function loadMacro ($tagName, &$filename = null)
+  function findMacroFile ($tagName)
   {
     $tagName  = normalizeTagName ($tagName);
     $filename = $tagName . $this->macrosExt;
-    /** @var \Matisse\Components\DocumentFragment $doc */
-    $doc = $this->loadMacroFile ($filename);
-    $c   = $doc->getFirstChild ();
-    if ($c instanceof Macro)
-      return $c;
-    $filename = $this->findMacroFile ($filename);
-    throw new MatisseException("File <path>$filename</path> doesn't define a macro called <kbd>$tagName</kbd> right at the beginning of the file");
-  }
-
-  private function findMacroFile ($filename)
-  {
     foreach ($this->macrosDirectories as $dir) {
       $path = "$dir/$filename";
       if (file_exists ($path))
@@ -69,9 +49,32 @@ class MacrosService
     throw new FileIOException($filename);
   }
 
+  /**
+   * Loads and compiles the macro.
+   *
+   * <p>This method searches for a file defining a macro for the given tag name.
+   * <p>It returns a DocumentFragment containing the macro as its first child.
+   *
+   * @param string $tagName
+   * @param string $filename [optional] Outputs the filename that was searched for.
+   * @return DocumentFragment
+   * @throws MatisseException
+   */
+  function loadMacro ($tagName, &$filename = null)
+  {
+    $filename = $this->findMacroFile ($tagName);
+    /** @var \Matisse\Components\DocumentFragment $doc */
+    $doc = $this->loadMacroFile ($filename);
+    $c   = $doc->getFirstChild ();
+    if ($c instanceof Macro)
+      return $doc;
+    $filename = $this->findMacroFile ($filename);
+    throw new MatisseException("File <path>$filename</path> doesn't define a macro called <kbd>$tagName</kbd> right at the beginning of the file");
+  }
+
   private function loadMacroFile ($filename)
   {
-    return $this->viewService->loadFromFile ($this->findMacroFile ($filename))->getCompiled ();
+    return $this->viewService->loadFromFile ($filename)->getCompiled ();
   }
 
 }

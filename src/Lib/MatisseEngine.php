@@ -5,6 +5,7 @@ use Electro\Caching\Lib\CachingFileCompiler;
 use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\Views\ViewEngineInterface;
 use Electro\Interfaces\Views\ViewServiceInterface;
+use Matisse\Components\Base\CompositeComponent;
 use Matisse\Components\DocumentFragment;
 use Matisse\Exceptions\MatisseException;
 use Matisse\Parser\DocumentContext;
@@ -22,6 +23,12 @@ class MatisseEngine implements ViewEngineInterface
    * @var InjectorInterface
    */
   private $injector;
+  /**
+   * When set, the next compilation (and only that one) will generate a root component of the specified class.
+   *
+   * @var string|null
+   */
+  private $rootClass = null;
   /**
    * @var ViewServiceInterface
    */
@@ -41,11 +48,24 @@ class MatisseEngine implements ViewEngineInterface
 
     // Create a compiled template.
 
-    $root = new DocumentFragment;
+    $class = $this->rootClass ?: DocumentFragment::class;
+    /** @var DocumentFragment $root */
+    $root = $this->injector->make ($class);
     $root->setContext ($this->context->makeSubcontext ());
+    $this->rootClass = null;
+
+    $base = $root;
+    if ($root instanceof CompositeComponent) {
+      $base = new DocumentFragment;
+      $base->setContext ($this->context->makeSubcontext ());
+    }
 
     $parser = new Parser;
-    $parser->parse ($src, $root);
+    $parser->parse ($src, $base);
+
+    if ($base !== $root)
+      $root->setShadowDOM ($base);
+
     return $root;
 
 //    echo "<div style='white-space:pre-wrap'>";
@@ -55,21 +75,26 @@ class MatisseEngine implements ViewEngineInterface
 
   function configure ($options)
   {
-//    if (!$options instanceof Context)
-//      throw new \InvalidArgumentException ("The argument must be an instance of " . formatClassName (Context::class));
-//    $this->context = $options;
+    $this->rootClass = get ($options, 'rootClass');
   }
 
   function loadFromCache (CachingFileCompiler $cache, $sourceFile)
   {
     global $usrlz_ctx, $usrlz_inj;
 
+    // Preserve the current context.
+    $prev_ctx = $usrlz_ctx;
+
     $usrlz_ctx = $this->context->makeSubcontext ();
     $usrlz_inj = $this->injector;
 
-    return $cache->get ($sourceFile, function ($source) {
+    $compiled = $cache->get ($sourceFile, function ($source) {
       return $this->compile ($source);
     });
+
+    // Restore the current context.
+    $usrlz_ctx = $prev_ctx;
+    return $compiled;
   }
 
   function render ($compiled, $data = null)

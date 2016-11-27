@@ -4,7 +4,6 @@ namespace Matisse\Components\Macro;
 use Electro\ViewEngine\Lib\ViewModel;
 use Matisse\Components\Base\Component;
 use Matisse\Components\Base\CompositeComponent;
-use Matisse\Components\DocumentFragment;
 use Matisse\Components\Metadata;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Exceptions\FileIOException;
@@ -21,36 +20,20 @@ class MacroCall extends CompositeComponent
   const propertiesClass = MacroCallProperties::class;
   /** @var MacroCallProperties */
   public $props;
-  /**
-   * Points to the component that defines the macro for this instance.
-   *
-   * @var Macro
-   */
+  /** @var Macro Points to the component that defines the macro for this instance. */
   protected $macroInstance;
 
-//  public function export ()
-//  {
-//    $a       = parent::export ();
-//    $a['MI'] = $this->macroInstance;
-//    return $a;
-//  }
-//
-//  public function import ($a)
-//  {
-//    $this->macroInstance = $a['MI'];
-//    parent::import ($a);
-//  }
-//
-  function onParsingComplete ()
+  function render ()
   {
-    // Move children to default parameter.
+    // Validate defaultParam's value.
+    $def = $this->getDefaultParam ();
+    if (!empty($def)) {
+      if (!$this->props->defines ($def))
+        throw new ComponentException($this,
+          "Invalid value for <kbd>defaultParam</kbd> on <b>&lt;{$this->props->macro}></b>; parameter <kbd>$def</kbd> does not exist");
 
-    if ($this->hasChildren ()) {
-      $def = $this->getDefaultParam ();
-      if (!empty($def)) {
-        if (!$this->props->defines ($def))
-          throw new ComponentException($this, "Invalid default property <kbd>$def</kbd>");
-
+      // Move children to default parameter.
+      if ($this->hasChildren ()) {
         $type = $this->props->getTypeOf ($def);
         if ($type != type::content && $type != type::metadata)
           throw new ComponentException($this, sprintf (
@@ -62,9 +45,12 @@ class MacroCall extends CompositeComponent
         $param->attachTo ($this);
         $param->setChildren ($this->getChildren ());
       }
-      else throw new ComponentException ($this,
-        'You may not specify content for this tag because it has no default property');
     }
+    elseif ($this->hasChildren ())
+      throw new ComponentException ($this,
+        'You may not specify content for this tag because it has no default property');
+
+    parent::render ();
   }
 
   protected function getDefaultParam ()
@@ -80,26 +66,24 @@ class MacroCall extends CompositeComponent
    */
   protected function onCreate (array $props = null, Component $parent = null)
   {
+//    inspect("Macro: ".get ($props, 'macro'));
+//    $z = get_object_vars($this);
+//    foreach ($z as &$v)
+//      $v = is_object($v) ? 'ID='.Debug::objectId($v) : $v;
+//    inspect ($z);
+
     $this->parent = $parent;
     $name         = get ($props, 'macro');
     if (exists ($name)) {
-      $doc           = new DocumentFragment;
-      $shadowContext = $this->context->makeSubcontext ();
-      $doc->setContext ($shadowContext);
       try {
-        // A macro with the given name is not defined yet.
-        // Try to load it now.
-        $macro = $this->context->getMacrosService ()->loadMacro ($name, $filename);
+        $this->setShadowDOM ($this->context->getMacrosService ()->loadMacro ($name, $path));
+        $this->macroInstance = $this->shadowDOM->getFirstChild ();
+        $this->props->setMacro ($this->macroInstance);
       }
       catch (FileIOException $e) {
         /** @noinspection PhpUndefinedVariableInspection */
         self::throwUnknownComponent ($this->context, $name, $parent, $filename);
       }
-      $this->macroInstance = $macro;
-      if (isset($this->props))
-        $this->props->setMacro ($macro);
-      $this->setShadowDOM ($doc); // this also attaches it, which MUST be done before adding children!
-      $doc->addChildren ($macro->getChildren ());
     }
     parent::onCreate ($props, $parent);
   }

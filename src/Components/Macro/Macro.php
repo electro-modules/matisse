@@ -127,6 +127,12 @@ class Macro extends Component
     return $names;
   }
 
+  /**
+   * Called by MacroCall.
+   *
+   * @param ViewModel $viewModel
+   * @throws ComponentException
+   */
   public function importServices (ViewModel $viewModel)
   {
     $prop = $this->props->import;
@@ -168,6 +174,11 @@ class Macro extends Component
         $assets->addStylesheet ($style->props->src);
       else $assets->addInlineCss ($style->runAndGetContent (), $style->props->name);
     }
+  }
+
+  protected function render ()
+  {
+    $this->run (true);
   }
 
 }

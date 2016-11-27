@@ -103,7 +103,7 @@ class MetadataProperties extends AbstractProperties
 
   function isScalar ($name)
   {
-    return isset($this->name) ? is_scalar ($this->name) : true;
+    return isset($this->$name) ? is_scalar ($this->$name) : true;
   }
 
   function set ($name, $value)

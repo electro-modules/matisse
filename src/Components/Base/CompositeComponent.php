@@ -92,8 +92,9 @@ class CompositeComponent extends Component
   function setShadowDOM (Component $shadowDOM = null)
   {
     $this->shadowDOM = $shadowDOM;
-    if ($shadowDOM)
-      $shadowDOM->attachTo ($this);
+    //Disabled, because shadowDOM can't be attached, as it would wrongly inherit this component's context
+//    if ($shadowDOM)
+//      $shadowDOM->attachTo ($this);
   }
 
   /**
@@ -116,13 +117,12 @@ class CompositeComponent extends Component
    */
   function provideShadowDOM ()
   {
-    $sh= $this->shadowDOM
+    return $this->shadowDOM
       ?: (
       $this->view && $this->view->getEngine () instanceof MatisseEngine
         ? $this->view->getCompiled ()
         : null // Shadow DOMs are only available for Matisse templates.
       );
-    return $sh;
   }
 
   protected function createView ()

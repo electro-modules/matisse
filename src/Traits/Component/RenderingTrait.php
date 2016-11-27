@@ -116,7 +116,7 @@ trait RenderingTrait
    * <p>**You can't override this!** But there are many extension points meant for overriding specific parts of the
    * rendering process. See the documentation to find out which suits your needs.
    *
-   * @param bool $onlyContent If true, {@see render} will not be called and, instead, each child will be rendered.
+   * @param bool $onlyContent If true, {@see render} will not be called and only children will be rendered.
    * @throws ComponentException
    */
   final function run ($onlyContent = false)
@@ -163,7 +163,7 @@ trait RenderingTrait
   {
     /** @var Component[] $children */
     $children = isset($attrName) ? $this->getChildren ($attrName) : $this->children;
-    foreach ($children as $child)
+    foreach ($children ?: [] as $child)
       $child->run ();
   }
 
