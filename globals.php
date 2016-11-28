@@ -3,10 +3,10 @@ use Electro\Interfaces\RenderableInterface;
 use Matisse\Exceptions\MatisseException;
 use PhpKit\WebConsole\Lib\Debug;
 
-const MPARENT   = '@parent';
-const MPROPS    = '@props';
-const MCHILDREN = '@nodes';
-const MBINDINGS = '@bind';
+const MPARENT       = '@parent';
+const MPROPS        = '@props';
+const MCHILDREN     = '@nodes';
+const MBINDINGS     = '@bind';
 
 /**
  * Represents text that should not be HTML-escaped when output.

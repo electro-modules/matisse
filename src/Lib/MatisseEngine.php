@@ -25,12 +25,12 @@ class MatisseEngine implements ViewEngineInterface
    */
   private $injector;
   /**
-   * When set, the next compilation (and only that one) will generate a root component of the specified class.
-   * <p>When NULL, {@see DocumentFragment} is assumed.
+   * When set, loading the template will generate a root component of the specified class.
+   * <p>When NULL, {@see DocumentFragment} is returned.
    *
    * @var string|null
    */
-  private $rootClass = DocumentFragment::class;
+  private $rootClass = null;
   /**
    * @var ViewServiceInterface
    */
@@ -50,27 +50,13 @@ class MatisseEngine implements ViewEngineInterface
 
     // Create a compiled template.
 
-    /** @var DocumentFragment $root */
-    $root = $this->injector->make ($this->rootClass);
+    $root = new DocumentFragment;
     $root->setContext ($this->context->makeSubcontext ());
 
-    $base = $root;
-    if ($root instanceof CompositeComponent) {
-      $base = new DocumentFragment;
-      $base->setContext ($this->context->makeSubcontext ());
-    }
-
     $parser = new Parser;
-    $parser->parse ($src, $base);
-
-    if ($base !== $root)
-      $root->setShadowDOM ($base);
+    $parser->parse ($src, $root);
 
     return $root;
-
-//    echo "<div style='white-space:pre-wrap'>";
-//    echo serialize ($root);exit;
-
   }
 
   function configure (array $options = [])
@@ -89,12 +75,24 @@ class MatisseEngine implements ViewEngineInterface
     $usrlz_ctx = $this->context->makeSubcontext ();
     $usrlz_inj = $this->injector;
 
-    $compiled = $cache->get ($sourceFile, function ($source) {
-      return $this->compile ($source);
+    $compiled = $cache->get ($sourceFile, function ($source) use ($sourceFile) {
+      $root = $this->compile ($source);
+      if ($root instanceof CompositeComponent)
+        $root->templateUrl = $sourceFile;
+      return $root;
     });
 
     // Restore the current context.
     $usrlz_ctx = $prev_ctx;
+
+    if ($this->rootClass) {
+      /** @var CompositeComponent $root */
+      $root = $this->injector->make ($this->rootClass);
+      $root->setContext ($this->context->makeSubcontext ());
+      $root->setShadowDOM ($compiled);
+      return $root;
+    }
+
     return $compiled;
   }
 
