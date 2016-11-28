@@ -10,6 +10,7 @@ use Matisse\Components\DocumentFragment;
 use Matisse\Exceptions\MatisseException;
 use Matisse\Parser\DocumentContext;
 use Matisse\Parser\Parser;
+use Selenia\Platform\Components\Base\PageComponent;
 
 class MatisseEngine implements ViewEngineInterface
 {
@@ -25,6 +26,7 @@ class MatisseEngine implements ViewEngineInterface
   private $injector;
   /**
    * When set, the next compilation (and only that one) will generate a root component of the specified class.
+   * <p>When NULL, {@see DocumentFragment} is assumed.
    *
    * @var string|null
    */
@@ -49,10 +51,11 @@ class MatisseEngine implements ViewEngineInterface
     // Create a compiled template.
 
     $class = $this->rootClass ?: DocumentFragment::class;
+    $this->rootClass = null;
+    $class =DocumentFragment::class;
     /** @var DocumentFragment $root */
     $root = $this->injector->make ($class);
     $root->setContext ($this->context->makeSubcontext ());
-    $this->rootClass = null;
 
     $base = $root;
     if ($root instanceof CompositeComponent) {
@@ -75,7 +78,7 @@ class MatisseEngine implements ViewEngineInterface
 
   function configure ($options)
   {
-    $this->rootClass = get ($options, 'rootClass');
+    $this->rootClass = get ($options, 'page') ? PageComponent::class : null;
   }
 
   function loadFromCache (CachingFileCompiler $cache, $sourceFile)
