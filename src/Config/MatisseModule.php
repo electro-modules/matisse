@@ -28,7 +28,6 @@ class MatisseModule implements ModuleInterface
           ->share (DocumentContext::class)
           ->share (MacrosService::class)
           ->share (MatisseSettings::class)
-          ->share (MatisseEngine::class)
           ->alias (DataBinderInterface::class, DataBinder::class)
           ->prepare (ViewServiceInterface::class, function (ViewServiceInterface $viewService) {
             $viewService->register (MatisseEngine::class, '/\.html$/');

@@ -30,7 +30,7 @@ class MatisseEngine implements ViewEngineInterface
    *
    * @var string|null
    */
-  private $rootClass = null;
+  private $rootClass = DocumentFragment::class;
   /**
    * @var ViewServiceInterface
    */
@@ -50,11 +50,8 @@ class MatisseEngine implements ViewEngineInterface
 
     // Create a compiled template.
 
-    $class = $this->rootClass ?: DocumentFragment::class;
-    $this->rootClass = null;
-    $class =DocumentFragment::class;
     /** @var DocumentFragment $root */
-    $root = $this->injector->make ($class);
+    $root = $this->injector->make ($this->rootClass);
     $root->setContext ($this->context->makeSubcontext ());
 
     $base = $root;
@@ -76,9 +73,10 @@ class MatisseEngine implements ViewEngineInterface
 
   }
 
-  function configure ($options)
+  function configure (array $options = [])
   {
-    $this->rootClass = get ($options, 'page') ? PageComponent::class : null;
+    $this->rootClass = get ($options, 'rootClass')
+      ?: (get ($options, 'page') ? PageComponent::class : DocumentFragment::class);
   }
 
   function loadFromCache (CachingFileCompiler $cache, $sourceFile)
