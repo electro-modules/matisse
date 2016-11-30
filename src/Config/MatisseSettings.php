@@ -3,13 +3,11 @@ namespace Matisse\Config;
 
 use Electro\Kernel\Config\KernelSettings;
 use Electro\Kernel\Lib\ModuleInfo;
+use Electro\Traits\ConfigurationTrait;
+use Electro\ViewEngine\Config\ViewEngineSettings;
 use Matisse\Lib\DefaultFilters;
 use Matisse\Lib\FilterHandler;
 use Matisse\Parser\DocumentContext;
-use Matisse\Services\MacrosService;
-use Electro\Traits\ConfigurationTrait;
-use Electro\ViewEngine\Config\ViewEngineSettings;
-use Electro\ViewEngine\Services\AssetsService;
 use PhpKit\Flow\FilesystemFlow;
 
 /**
@@ -17,15 +15,12 @@ use PhpKit\Flow\FilesystemFlow;
  *
  * @method $this|bool devEnv (bool $v = null)
  * @method $this|string moduleMacrosPath (string $v = null) The relative path of the macros folder inside a module
+ * @method $this|string macrosExt (string $v = null) File extension of macro files
  */
 class MatisseSettings
 {
   use ConfigurationTrait;
 
-  /**
-   * @var AssetsService
-   */
-  private $assetsService;
   /**
    * A mapping between modules view templates base directories and the corresponding PHP namespaces that will be
    * used for resolving view template paths to PHP controller classes.
@@ -52,9 +47,15 @@ class MatisseSettings
    */
   private $kernelSettings;
   /**
-   * @var MacrosService
+   * @var string[]
    */
-  private $macrosService;
+  private $macrosDirectories = [];
+  /**
+   * File extension of macro files.
+   *
+   * @var string
+   */
+  private $macrosExt = '.html';
   /**
    * @var string
    */
@@ -74,15 +75,24 @@ class MatisseSettings
    */
   private $viewEngineSettings;
 
-  public function __construct (KernelSettings $kernelSettings, MacrosService $macrosService,
-                               AssetsService $assetsService,
-                               ViewEngineSettings $viewEngineSettings, $devEnv)
+  public function __construct (KernelSettings $kernelSettings, ViewEngineSettings $viewEngineSettings, $devEnv)
   {
     $this->kernelSettings     = $kernelSettings;
-    $this->macrosService      = $macrosService;
-    $this->assetsService      = $assetsService;
     $this->devEnv             = $devEnv;
     $this->viewEngineSettings = $viewEngineSettings;
+  }
+
+  /**
+   * Directories where macros can be found.
+   * <p>They will be search in order until the requested macro is found.
+   * <p>These paths will be registered on the templating engine.
+   * <p>This is preinitialized to the application macro's path.
+   *
+   * @return string[]
+   */
+  function getMacrosDirectories ()
+  {
+    return $this->macrosDirectories;
   }
 
   /**
@@ -109,40 +119,6 @@ class MatisseSettings
     $ctx->registerTags ($this->tags);
     $ctx->setFilterHandler (new FilterHandler (new DefaultFilters));
     $ctx->getDataBinder ()->setContext ($ctx);
-  }
-
-  /**
-   * A list of relative file paths of assets published by the module, relative to the module's public folder.
-   *
-   * <p>Registered assets will be automatically loaded by Matisse-rendered pages.
-   * <p>Also, if they are located on a sub-directory of `/resources` , the framework's build process may automatically
-   * concatenate and minify them for a release-grade build.
-   *
-   * > <p>**Important:** make sure to call {@see publishPublicDirAs()} before calling this method.
-   *
-   * @param ModuleInfo $moduleInfo
-   * @param string[]   $assets
-   * @return $this
-   */
-  function registerAssets (ModuleInfo $moduleInfo, $assets)
-  {
-    $publicUrl = "{$this->kernelSettings->modulesPublishingPath}/$moduleInfo->name";
-    // TODO: handle assets on a sub-directory of resources.
-    foreach ($assets as $path) {
-      $path = "$publicUrl/$path";
-      $p    = strrpos ($path, '.');
-      if (!$p) continue;
-      $ext = substr ($path, $p + 1);
-      switch ($ext) {
-        case 'css':
-          $this->assetsService->addStylesheet ($path);
-          break;
-        case 'js':
-          $this->assetsService->addScript ($path);
-          break;
-      }
-    }
-    return $this;
   }
 
   /**
@@ -204,7 +180,7 @@ class MatisseSettings
     if (fileExists ($path)) {
       $all = FilesystemFlow::from ($path)->onlyDirectories ()->keys ()->all ();
       array_unshift ($all, $path);
-      $this->macrosService->macrosDirectories = array_merge ($all, $this->macrosService->macrosDirectories);
+      $this->macrosDirectories = array_merge ($all, $this->macrosDirectories);
     }
     return $this;
   }

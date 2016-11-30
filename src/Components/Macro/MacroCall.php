@@ -76,9 +76,10 @@ class MacroCall extends CompositeComponent
     $name         = get ($props, 'macro');
     if (exists ($name)) {
       try {
-        $this->setShadowDOM ($this->context->getMacrosService ()->loadMacro ($name, $path));
-        $this->macroInstance = $this->shadowDOM->getFirstChild ();
+        $frag = $this->context->getMacrosService ()->loadMacro ($name, $path);
+        $this->macroInstance = $frag->getFirstChild ();
         $this->props->setMacro ($this->macroInstance);
+        $this->setShadowDOM ($this->macroInstance);
       }
       catch (FileIOException $e) {
         /** @noinspection PhpUndefinedVariableInspection */

@@ -3,6 +3,9 @@ namespace Matisse\Parser;
 
 use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\Views\ViewServiceInterface;
+use Electro\Traits\InspectionTrait;
+use Electro\ViewEngine\Services\AssetsService;
+use Electro\ViewEngine\Services\BlocksService;
 use Matisse\Config\MatisseSettings;
 use Matisse\Interfaces\DataBinderInterface;
 use Matisse\Interfaces\PresetsInterface;
@@ -10,9 +13,6 @@ use Matisse\Services\MacrosService;
 use Matisse\Traits\Context\ComponentsAPITrait;
 use Matisse\Traits\Context\FiltersAPITrait;
 use Matisse\Traits\Context\ViewsAPITrait;
-use Electro\Traits\InspectionTrait;
-use Electro\ViewEngine\Services\AssetsService;
-use Electro\ViewEngine\Services\BlocksService;
 
 /**
  * A Matisse rendering context.
@@ -61,6 +61,10 @@ class DocumentContext
    */
   public $injector;
   /**
+   * @var MatisseSettings
+   */
+  public $matisseSettings;
+  /**
    * A stack of presets.
    *
    * <p>Each preset is an instance of a class where methods are named with component class names.
@@ -98,24 +102,25 @@ class DocumentContext
    * @param MacrosService        $macrosService
    * @param DataBinderInterface  $dataBinder
    * @param InjectorInterface    $injector
-   * @param MatisseSettings      $settings
+   * @param MatisseSettings      $matisseSettings
    * @param ViewServiceInterface $viewService
    */
   function __construct (AssetsService $assetsService, BlocksService $blocksService, MacrosService $macrosService,
-                        DataBinderInterface $dataBinder, InjectorInterface $injector, MatisseSettings $settings,
+                        DataBinderInterface $dataBinder, InjectorInterface $injector, MatisseSettings $matisseSettings,
                         ViewServiceInterface $viewService)
   {
-    $this->tags          = self::$coreTags;
-    $this->dataBinder    = $dataBinder;
-    $this->assetsService = $assetsService;
-    $this->blocksService = $blocksService;
-    $this->macrosService = $macrosService;
-    $this->injector      = $injector;
-    $this->viewService   = $viewService;
-    $this->presets       = map ($settings->getPresets (), function ($class) {
+    $this->tags            = self::$coreTags;
+    $this->dataBinder      = $dataBinder;
+    $this->assetsService   = $assetsService;
+    $this->blocksService   = $blocksService;
+    $this->macrosService   = $macrosService;
+    $this->injector        = $injector;
+    $this->viewService     = $viewService;
+    $this->matisseSettings = $matisseSettings;
+    $this->presets         = map ($matisseSettings->getPresets (), function ($class) {
       return $this->injector->make ($class);
     });
-    $settings->initContext ($this);
+    $matisseSettings->initContext ($this);
   }
 
   /**

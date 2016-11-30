@@ -21,26 +21,6 @@ use Matisse\Properties\TypeSystem\type;
  */
 class Macro extends Component
 {
-  /** Finds binding expressions which have macro parameter bindings. */
-  const FIND_MACRO_EXP = '%
-    \{
-    [^\n\r]         # if line break then it is not an expression
-    [^@\}]+         # not @ or }
-    @               # if it is @ then the expression has a macro param ref.
-    [^\}]+
-    \}              # make sure the expression is closed
-  %xu';
-  /** Finds macro binding expressions. */
-  const PARSE_SIMPLE_MACRO_BINDING_EXP = '%
-    \{
-    [^\n\r]         # if line break then it is not an expression
-    \s*
-    @               # must have a macro param ref.
-    ([\w\-]*)       # capture the macro param name
-    \s*
-    (\| [^\}]* )?   # capture filters (if any)
-    \}
-  %xu';
   const allowsChildren                 = true;
 
   const propertiesClass = MacroProperties::class;

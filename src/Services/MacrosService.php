@@ -4,6 +4,7 @@ namespace Matisse\Services;
 use Electro\Interfaces\Views\ViewServiceInterface;
 use Matisse\Components\DocumentFragment;
 use Matisse\Components\Macro\Macro;
+use Matisse\Config\MatisseSettings;
 use Matisse\Exceptions\FileIOException;
 use Matisse\Exceptions\MatisseException;
 
@@ -13,35 +14,25 @@ use Matisse\Exceptions\MatisseException;
 class MacrosService
 {
   /**
-   * Directories where macros can be found.
-   * <p>They will be search in order until the requested macro is found.
-   * <p>These paths will be registered on the templating engine.
-   * <p>This is preinitialized to the application macro's path.
-   *
-   * @var string[]
+   * @var MatisseSettings
    */
-  public $macrosDirectories = [];
-  /**
-   * File extension of macro files.
-   *
-   * @var string
-   */
-  public $macrosExt = '.html';
+  private $matisseSettings;
   /**
    * @var ViewServiceInterface
    */
   private $viewService;
 
-  public function __construct (ViewServiceInterface $viewService)
+  public function __construct (ViewServiceInterface $viewService, MatisseSettings $matisseSettings)
   {
     $this->viewService = $viewService;
+    $this->matisseSettings = $matisseSettings;
   }
 
   function findMacroFile ($tagName)
   {
     $tagName  = normalizeTagName ($tagName);
-    $filename = $tagName . $this->macrosExt;
-    foreach ($this->macrosDirectories as $dir) {
+    $filename = $tagName . $this->matisseSettings->macrosExt ();
+    foreach ($this->matisseSettings->getMacrosDirectories () as $dir) {
       $path = "$dir/$filename";
       if (file_exists ($path))
         return $path;

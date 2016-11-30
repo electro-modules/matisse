@@ -141,7 +141,7 @@ abstract class Component implements RenderableInterface, \Serializable
 
   static function throwUnknownComponent (DocumentContext $context, $tagName, Component $parent, $filename = null)
   {
-    $paths    = implode ('', map ($context->getMacrosService ()->macrosDirectories,
+    $paths    = implode ('', map ($context->matisseSettings->getMacrosDirectories (),
       function ($dir) { return "<li><path>$dir</path></li>"; }
     ));
     $filename = $filename ? "<kbd>$filename</kbd>" : "it";
