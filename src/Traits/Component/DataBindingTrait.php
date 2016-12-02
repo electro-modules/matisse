@@ -1,15 +1,14 @@
 <?php
 namespace Matisse\Traits\Component;
 
-use PhpKit\WebConsole\ErrorConsole\ErrorConsole;
-use PhpKit\WebConsole\Lib\Debug;
+use Electro\ViewEngine\Lib\ViewModel;
 use Matisse\Components\Base\Component;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Exceptions\DataBindingException;
 use Matisse\Interfaces\DataBinderInterface;
 use Matisse\Parser\Expression;
 use Matisse\Properties\Base\ComponentProperties;
-use Electro\ViewEngine\Lib\ViewModel;
+use PhpKit\WebConsole\Lib\Debug;
 
 /**
  * Provides an API for handling data binding on a component's properties.
@@ -225,22 +224,16 @@ trait DataBindingTrait
     list (, $idxVar, $itVar) = $m;
   }
 
-  /**
-   * @param \Error|\Exception $e
-   * @param Expression        $exp
-   * @throws ComponentException
-   */
   private function evalError ($e, Expression $exp)
   {
-    throw new ComponentException ($this,
+    inspect ()->writef ('<#section|%s>%s</#section>',
+      'Error while evaluating data-binding expression',
       Debug::grid ([
         'Expression' => Debug::RAW_TEXT . "<kbd>$exp</kbd>",
         'Compiled'   => sprintf ('%s<code>%s</code>', Debug::RAW_TEXT, \PhpCode::highlight ("$exp->translated")),
-        'Error'      => sprintf ('%s%s %s', Debug::RAW_TEXT, Debug::typeInfoOf ($e), $e->getMessage ()),
-        'At'         => sprintf ('%s%s, line <b>%s</b>', Debug::RAW_TEXT,
-          ErrorConsole::errorLink ($e->getFile (), $e->getLine ()), $e->getLine ()),
-      ], 'Error while evaluating data-binding expression')
+      ])
     );
+    throw $e;
   }
 
 }

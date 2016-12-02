@@ -7,16 +7,14 @@ use PhpKit\WebConsole\Lib\Debug;
 
 class ComponentException extends MatisseException
 {
-  public function __construct (Component $component = null, $msg = '', $deep = false)
+  public function __construct (Component $component = null, $msg = '', $deep = false, $previous = null)
   {
     // Prevent infinite recursion when this constructor throws an exception itself.
     static $nest = 0;
-    if ($nest++ == 2)
-      return;
 
     if (ctype_alnum (substr ($msg, -1)))
       $msg .= '.';
-    if (is_null ($component))
+    if (is_null ($component) || $nest++ == 2)
       parent::__construct ($msg);
     else {
       $class = Debug::typeInfoOf ($component);
@@ -37,7 +35,7 @@ class ComponentException extends MatisseException
         ? ""
         : ($id ? "Error on $class component <b>$id</b>" : "Error on a $class component.");
       $msg    = "<p>$header<p>$msg</p>" . ($o ? "<hr>$o" : '');
-      parent::__construct ($msg);
+      parent::__construct ($msg, '', $previous);
     }
   }
 

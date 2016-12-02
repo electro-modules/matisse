@@ -86,7 +86,8 @@ class Metadata extends Component
         $parent->addChild ($comp, $prepend);
       }
       // Now, compile the children.
-      self::compile ($item->getChildren (), $comp);
+      if ($item->hasChildren ())
+        self::compile ($item->getChildren (), $comp);
     };
   }
 

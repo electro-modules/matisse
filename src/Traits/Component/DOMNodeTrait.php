@@ -158,8 +158,9 @@ trait DOMNodeTrait
     $c = clone $this;
     $c->detach ();
     $c->setContext ($context);
-    foreach ($this->getChildren () as $child)
-      $child->setContextRecursive ($context);
+    if ($this->hasChildren ())
+      foreach ($this->getChildren () as $child)
+        $child->setContextRecursive ($context);
     if ($this->supportsProperties ()) {
       /** @var \Matisse\Components\Metadata $meta */
       foreach ($c->props->getPropertiesOf (type::metadata) as $meta)
