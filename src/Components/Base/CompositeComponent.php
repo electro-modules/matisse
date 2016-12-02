@@ -92,9 +92,7 @@ class CompositeComponent extends Component
   function setShadowDOM (Component $shadowDOM = null)
   {
     $this->shadowDOM = $shadowDOM;
-    //Disabled, because shadowDOM can't be attached, as it would wrongly inherit this component's context
-//    if ($shadowDOM)
-//      $shadowDOM->attachTo ($this);
+    //Note: do not attach shadowDOM, as it would wrongly inherit this component's context
   }
 
   /**

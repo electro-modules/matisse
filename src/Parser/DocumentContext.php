@@ -19,6 +19,9 @@ use Matisse\Traits\Context\ViewsAPITrait;
  *
  * <p>The context holds state and configuration information shared between all components on a document.
  * It also conveniently provides APIs for accessing/managing Assets, Blocks, etc.
+ *
+ * ><p>**Warning:** do NOT clone instances of this class; call {@see makeSubcontext} instead, otherwise undesired
+ * side-effects will happen (ex. presets may fail).
  */
 class DocumentContext
 {
@@ -33,7 +36,6 @@ class DocumentContext
     'condenseLiterals',
     'controllerNamespaces',
     'controllers',
-    'devEnv',
     'presets',
     'dataBinder',
     'viewService',
@@ -48,12 +50,6 @@ class DocumentContext
    * @var bool
    */
   public $condenseLiterals = false;
-  /**
-   * Set to true to generate pretty-printed markup.
-   *
-   * @var bool
-   */
-  public $devEnv = false;
   /**
    * The injector allows the creation of components with yet unknown dependencies.
    *
@@ -171,7 +167,7 @@ class DocumentContext
   public function makeSubcontext ()
   {
     $sub = clone $this;
-    // Sub-contexts inherit the parent's presets (without this, the Apply component will not work)
+    // Sub-contexts inherit the parent's presets (without this, the Presets component will not work correctly)
     $sub->presets =& $this->presets;
 
     $sub->dataBinder = $this->dataBinder->makeNew ();

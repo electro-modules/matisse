@@ -24,7 +24,7 @@ class RawText
       return;
     }
     elseif (!is_string ($s))
-      throw new MatisseException ("A <kbd>RawText</kbd> instance must hold a string value, not a " .
+      throw new MatisseException ("A <kbd>RawText</kbd> instance must hold a <kbd>string</kbd> or a <kbd>RenderableInterface</kbd> value, not a " .
                                   Debug::typeInfoOf ($s));
     $this->s = $s;
   }

@@ -39,7 +39,7 @@ class MatisseEngine implements ViewEngineInterface
   function __construct (ViewServiceInterface $view, DocumentContext $context, InjectorInterface $injector)
   {
     $this->view     = $view; // The view is always the owner if this engine, as long as the parameter is called $view
-    $this->context  = clone $context;
+    $this->context  = $context;
     $this->injector = $injector;
   }
 

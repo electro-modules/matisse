@@ -23,6 +23,8 @@ class ComponentInspector
   /** @var SplObjectStorage */
   private static $recursionMap;
 
+  public static $showUnmodifiedProps = false;
+
   /**
    * Returns a textual representation of the component, suitable for debugging purposes.
    *
@@ -159,53 +161,56 @@ class ComponentInspector
 
         // Display all scalar properties.
 
+        $shUnPr = self::$showUnmodifiedProps;
         foreach ($props as $k => $v) {
           $t          = $component->props->getTypeOf ($k);
           $isModified = $component->props->isModified ($k);
-          $modifStyle = $isModified ? ' class=__modified' : ' class=__original';
-          if ($t != type::content && $t != type::collection && $t != type::metadata) {
-            $tn = $component->props->getTypeNameOf ($k);
-            echo "<tr$modifStyle><td style='color:$COLOR_PROP'>$k<td><i style='color:$COLOR_TYPE'>$tn</i><td>";
+          if ($isModified || $shUnPr) {
+            $modifStyle = $shUnPr ? ($isModified ? ' class=__modified' : ' class=__original') : '';
+            if ($t != type::content && $t != type::collection && $t != type::metadata) {
+              $tn = $component->props->getTypeNameOf ($k);
+              echo "<tr$modifStyle><td style='color:$COLOR_PROP'>$k<td><i style='color:$COLOR_TYPE'>$tn</i><td>";
 
-            // Display data-binding
-            if ($component->isBound ($k)) {
-              /** @var Expression $exp */
-              $exp = $component->getBinding ($k);
-              $exp = self::inspectString ((string)$exp);
-              echo "<span style='color:$COLOR_BIND'>$exp</span> = ";
+              // Display data-binding
+              if ($component->isBound ($k)) {
+                /** @var Expression $exp */
+                $exp = $component->getBinding ($k);
+                $exp = self::inspectString ((string)$exp);
+                echo "<span style='color:$COLOR_BIND'>$exp</span> = ";
 
-              $v = self::getBindingValue ($k, $component, $error);
-              if ($error)
-                break;
-            }
+                $v = self::getBindingValue ($k, $component, $error);
+                if ($error)
+                  break;
+              }
 
-            if (is_null ($v))
-              echo "<i style='color:$COLOR_INFO'>null</i>";
+              if (is_null ($v))
+                echo "<i style='color:$COLOR_INFO'>null</i>";
 
-            else switch ($t) {
-              case type::bool:
-                echo "<i style='color:$COLOR_CONST'>" . ($v ? 'true' : 'false') . '</i>';
-                break;
-              case type::id:
-                echo "$Q$v$Q";
-                break;
-              case type::number:
-                echo $v;
-                break;
-              case type::string:
-                echo "$Q<span style='white-space: pre-wrap'>" .
-                     self::inspectString (strval ($v)) .
-                     "</span>$Q";
-                break;
-              default:
-                if (is_object ($v))
-                  echo sprintf ("<i style='color:$COLOR_CONST'>%s</i>", Debug::typeInfoOf ($v));
-                elseif (is_array ($v))
-                  echo sprintf ("<i style='color:$COLOR_CONST'>array(%d)</i>", count ($v));
-                else {
-                  $v = _e ($v);
+              else switch ($t) {
+                case type::bool:
+                  echo "<i style='color:$COLOR_CONST'>" . ($v ? 'true' : 'false') . '</i>';
+                  break;
+                case type::id:
                   echo "$Q$v$Q";
-                }
+                  break;
+                case type::number:
+                  echo $v;
+                  break;
+                case type::string:
+                  echo "$Q<span style='white-space: pre-wrap'>" .
+                       self::inspectString (strval ($v)) .
+                       "</span>$Q";
+                  break;
+                default:
+                  if (is_object ($v))
+                    echo sprintf ("<i style='color:$COLOR_CONST'>%s</i>", Debug::typeInfoOf ($v));
+                  elseif (is_array ($v))
+                    echo sprintf ("<i style='color:$COLOR_CONST'>array(%d)</i>", count ($v));
+                  else {
+                    $v = _e ($v);
+                    echo "$Q$v$Q";
+                  }
+              }
             }
           }
         }
@@ -217,51 +222,53 @@ class ComponentInspector
           if ($t == type::content || $t == type::collection || $t == type::metadata) {
             $tn         = $component->props->getTypeNameOf ($k);
             $isModified = $component->props->isModified ($k);
-            $modifStyle = $isModified ? ' style="background:#FFE"' : ' style="opacity:0.5"';
-            echo "<tr$modifStyle><td style='color:$COLOR_PROP'>$k<td><i style='color:$COLOR_TYPE'>$tn</i><td>";
+            if ($isModified || $shUnPr) {
+              $modifStyle = $shUnPr ? ($isModified ? ' class=__modified' : ' class=__original') : '';
+              echo "<tr$modifStyle><td style='color:$COLOR_PROP'>$k<td><i style='color:$COLOR_TYPE'>$tn</i><td>";
 
-            /** @var Expression $exp */
-            $exp = $component->getBinding ($k);
-            if (isset($exp)) {
-              $exp = self::inspectString ((string)$exp);
-              echo "<span style='color:$COLOR_BIND'>$exp</span> = ";
-              $v = self::getBindingValue ($k, $component, $error);
-              if ($error) {
-                echo $v;
-                break;
+              /** @var Expression $exp */
+              $exp = $component->getBinding ($k);
+              if (isset($exp)) {
+                $exp = self::inspectString ((string)$exp);
+                echo "<span style='color:$COLOR_BIND'>$exp</span> = ";
+                $v = self::getBindingValue ($k, $component, $error);
+                if ($error) {
+                  echo $v;
+                  break;
+                }
               }
+              if ($v && ($v instanceof Component || is_array ($v)))
+                switch ($t) {
+                  case type::content:
+                    if ($v) {
+                      echo "<tr><td><td colspan=2>";
+                      self::_inspect ($v, $deep);
+                    }
+                    else echo "<i style='color:$COLOR_INFO'>null</i>";
+                    break;
+                  case type::metadata:
+                    if ($v) {
+                      echo "<tr><td><td colspan=2>";
+                      self::_inspect ($v, $deep);
+                    }
+                    else echo "<i style='color:$COLOR_INFO'>null</i>";
+                    break;
+                  case type::collection:
+                    echo "of <i style='color:$COLOR_TYPE'>", $component->props->getRelatedTypeNameOf ($k), '</i>';
+                    if ($v) {
+                      echo "<tr><td><td colspan=2>";
+                      self::_inspectSet ($v, true);
+                    }
+                    else echo " = <i style='color:$COLOR_INFO'>[]</i>";
+                    break;
+                }
+              else if (is_array ($v))
+                echo "<i style='color:$COLOR_INFO'>[]</i>";
+              else if (isset($v))
+                printf ("<b style='color:red'>WRONG TYPE: %s</b>", Debug::typeInfoOf ($v));
+              else echo "<i style='color:$COLOR_INFO'>null</i>";
+              echo '</tr>';
             }
-            if ($v && ($v instanceof Component || is_array ($v)))
-              switch ($t) {
-                case type::content:
-                  if ($v) {
-                    echo "<tr><td><td colspan=2>";
-                    self::_inspect ($v, $deep);
-                  }
-                  else echo "<i style='color:$COLOR_INFO'>null</i>";
-                  break;
-                case type::metadata:
-                  if ($v) {
-                    echo "<tr><td><td colspan=2>";
-                    self::_inspect ($v, $deep);
-                  }
-                  else echo "<i style='color:$COLOR_INFO'>null</i>";
-                  break;
-                case type::collection:
-                  echo "of <i style='color:$COLOR_TYPE'>", $component->props->getRelatedTypeNameOf ($k), '</i>';
-                  if ($v) {
-                    echo "<tr><td><td colspan=2>";
-                    self::_inspectSet ($v, true);
-                  }
-                  else echo " = <i style='color:$COLOR_INFO'>[]</i>";
-                  break;
-              }
-            else if (is_array ($v))
-              echo "<i style='color:$COLOR_INFO'>[]</i>";
-            else if (isset($v))
-              printf ("<b style='color:red'>WRONG TYPE: %s</b>", Debug::typeInfoOf ($v));
-            else echo "<i style='color:$COLOR_INFO'>null</i>";
-            echo '</tr>';
           }
         }
 

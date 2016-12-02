@@ -6,12 +6,12 @@ use Electro\Interfaces\KernelInterface;
 use Electro\Interfaces\ModuleInterface;
 use Electro\Interfaces\Views\ViewServiceInterface;
 use Electro\Kernel\Lib\ModuleInfo;
+use Electro\Profiles\WebProfile;
 use Matisse\Interfaces\DataBinderInterface;
 use Matisse\Lib\DataBinder;
 use Matisse\Lib\MatisseEngine;
 use Matisse\Parser\DocumentContext;
 use Matisse\Services\MacrosService;
-use Electro\Profiles\WebProfile;
 
 class MatisseModule implements ModuleInterface
 {

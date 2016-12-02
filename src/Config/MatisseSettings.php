@@ -13,7 +13,9 @@ use PhpKit\Flow\FilesystemFlow;
 /**
  * Configuration settings for the Matisse rendering engine.
  *
- * @method $this|bool devEnv (bool $v = null)
+ * @method $this|bool collapseWhitespace (bool $v = null) Enable to remove whitespace around raw markup blocks
+ * @method $this|bool inspectDOM (bool $v = null) Enable to inspect the server-side view-DOM on a console panel
+ * @method $this|bool devEnv (bool $v = null) When TRUE, whitespace between tags is not removed
  * @method $this|string moduleMacrosPath (string $v = null) The relative path of the macros folder inside a module
  * @method $this|string macrosExt (string $v = null) File extension of macro files
  */
@@ -21,6 +23,12 @@ class MatisseSettings
 {
   use ConfigurationTrait;
 
+  /**
+   * Enable to remove whitespace around raw markup blocks.
+   *
+   * @var bool
+   */
+  private $collapseWhitespace = false;
   /**
    * A mapping between modules view templates base directories and the corresponding PHP namespaces that will be
    * used for resolving view template paths to PHP controller classes.
@@ -37,11 +45,11 @@ class MatisseSettings
    */
   private $controllers = [];
   /**
-   * This is automatically initialized from the environment DEBUG setting.
+   * Enabling this will have a severe impact on performance!
    *
    * @var bool
    */
-  private $devEnv = false;
+  private $inspectDOM = false;
   /**
    * @var KernelSettings
    */
@@ -75,10 +83,9 @@ class MatisseSettings
    */
   private $viewEngineSettings;
 
-  public function __construct (KernelSettings $kernelSettings, ViewEngineSettings $viewEngineSettings, $devEnv)
+  public function __construct (KernelSettings $kernelSettings, ViewEngineSettings $viewEngineSettings)
   {
     $this->kernelSettings     = $kernelSettings;
-    $this->devEnv             = $devEnv;
     $this->viewEngineSettings = $viewEngineSettings;
   }
 
@@ -112,8 +119,7 @@ class MatisseSettings
    */
   function initContext (DocumentContext $ctx)
   {
-    $ctx->condenseLiterals     = !$this->devEnv;
-    $ctx->devEnv               = $this->devEnv;
+    $ctx->condenseLiterals     = $this->collapseWhitespace;
     $ctx->controllers          = $this->controllers;
     $ctx->controllerNamespaces = $this->controllerNamespaces;
     $ctx->registerTags ($this->tags);
