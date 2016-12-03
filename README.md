@@ -97,11 +97,11 @@ Components can also be defined with pure markup via template files, without any 
 A more advanced example of a Matisse template, which defines a macro component that implements a customisable panel:
 
 ```HTML
-<Template name="Form" defaultParam="content">
-  <Param name="type" type="string" default="box-solid box-default"/>
-  <Param name="title" type="string"/>
-  <Param name="content" type="content"/>
-  <Param name="footer" type="content"/>
+<Template name=Form defaultParam=content>
+  <Param name=type type=string default="box-solid box-default"/>
+  <Param name=title type=string/>
+  <Param name=content type=content/>
+  <Param name=footer type=content/>
 
   <div class="form box {@type}">
     <If {@title}>
@@ -127,9 +127,7 @@ You can then create instances of this component like this:
 <Form type="box-info" title="My title">
   <h1>Welcome</h1>
   <p>Some text here...</p>
-  <Footer>
-    Some footer text...
-  </Footer>
+  <Footer>Some footer text...</Footer>
 </Form>
 ```
 
@@ -153,12 +151,10 @@ When rendered, the template will generate the following HTML markup:
 ### View Models
 
 You can also bind values from a view model into your template.
-For instance, if the following view model is defined:
+For instance, rendering a template with the following view model:
 
 ```PHP
-[
-  'footerText' => 'Some footer text...'
-]
+$model = ['footerText' => 'Some footer text...'];
 ```
 
 You may call the component defined above like this:
@@ -167,11 +163,11 @@ You may call the component defined above like this:
 <Form type="box-info" title="My title">
   <h1>Welcome</h1>
   <p>Some text here...</p>
-  <Footer>
-    {footerText}
-  </Footer>
+  <Footer>{footerText}</Footer>
 </Form>
 ```
+
+The resulting output would be identical to the one from the previous example.
 
 ### More documentation
 
