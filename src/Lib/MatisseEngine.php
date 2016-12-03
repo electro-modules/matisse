@@ -6,11 +6,11 @@ use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\Views\ViewEngineInterface;
 use Electro\Interfaces\Views\ViewServiceInterface;
 use Matisse\Components\Base\CompositeComponent;
+use Matisse\Components\Base\PageComponent;
 use Matisse\Components\DocumentFragment;
 use Matisse\Exceptions\MatisseException;
 use Matisse\Parser\DocumentContext;
 use Matisse\Parser\Parser;
-use Selenia\Platform\Components\Base\PageComponent;
 
 class MatisseEngine implements ViewEngineInterface
 {
