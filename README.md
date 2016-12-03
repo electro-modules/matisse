@@ -6,7 +6,7 @@ Matisse is a component-based template engine for PHP web applications.
 
 Like any other template engine, Matisse generates an HTML document by combining a source (template) document with data from your view model.
 
-But unlike most other PHP template engines, which deal with HTML markup with embedded commands written on some DSL, Matisse works with components, which are parametrised, composable and reusable units of rendering logic, domain logic and markup that are written as XML tags.
+But unlike most other PHP template engines, which deal with HTML markup with embedded commands written on some DSL, Matisse works with components, which are parameterised, composable and reusable units of rendering logic, domain logic and markup that are written as XML tags.
 
 The source template is an HTML text file where, besides common HTML tags (always lower cased), special tags beginning with a capital letter specify dynamic components.
 
@@ -15,13 +15,13 @@ Example of a Matisse template:
 ```HTML
 <h1>Some HTML text</h1>
 <form>
-	<Input name=field1 value={myVar}/>
-	<For each=name of={data}>
-		<Header><ul></Header>
-		<li>Item {name}</li>
-		<Footer></ul></Footer>
-		<Else>There are no items.</Else>
-	</For>
+  <Input name=field1 value={myVar}/>
+  <For each=name of={data}>
+    <Header><ul></Header>
+    <li>Item {name}</li>
+    <Footer></ul></Footer>
+    <Else>There are no items.</Else>
+  </For>
 </form>
 ```
 
@@ -35,8 +35,8 @@ So, the real DOM (as parsed by Matisse) for the example above is:
 <Text value="<h1>Some HTML text</h1><form>"/>
 <Input/>
 <For header="<ul>" footer="</ul>" else="There are no items.">
-	<Text value="Item "/>
-	<Text value={name}/>
+  <Text value="Item "/>
+  <Text value={name}/>
 </For>
 <Text value="</form>"/>
 ```
@@ -47,19 +47,56 @@ Each component tag is converted into an instance of a corresponding PHP class. W
 
 ##### Minimal component example
 
+This is the smallest, simplest component that you may implement:
+
+```PHP
+use Matisse\Components\Base\Component;
+
+class HelloWorld extends Component
+{
+  protected function render ()
+  {
+    echo "Hello World!";
+  }
+}
+```
+
+You would call this component from a template like this:
+
+```HTML
+<HelloWorld/>
+
+or
+
+<HelloWorld></HelloWorld>
+```
+
+which would render:
+
+```HTML
+Hello World!
+
+or
+
+Hello World!
+```
+
+#### Minimal component with a property
+
+Let's make our component's output text parameterizable:
+
 ```PHP
 use Matisse\Components\Base\Component;
 use Matisse\Properties\Base\ComponentProperties;
 
-class TestProperties extends ComponentProperties
+class MessageProperties extends ComponentProperties
 {
   public $value = '';
 }
 
-class Test extends Matisse\Components\Base\Component
+class Message extends Component
 {
   const propertiesClass = TextProperties::class;
-  public $props;
   
   protected function render ()
   {
@@ -71,13 +108,13 @@ class Test extends Matisse\Components\Base\Component
 You would call this component from a template like this:
 
 ```HTML
-<Test value="some text"/>
+<Message value="some text"/>
 
 or
 
-<Test>
-  <Value>some text</Value>
-</Test>
+<Message>
+  <Value>some other text</Value>
+</Message>
 ```
 
 which would render:
@@ -87,7 +124,7 @@ some text
 
 or
 
-some text
+some other text
 ```
 
 #### Macros
@@ -151,13 +188,14 @@ When rendered, the template will generate the following HTML markup:
 ### View Models
 
 You can also bind values from a view model into your template.
+
 For instance, rendering a template with the following view model:
 
 ```PHP
 $model = ['footerText' => 'Some footer text...'];
 ```
 
-You may call the component defined above like this:
+You may call the same component, defined above, like this:
 
 ```HTML
 <Form type="box-info" title="My title">
@@ -173,9 +211,9 @@ The resulting output would be identical to the one from the previous example.
 
 This was just a very short introduction to the Matisse template engine. Matisse provides many more advanced features for you to use on your templates.
 
-Matisse is already quite functional and it's being used right now on several projects at our company.
+Despite its current lack of documentation, Matisse is quite ready for use. In fact, we are using it, right now, on several projects at our company.
 
-We are sorry for the current lack of documentation. We are working on it.
+I'm sorry for the lack of documentation, but I'm working on it.
 
 ## License
 
