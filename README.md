@@ -8,17 +8,31 @@ Like any other template engine, Matisse generates an HTML document by combining 
 
 But unlike most other PHP template engines, which deal with HTML markup with embedded commands written on some DSL, Matisse works with components, which are parameterised, composable and reusable units of rendering logic, domain logic and markup that are written as XML tags.
 
-The source template is an HTML text file where, besides common HTML tags (always lower cased), special tags beginning with a capital letter specify dynamic components.
+## Installation
 
-Example of a Matisse template:
+To install this plugin on your application, using the terminal, `cd` to your app's directory and type:
+
+```bash
+workman install plugin electro-modules/matisse
+```
+
+> For correct operation, do not install this package directly with Composer.
+
+### Introduction
+
+#### Templates
+
+Matisse templates are HTML text files where, besides common HTML tags (always lower cased), special tags, beginning with a capital letter, specify dynamic components.
+
+##### Example
 
 ```HTML
 <h1>Some HTML text</h1>
 <form>
   <Input name=field1 value={myVar}/>
-  <For each=name of={data}>
+  <For each=record of={data}>
     <Header><ul></Header>
-    <li>Item {name}</li>
+    <li>Item {record.name}</li>
     <Footer></ul></Footer>
     <Else>There are no items.</Else>
   </For>
@@ -27,21 +41,53 @@ Example of a Matisse template:
 
 > When writing templates, HTML markup should be written in HTML 5 syntax, while component tags must be written in XML syntax. This means tags must always be closed, even if the tag has no content (you can use the self-closing tag syntax: `<Component/>`). Unlike XML though, attribute values are not required to be enclosed in quotes.
 
-On the example above, notice how the `<ul>` tag is only closed inside the `<Footer>` tag, seemingly violating the correct HTML tag nesting structure of the template. In reality, the template is perfectly valid and so is the generated HTML output. This happens because, for Matisse, all HTML tags are simply raw text, without any special meaning. All text lying between component tags (those beginning with a capital letter) is converted into as few as possible Text components.
+On the example above, `Input` is a component, not the common `input` HTML element.
+
+`For` is another component, which repeats a block of markup for each record on a list (array) of records.
+
+Notice how the `<ul>` tag is only closed inside the `<Footer>` tag, seemingly violating the correct HTML tag nesting structure of the template. In reality, the template is perfectly valid and so is the generated HTML output. This happens because, for Matisse, all HTML tags are simply raw text, without any special meaning. All text lying between component tags (those beginning with a capital letter) is converted into as few as possible Text components.
 
 So, the real DOM (as parsed by Matisse) for the example above is:
 
 ```HTML
 <Text value="<h1>Some HTML text</h1><form>"/>
-<Input/>
-<For header="<ul>" footer="</ul>" else="There are no items.">
+<Input name=field1 value={myVar}/>
+<For each=record of={data} header="<ul>" footer="</ul>" else="There are no items.">
   <Text value="Item "/>
-  <Text value={name}/>
+  <Text value={record.name}/>
 </For>
 <Text value="</form>"/>
 ```
 
-### Implementing Components
+#### Data binding
+
+Data from a view model or from component properties can be automatically applied to specific places on the template. This is called "binding" data to the template.
+
+To bind data, you use "data binding expressions", which are enclosed in brackets.
+
+##### Example
+
+```HTML
+<SomeComponent value={record.name}/>
+```
+
+The syntax for expressions differs from PHP expressions. For instance, accessing properties of an object or array is done with the dot operator, instead of the `[]` or `->` operators.
+
+Expressions can also define sequences of filters for applying multiple transformations to a value.
+
+##### Example
+
+```HTML
+<SomeComponent value={record.date|datePart|else 'No date'}/>
+```
+
+On composite components (those having their own templates), you can bind to the template's owning component's properties using the `@` operator.
+
+```HTML
+<SomeComponent value={@prop1}/>
+```
+
+### Implementing your own components
 
 Each component tag is converted into an instance of a corresponding PHP class. When the template is rendered, each component instance is responsible for generating an HTML representation of that component, together with optional (embedded or external) javascript code and stylesheet references or embedded CSS styles.
 
@@ -134,13 +180,13 @@ Components can also be defined with pure markup via template files, without any 
 A more advanced example of a Matisse template, which defines a macro component that implements a customisable panel:
 
 ```HTML
-<Template name=Form defaultParam=content>
+<Macro name=Panel defaultParam=content>
   <Param name=type type=string default="box-solid box-default"/>
   <Param name=title type=string/>
   <Param name=content type=content/>
   <Param name=footer type=content/>
 
-  <div class="form box {@type}">
+  <div class="panel box {@type}">
     <If {@title}>
       <div class="box-header with-border">
         <h3 class="box-title">{@title}</h3>
@@ -161,17 +207,17 @@ A more advanced example of a Matisse template, which defines a macro component t
 You can then create instances of this component like this:
 
 ```HTML
-<Form type="box-info" title="My title">
+<Panel type="info" title="My title">
   <h1>Welcome</h1>
   <p>Some text here...</p>
   <Footer>Some footer text...</Footer>
-</Form>
+</Panel>
 ```
 
 When rendered, the template will generate the following HTML markup:
 
 ```HTML
-<div class="form box box-info">
+<div class="panel box box-info">
   <div class="box-header with-border">
     <h3 class="box-title">My title</h3>
   </div>
@@ -198,11 +244,11 @@ $model = ['footerText' => 'Some footer text...'];
 You may call the same component, defined above, like this:
 
 ```HTML
-<Form type="box-info" title="My title">
+<Panel type="box-info" title="My title">
   <h1>Welcome</h1>
   <p>Some text here...</p>
   <Footer>{footerText}</Footer>
-</Form>
+</Panel>
 ```
 
 The resulting output would be identical to the one from the previous example.
