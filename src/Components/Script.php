@@ -16,16 +16,16 @@ class ScriptProperties extends ComponentProperties
    */
   public $name = [type::id];
   /**
+   * @var bool
+   */
+  public $prepend = false;
+  /**
    * If set, the URL for an external script.<br>
    * If not set, the tag content will be used as an inline script.
    *
    * @var string
    */
   public $src = '';
-  /**
-   * @var bool
-   */
-  public $prepend = false;
 }
 
 class Script extends Component
@@ -46,7 +46,9 @@ class Script extends Component
     if (exists ($prop->src))
       $this->context->getAssetsService ()->addScript ($prop->src, $this->props->prepend);
     else if ($this->hasChildren ())
-      $this->context->getAssetsService ()->addInlineScript ($this, $prop->name, $this->props->prepend);
+      $this->context->getAssetsService ()
+                    ->addInlineScript (self::getRenderingOfSet ($this->getChildren ()), $prop->name,
+                      $this->props->prepend);
   }
 }
 

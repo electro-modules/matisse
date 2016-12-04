@@ -16,16 +16,16 @@ class StyleProperties extends ComponentProperties
    */
   public $name = [type::id];
   /**
+   * @var bool
+   */
+  public $prepend = false;
+  /**
    * If set, the URL for an external CSS stylesheet.<br>
    * If not set, the tag content will be used as an inline stylesheet.
    *
    * @var string
    */
   public $src = '';
-  /**
-   * @var bool
-   */
-  public $prepend = false;
 }
 
 class Style extends Component
@@ -46,7 +46,8 @@ class Style extends Component
     if (exists ($prop->src))
       $this->context->getAssetsService ()->addStylesheet ($prop->src, $this->props->prepend);
     else if ($this->hasChildren ())
-      $this->context->getAssetsService ()->addInlineCss ($this, $prop->name, $this->props->prepend);
+      $this->context->getAssetsService ()->addInlineCss (self::getRenderingOfSet ($this->getChildren ()), $prop->name,
+        $this->props->prepend);
   }
 }
 
