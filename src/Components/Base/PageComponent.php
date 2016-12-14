@@ -285,8 +285,10 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
   {
     parent::afterRender ();
 
+
     //----------------------------------------------------------------------------------------
     // View Model panel
+    //
     // (MUST run before the DOM panel to capture the data-binding stack at its current state)
     //----------------------------------------------------------------------------------------
     DebugConsole::registerPanel ('view', new ConsoleLogger ('View', 'fa fa-eye'));
