@@ -161,7 +161,7 @@ abstract class Component implements RenderableInterface, \Serializable
     $props = array_merge (['tagName' => $this->tagName], object_publicProps ($this));
     unset ($props['parent']);
     unset ($props['context']);
-    unset ($props['children']);
+    $props['children'] = $this->children;
     return $props;
   }
 
@@ -181,7 +181,7 @@ abstract class Component implements RenderableInterface, \Serializable
   function __toString ()
   {
     try {
-      return $this->inspect ();
+      return $this->inspect (true);
     }
     catch (\Exception $e) {
       inspect ($e->getTraceAsString ());
