@@ -45,12 +45,6 @@ class MatisseSettings
    */
   private $controllers = [];
   /**
-   * Enabling this will have a severe impact on performance!
-   *
-   * @var bool
-   */
-  private $inspectDOM = false;
-  /**
    * @var KernelSettings
    */
   private $kernelSettings;

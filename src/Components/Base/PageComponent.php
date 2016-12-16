@@ -1,6 +1,7 @@
 <?php
 namespace Matisse\Components\Base;
 
+use Electro\Debugging\Config\DebugSettings;
 use Electro\Exceptions\FatalException;
 use Electro\Exceptions\Flash\FileException;
 use Electro\Exceptions\FlashMessageException;
@@ -16,12 +17,10 @@ use Electro\Interfaces\SessionInterface;
 use Electro\Kernel\Config\KernelSettings;
 use Electro\Traits\PolymorphicInjectionTrait;
 use Exception;
-use Matisse\Config\MatisseSettings;
 use Matisse\Parser\DocumentContext;
 use Matisse\Parser\Expression;
 use PhpKit\WebConsole\DebugConsole\DebugConsole;
 use PhpKit\WebConsole\Lib\Debug;
-use PhpKit\WebConsole\Loggers\ConsoleLogger;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
@@ -108,17 +107,17 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
    */
   protected $response;
   /**
+   * @var DebugSettings
+   */
+  private $debugSettings;
+  /**
    * @var InjectorInterface
    */
   private $injector;
-  /**
-   * @var MatisseSettings
-   */
-  private $matisseSettings;
 
   function __construct (InjectorInterface $injector, KernelSettings $kernelSettings,
                         RedirectionInterface $redirection, NavigationInterface $navigation,
-                        ModelControllerInterface $modelController, MatisseSettings $matisseSettings)
+                        ModelControllerInterface $modelController, DebugSettings $debugSettings)
   {
     parent::__construct ();
 
@@ -127,7 +126,7 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
     $this->redirection     = $redirection;
     $this->navigation      = $navigation;
     $this->modelController = $modelController;
-    $this->matisseSettings = $matisseSettings;
+    $this->debugSettings   = $debugSettings;
 
     // Inject extra dependencies into the subclasses' inject methods, if one or more exist.
 
@@ -285,65 +284,63 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
   {
     parent::afterRender ();
 
-
     //----------------------------------------------------------------------------------------
     // View Model panel
     //
     // (MUST run before the DOM panel to capture the data-binding stack at its current state)
     //----------------------------------------------------------------------------------------
-    DebugConsole::registerPanel ('view', new ConsoleLogger ('View', 'fa fa-eye'));
+    if ($this->debugSettings->logView) {
+      $VMFilter = function ($k, $v, $o) {
+        if (
+          $v instanceof DocumentContext ||
+          $v instanceof Component ||
+          $k === 'parent' ||
+          $k === 'model'
+        ) return '...';
+        return true;
+      };
+      $expMap   = Expression::$inspectionMap;
+      ksort ($expMap);
 
-    $VMFilter = function ($k, $v, $o) {
-      if (
-        $v instanceof DocumentContext ||
-        $v instanceof Component ||
-        $k === 'parent' ||
-        $k === 'model'
-      ) return '...';
-      return true;
-    };
-    $expMap   = Expression::$inspectionMap;
-    ksort ($expMap);
-
-    DebugConsole::logger ('view')
-                ->withFilter ($VMFilter, $this->context)
-                ->write ('<#section|Compiled expressions>')
-                ->inspect ($expMap)
-                ->write ('</#section>');
+      DebugConsole::logger ('view')
+                  ->withFilter ($VMFilter, $this->context)
+                  ->write ('<#section|Compiled expressions>')
+                  ->inspect ($expMap)
+                  ->write ('</#section>');
+    }
 
     //------------
     // Model panel
     //------------
-    DebugConsole::registerPanel ('model', new ConsoleLogger ('Model', 'fa fa-table'));
+    if ($this->debugSettings->logModel) {
+      $shadowDOM = $this->getShadowDOM ();
+      if ($shadowDOM) {
 
-    $shadowDOM = $this->getShadowDOM ();
-    if ($shadowDOM) {
+        $VMFilter = function ($k, $v, $o) {
+          if ($v instanceof KernelSettings ||
+              $v instanceof NavigationInterface ||
+              $v instanceof NavigationLinkInterface ||
+              $v instanceof SessionInterface ||
+              $v instanceof ServerRequestInterface ||
+              $v instanceof DocumentContext ||
+              $v instanceof Component
+          ) return '...';
+          return true;
+        };
 
-      $VMFilter = function ($k, $v, $o) {
-        if ($v instanceof KernelSettings ||
-            $v instanceof NavigationInterface ||
-            $v instanceof NavigationLinkInterface ||
-            $v instanceof SessionInterface ||
-            $v instanceof ServerRequestInterface ||
-            $v instanceof DocumentContext ||
-            $v instanceof Component
-        ) return '...';
-        return true;
-      };
-
-      $binder = $shadowDOM->getDataBinder ();
-      DebugConsole::logger ('model')
-                  ->write ('<#i>PAGE DATA BINDER: ' . Debug::getType ($binder) . "</#i>")
-                  ->write ("<#section|PAGE VIEW MODEL>")
-                  ->withFilter ($VMFilter, $binder->getViewModel ())
-                  ->write ("</#section>");
+        $binder = $shadowDOM->getDataBinder ();
+        DebugConsole::logger ('model')
+                    ->write ('<#i>PAGE DATA BINDER: ' . Debug::getType ($binder) . "</#i>")
+                    ->write ("<#section|PAGE VIEW MODEL>")
+                    ->withFilter ($VMFilter, $binder->getViewModel ())
+                    ->write ("</#section>");
+      }
     }
 
     //-----------
     // DOM panel
     //-----------
-    if ($this->matisseSettings->inspectDOM ()) {
-      DebugConsole::registerPanel ('DOM', new ConsoleLogger ('Server-side DOM', 'fa fa-sitemap'));
+    if ($this->debugSettings->logDOM) {
       $insp = $this->inspect (true);
       DebugConsole::logger ('DOM')->write ($insp);
     }
