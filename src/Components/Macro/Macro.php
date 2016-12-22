@@ -152,7 +152,7 @@ class Macro extends Component
     foreach ($this->props->style as $style) {
       if ($style->props->src)
         $assets->addStylesheet ($style->props->src);
-      else $assets->addInlineCss ($style->runAndGetContent (), $style->props->name);
+      else $assets->addInlineCss ($style->renderChildren (), $style->props->name);
     }
   }
 

@@ -3,7 +3,6 @@ namespace Matisse\Traits\Component;
 
 use Matisse\Components\Base\Component;
 use Matisse\Exceptions\ComponentException;
-use Matisse\Interfaces\PresetsInterface;
 
 trait RenderingTrait
 {
@@ -107,6 +106,20 @@ trait RenderingTrait
   }
 
   /**
+   * Similar to {@see getRendering}, but it returns only the component's children's rendering.
+   *
+   * ><p>**Note:** the component itself is not rendered.
+   *
+   * @param string|null $attrName [optional] A property name. If none, it renders all of the component's direct
+   *                              children.
+   * @return string
+   */
+  function renderChildren ($attrName = null)
+  {
+    return self::getRenderingOfSet ($this->getChildren ($attrName));
+  }
+
+  /**
    * Renders the component.
    *
    * <p>This performs all the setup and data binding logic required for a successful render.
@@ -138,25 +151,10 @@ trait RenderingTrait
   }
 
   /**
-   * Similar to {@see getRendering}, but it returns only the component's children's rendering.
-   *
-   * ><p>**Note:** the component itself is not rendered.
-   *
-   * @return string
-   */
-  function runAndGetContent ()
-  {
-    ob_start (null, 0);
-    $this->runContent ();
-    return ob_get_clean ();
-  }
-
-  /**
    * Invokes doRender() recursively on the component's children (or a subset of).
    *
    * @param string|null $attrName [optional] A property name. If none, it renders all of the component's direct
    *                              children.
-   *
    * @see runContent()
    */
   function runChildren ($attrName = null)

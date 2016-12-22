@@ -29,7 +29,7 @@ $VOID_ELEMENTS = [
  *
  * @param string       $selector Syntax: 'tag#id.class1.class2...classN', all elements are optional. Default tag is
  *                               'div'.
- * @param array|string $attrs    Can also receive the value of $content, but BEWARE: the content array MUST have
+ * @param array|string $attrs    It can also receive the value of $content, but BEWARE: the content array MUST have
  *                               integer keys, otherwise it will be interpreted as an attributes array.
  * @param array|string $content
  * @return array
@@ -49,10 +49,10 @@ function h ($selector, $attrs = [], $content = [])
     $content = $attrs;
     $attrs   = [];
   }
-  if (isset($attrs['class'])) {
-    $classes = array_merge ($classes, explode (' ', $attrs['class']));
-    unset ($attrs['class']);
-  }
+  $class = isset($attrs['class']) ? $attrs['class'] : null;
+  if ($class !== null && $class !== '')
+    $classes = array_merge ($classes, explode (' ', $class));
+  unset ($attrs['class']); // must be unset even if the attribute is null or ''
 
   $outAttrs = [];
   if ($id)
