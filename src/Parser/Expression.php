@@ -1,9 +1,9 @@
 <?php
 namespace Matisse\Parser;
 
+use Electro\Traits\InspectionTrait;
 use Matisse\Exceptions\DataBindingException;
 use Matisse\Interfaces\DataBinderInterface;
-use Electro\Traits\InspectionTrait;
 use PhpCode;
 use RuntimeException;
 
@@ -93,9 +93,9 @@ REGEXP;
 
   public static $INSPECTABLE = ['expression', 'translated'];
   /**
-   * A map of databinding expressions to compiled functions.
+   * A map of databinding expressions to compiled PHP code.
    *
-   * @var \Closure[] [string => Closure]
+   * @var \Closure[]
    */
   public static $cache = [];
   /**
@@ -105,7 +105,7 @@ REGEXP;
    *
    * @var string[] [string => string]
    */
-  public static $inspectionMap = [];
+  public static $translationCache = [];
   /**
    * Finds binding expressions and extracts information from them.
    * > Note: the u modifier allows unicode white space to be properly matched.
@@ -137,7 +137,7 @@ REGEXP;
    *
    * @var string
    */
-  private $expression;
+  public $expression;
 
   function __construct ($expression)
   {
@@ -326,13 +326,16 @@ REGEXP;
   function evaluate (DataBinderInterface $binder)
   {
     if (!($fn = $this->compiled)) {
-      $fn = get (self::$cache, $this->expression);
-      if ($fn)
-        $this->compiled = $fn;
+      $exp = $this->expression;
+      $fn  = get (self::$cache, $exp);
+      if ($fn) {
+        $this->translated = self::$translationCache[$exp];
+        $this->compiled   = $fn;
+      }
       else {
         // translate to PHP.
         if (!$this->translated) // if the expression was unserialized, this will already be set
-          $this->translated = self::translate ($this->expression);
+          $this->translated = self::translate ($exp);
         // Compile to native code.
         try {
           $fn = $this->compiled = PhpCode::compile ($this->translated,
@@ -341,11 +344,11 @@ REGEXP;
             ));
         }
         catch (RuntimeException $e) {
-          self::filterSyntaxError ($this->expression, '<hr>' . $e->getMessage ());
+          self::filterSyntaxError ($exp, '<hr>' . $e->getMessage ());
         }
         // Cache the compiled expression.
-        self::$cache[$this->expression]         = $fn;
-        self::$inspectionMap[$this->expression] = $this->translated;
+        self::$cache[$exp]            = $fn;
+        self::$translationCache[$exp] = $this->translated;
       }
     }
     return $fn ($binder);

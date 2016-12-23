@@ -299,7 +299,7 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
         ) return '...';
         return true;
       };
-      $expMap   = Expression::$inspectionMap;
+      $expMap   = Expression::$translationCache;
       ksort ($expMap);
 
       DebugConsole::logger ('view')
