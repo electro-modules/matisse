@@ -22,6 +22,8 @@ class MacroCall extends CompositeComponent
   public $props;
   /** @var Macro Points to the component that defines the macro for this instance. */
   protected $macroInstance;
+  /** @var string This is not the same as the constant with the same name! This is a dynamic version of it. */
+  private $propertiesClass;
 
   function render ()
   {
@@ -53,10 +55,30 @@ class MacroCall extends CompositeComponent
     parent::render ();
   }
 
+  /**
+   * Overriden.
+   *
+   * @param array|null $props
+   */
+  function setProps (array $props = null)
+  {
+    $class       = $this->propertiesClass;
+    $this->props = new $class ($this);
+    if ($props)
+      $this->props->apply ($props);
+  }
+
   protected function getDefaultParam ()
   {
     return $this->macroInstance->props->defaultParam;
   }
+
+//  protected function setupViewModel ()
+//  {
+//    parent::setupViewModel ();
+//    foreach ($this->props->getPropertiesOf (type::content, type::metadata, type::collection) as $prop => $v)
+//      $this->props->$prop->preRun();
+//  }
 
   /**
    * Loads the macro with the name specified by the `macro` property.
@@ -76,25 +98,21 @@ class MacroCall extends CompositeComponent
     $name         = get ($props, 'macro');
     if (exists ($name)) {
       try {
-        $frag = $this->context->getMacrosService ()->loadMacro ($name, $path);
+        $macros              = $this->context->getMacrosService ();
+        $frag                = $macros->loadMacro ($name, $path);
         $this->macroInstance = $frag->getFirstChild ();
         $this->props->setMacro ($this->macroInstance);
         $this->setShadowDOM ($this->macroInstance);
+        $this->propertiesClass = $macros->setupPropsClass ($name, $this->macroInstance);
       }
       catch (FileIOException $e) {
         /** @noinspection PhpUndefinedVariableInspection */
-        self::throwUnknownComponent ($this->context, $name, $parent, $filename);
+        self::throwUnknownComponent ($this->context, $name, $parent, $path);
       }
     }
     parent::onCreate ($props, $parent);
   }
 
-//  protected function setupViewModel ()
-//  {
-//    parent::setupViewModel ();
-//    foreach ($this->props->getPropertiesOf (type::content, type::metadata, type::collection) as $prop => $v)
-//      $this->props->$prop->preRun();
-//  }
   protected function viewModel (ViewModel $viewModel)
   {
     parent::viewModel ($viewModel);
@@ -102,6 +120,5 @@ class MacroCall extends CompositeComponent
     $viewModel->model = $this->context->getDataBinder ()->getViewModel ()->model;
     $this->macroInstance->importServices ($viewModel);
   }
-
 
 }

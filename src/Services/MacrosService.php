@@ -5,8 +5,11 @@ use Electro\Interfaces\Views\ViewServiceInterface;
 use Matisse\Components\DocumentFragment;
 use Matisse\Components\Macro\Macro;
 use Matisse\Config\MatisseSettings;
+use Matisse\Exceptions\ComponentException;
 use Matisse\Exceptions\FileIOException;
 use Matisse\Exceptions\MatisseException;
+use Matisse\Properties\Base\ComponentProperties;
+use Matisse\Properties\TypeSystem\type;
 
 /**
  * Manages macros loading, storage and retrieval.
@@ -24,7 +27,7 @@ class MacrosService
 
   public function __construct (ViewServiceInterface $viewService, MatisseSettings $matisseSettings)
   {
-    $this->viewService = $viewService;
+    $this->viewService     = $viewService;
     $this->matisseSettings = $matisseSettings;
   }
 
@@ -41,7 +44,7 @@ class MacrosService
   }
 
   /**
-   * Loads and compiles the macro.
+   * Loads and compiles the macro, or retrieves it from the cache.
    *
    * <p>This method searches for a file defining a macro for the given tag name.
    * <p>It returns a DocumentFragment containing the macro as its first child.
@@ -59,13 +62,58 @@ class MacrosService
     $c   = $doc->getFirstChild ();
     if ($c instanceof Macro)
       return $doc;
-    $filename = $this->findMacroFile ($filename);
     throw new MatisseException("File <path>$filename</path> doesn't define a macro called <kbd>$tagName</kbd> right at the beginning of the file");
+  }
+
+  /**
+   * Compiles (with caching) a class for the macro's properties and returns an instance of it.
+   *
+   * @param string $tagName
+   * @param Macro  $macro
+   * @return string The properties' class name.
+   * @throws ComponentException
+   */
+  function setupPropsClass ($tagName, Macro $macro)
+  {
+    $propsClass = $tagName . 'AutoProps';
+    if (!class_exists ($propsClass, false)) {
+      $baseClass = ComponentProperties::class;
+      $typeClass = type::class;
+      $propsStr  = "  public \$macro='';\n";
+      foreach ($macro->props->param as $param) {
+        $def  = $param->props->default;
+        $type = $param->props->type;
+        if (!defined ("$typeClass::$type"))
+          throw new ComponentException($macro, "Invalid parameter type: <kbd>$type</kbd>");
+        $typeVal = constant ("$typeClass::$type");
+        $defVal  = '';
+        if (exists ($def))
+          switch ($type) {
+            case 'string':
+            case 'id':
+              $defVal = ",'$def'";
+              break;
+            case 'bool':
+            case 'number':
+              $defVal = ",$def";
+              break;
+          }
+        $propsStr .= "  public \${$param->props->name}=['$typeVal'$defVal];\n";
+      }
+      $code = <<<PHP
+class $propsClass extends $baseClass
+{
+$propsStr}
+PHP;
+      \PhpCode::run ($code);
+    }
+    return $propsClass;
   }
 
   private function loadMacroFile ($filename)
   {
     return $this->viewService->loadFromFile ($filename)->getCompiled ();
   }
+
 
 }
