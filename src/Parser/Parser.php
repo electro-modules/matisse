@@ -386,7 +386,7 @@ does not support the specified parameter <b>$tag</b>.
   {
     $component = $this->current;
     $type      = $component->props->getTypeOf ($propName);
-    if ($type == type::string)
+    if ($type == type::string || $type == type::number)
       $this->currentScalarProperty = $propName;
     else {
       $relatedType   = $type == type::collection ? $component->props->getRelatedTypeOf ($propName) : '';
