@@ -127,7 +127,10 @@ class ReflectionClass
 
       case type::string:
       case type::id:
+      case type::any:
         $prop->type = $value;
+        if (!isset($prop->default))
+          $prop->default = '';
         break;
 
       case type::number:
@@ -142,17 +145,17 @@ class ReflectionClass
 
       case type::content:
         $prop->type    = $value;
-        $prop->default = null;
+        $prop->default = null;  // no defaults are allowed
         break;
 
       case type::data:
         $prop->type    = $value;
-        $prop->default = null;
+        $prop->default = null;  // no defaults are allowed
         break;
 
       case type::metadata:
         $prop->type    = $value;
-        $prop->default = null;
+        $prop->default = null;  // no defaults are allowed
         break;
 
       case type::collection:
@@ -161,11 +164,6 @@ class ReflectionClass
           $prop->default = [];
         if (!isset ($prop->relatedType))
           $prop->relatedType = type::content;
-        break;
-
-      case type::any:
-        $prop->type = $value;
-        $prop->default = null;
         break;
 
       case type::binding:

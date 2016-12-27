@@ -62,8 +62,9 @@ class MacroCall extends CompositeComponent
    */
   function setProps (array $props = null)
   {
-    $class       = $this->propertiesClass;
-    $this->props = new $class ($this);
+    $class = $this->propertiesClass;
+    if ($class)
+      $this->props = new $class ($this);
     if ($props)
       $this->props->apply ($props);
   }

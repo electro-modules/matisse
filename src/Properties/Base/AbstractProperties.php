@@ -134,6 +134,7 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
         case type::collection:
         case type::metadata:
         case type::string:
+        case type::number:
           return true;
       }
     }

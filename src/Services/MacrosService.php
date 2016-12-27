@@ -91,6 +91,7 @@ class MacrosService
           switch ($type) {
             case 'string':
             case 'id':
+            case 'any':
               $defVal = ",'$def'";
               break;
             case 'bool':
@@ -105,6 +106,8 @@ class $propsClass extends $baseClass
 {
 $propsStr}
 PHP;
+//      inspect ($code);
+//    return '';
       \PhpCode::run ($code);
     }
     return $propsClass;
