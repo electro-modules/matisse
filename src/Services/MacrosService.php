@@ -1,6 +1,7 @@
 <?php
 namespace Matisse\Services;
 
+use Electro\Caching\Lib\FileSystemCache;
 use Electro\Interfaces\Views\ViewServiceInterface;
 use Matisse\Components\DocumentFragment;
 use Matisse\Components\Macro\Macro;
@@ -17,6 +18,10 @@ use Matisse\Properties\TypeSystem\type;
 class MacrosService
 {
   /**
+   * @var FileSystemCache
+   */
+  private $cache;
+  /**
    * @var MatisseSettings
    */
   private $matisseSettings;
@@ -25,10 +30,14 @@ class MacrosService
    */
   private $viewService;
 
-  public function __construct (ViewServiceInterface $viewService, MatisseSettings $matisseSettings)
+  public function __construct (ViewServiceInterface $viewService, MatisseSettings $matisseSettings,
+                               FileSystemCache $cache)
   {
     $this->viewService     = $viewService;
     $this->matisseSettings = $matisseSettings;
+    $cache->setNamespace ('views/macros/props');
+    $cache->setOptions (['dataIsCode' => true]);
+    $this->cache = $cache;
   }
 
   function findMacroFile ($tagName)
@@ -75,40 +84,42 @@ class MacrosService
    */
   function setupPropsClass ($tagName, Macro $macro)
   {
-    $propsClass = $tagName . 'AutoProps';
+    $propsClass = $tagName . 'MacroProps';
     if (!class_exists ($propsClass, false)) {
-      $baseClass = ComponentProperties::class;
-      $typeClass = type::class;
-      $propsStr  = "  public \$macro='';\n";
-      foreach ($macro->props->param as $param) {
-        $def  = $param->props->default;
-        $type = $param->props->type;
-        if (!defined ("$typeClass::$type"))
-          throw new ComponentException($macro, "Invalid parameter type: <kbd>$type</kbd>");
-        $typeVal = constant ("$typeClass::$type");
-        $defVal  = '';
-        if (exists ($def))
-          switch ($type) {
-            case 'string':
-            case 'id':
-            case 'any':
-              $defVal = ",'$def'";
-              break;
-            case 'bool':
-            case 'number':
-              $defVal = ",$def";
-              break;
-          }
-        $propsStr .= "  public \${$param->props->name}=['$typeVal'$defVal];\n";
-      }
-      $code = <<<PHP
+      $this->cache->get ("$propsClass.php", function () use ($propsClass, $macro) {
+
+        $baseClass = ComponentProperties::class;
+        $typeClass = type::class;
+        $propsStr  = "  public \$macro='';\n";
+        foreach ($macro->props->param as $param) {
+          $def  = $param->props->default;
+          $type = $param->props->type;
+          if (!defined ("$typeClass::$type"))
+            throw new ComponentException($macro, "Invalid parameter type: <kbd>$type</kbd>");
+          $typeVal = constant ("$typeClass::$type");
+          $defVal  = '';
+          if (exists ($def))
+            switch ($type) {
+              case 'string':
+              case 'id':
+              case 'any':
+                $defVal = ",'$def'";
+                break;
+              case 'bool':
+              case 'number':
+                $defVal = ",$def";
+                break;
+            }
+          $propsStr .= "  public \${$param->props->name}=['$typeVal'$defVal];\n";
+        }
+        $code = <<<PHP
+<?php
 class $propsClass extends $baseClass
 {
 $propsStr}
 PHP;
-//      inspect ($code);
-//    return '';
-      \PhpCode::run ($code);
+        return $code;
+      });
     }
     return $propsClass;
   }
