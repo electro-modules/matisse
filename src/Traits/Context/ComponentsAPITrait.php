@@ -36,6 +36,7 @@ trait ComponentsAPITrait
     'Style'             => Components\Style::class,
     'For'               => Components\For_::class,
     'Import'            => Components\Import::class,
+    'FlashMessage'      => Components\FlashMessage::class,
     MacroCall::TAG_NAME => MacroCall::class,
   ];
 
