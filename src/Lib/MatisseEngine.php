@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Lib;
 
 use Electro\Caching\Lib\CachingFileCompiler;
@@ -105,7 +106,9 @@ class MatisseEngine implements ViewEngineInterface
       else if (!is_object ($data) || !$data instanceof ViewModel)
         throw new MatisseException("Argument must be an array or a <kbd>ViewModel</kbd> instance",
           "Invalid data for view model.");
-      $compiled->getShadowDom ()->getDataBinder ()->setViewModel ($data);
+      ($compiled instanceof CompositeComponent
+        ? $compiled->getShadowDom ()
+        : $compiled)->getDataBinder ()->setViewModel ($data);
     }
 
     /** @var DocumentFragment $compiled */
