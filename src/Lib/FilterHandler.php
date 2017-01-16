@@ -51,6 +51,8 @@ class FilterHandler
 
   function __call ($name, $args)
   {
+    if (!$name)
+      throw new FilterHandlerNotFoundException("Filter name is missing");
     $method = "filter_$name";
     if (isset($this->filters[$method]))
       return call_user_func_array ($this->filters[$method], $args);

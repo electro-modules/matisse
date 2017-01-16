@@ -52,6 +52,8 @@ trait ViewModelTrait
   /**
    * Override to set data on the component's view model.
    *
+   * ><p>Don't forget to call `parent::viewModel` if you override this method.
+   *
    * @param ViewModel $viewModel The view model where data can be stored for later access by the view renderer.
    */
   protected function viewModel (ViewModel $viewModel)

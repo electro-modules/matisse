@@ -16,6 +16,7 @@ use Electro\Interfaces\Navigation\NavigationLinkInterface;
 use Electro\Interfaces\SessionInterface;
 use Electro\Kernel\Config\KernelSettings;
 use Electro\Traits\PolymorphicInjectionTrait;
+use Electro\ViewEngine\Lib\ViewModel;
 use Exception;
 use Matisse\Parser\DocumentContext;
 use Matisse\Parser\Expression;
@@ -271,15 +272,6 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
       exists ($title) ? str_replace ('@', $title, $this->kernelSettings->title) : $this->kernelSettings->appName;
   }
 
-  /**
-   * Sets a reference to the model on the view model, allowing the view to access the model for rendering.
-   */
-  protected function afterPreRun ()
-  {
-    parent::afterPreRun ();
-    $this->getViewModel ()->model = $this->model;
-  }
-
   protected function afterRender ()
   {
     parent::afterRender ();
@@ -388,6 +380,16 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
     // no op
   }
 
+  protected function viewModel (ViewModel $viewModel)
+  {
+    // Sets a reference to the model on the view model, allowing the view to access the model for rendering.
+    if ($this->model)
+      $this->getViewModel ()->model = $this->model;
+
+    $viewModel->pageTitle = $this->pageTitle;
+  }
+
+
   /**
    * Utility method for retrieving the value of a form field submitted via a `application/x-www-form-urlencoded` or a
    * `multipart/form-data` POST request.
@@ -403,7 +405,7 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
 
   protected function getActionAndParam (&$action, &$param)
   {
-    $action = get ($_REQUEST, PlatformModule::ACTION_FIELD, '');
+    $action = get ($_REQUEST, PlatformModule::ACTION_FIELD, 'submit');
     if (preg_match ('#(\w*):(.*)#', $action, $match)) {
       $action = $match[1];
       $param  = $match[2];
