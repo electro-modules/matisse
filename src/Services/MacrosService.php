@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Services;
 
 use Electro\Caching\Lib\FileSystemCache;
@@ -79,14 +80,14 @@ class MacrosService
    *
    * @param string $tagName
    * @param Macro  $macro
+   * @param string $path The filesystem path of the macro's source file.
    * @return string The properties' class name.
-   * @throws ComponentException
    */
-  function setupPropsClass ($tagName, Macro $macro)
+  function setupPropsClass ($tagName, Macro $macro, $path)
   {
     $propsClass = $tagName . 'MacroProps';
     if (!class_exists ($propsClass, false)) {
-      $this->cache->get ("$propsClass.php", function () use ($propsClass, $macro) {
+        $this->cache->get ("$path.php", function () use ($propsClass, $macro) {
 
         $baseClass = ComponentProperties::class;
         $typeClass = type::class;

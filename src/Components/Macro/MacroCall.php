@@ -104,7 +104,7 @@ class MacroCall extends CompositeComponent
         $this->macroInstance = $frag->getFirstChild ();
         $this->props->setMacro ($this->macroInstance);
         $this->setShadowDOM ($this->macroInstance);
-        $this->propertiesClass = $macros->setupPropsClass ($name, $this->macroInstance);
+        $this->propertiesClass = $macros->setupPropsClass ($name, $this->macroInstance, $path);
       }
       catch (FileIOException $e) {
         /** @noinspection PhpUndefinedVariableInspection */
