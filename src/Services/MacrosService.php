@@ -10,6 +10,7 @@ use Matisse\Config\MatisseSettings;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Exceptions\FileIOException;
 use Matisse\Exceptions\MatisseException;
+use Matisse\Parser\Expression;
 use Matisse\Properties\Base\ComponentProperties;
 use Matisse\Properties\TypeSystem\type;
 
@@ -87,12 +88,17 @@ class MacrosService
   {
     $propsClass = $tagName . 'MacroProps';
     if (!class_exists ($propsClass, false)) {
-        $this->cache->get ("$path.php", function () use ($propsClass, $macro) {
+      $this->cache->get ("$path.php", function () use ($propsClass, $macro, $path) {
 
         $baseClass = ComponentProperties::class;
         $typeClass = type::class;
-        $propsStr  = "  public \$macro='';\n";
+        $propsStr  = "  const templateUrl='$path';
+  public \$macro='';
+
+";
+        $bindings  = [];
         foreach ($macro->props->param as $param) {
+          $name = $param->props->name;
           $def  = $param->props->default;
           $type = $param->props->type;
           if (!defined ("$typeClass::$type"))
@@ -111,13 +117,20 @@ class MacrosService
                 $defVal = ",$def";
                 break;
             }
-          $propsStr .= "  public \${$param->props->name}=['$typeVal'$defVal];\n";
+          $propsStr .= "  public \$$name=['$typeVal'$defVal];\n";
+          /** @var Expression $exp */
+          $exp = $param->getBinding ('default');
+          if ($exp)
+            $bindings[$name] = serialize ($exp);
         }
+        $bindingsStr = $bindings ? sprintf ('  const bindings = %s;
+', \PhpCode::dump ($bindings, 1)) : '';
+
         $code = <<<PHP
 <?php
 class $propsClass extends $baseClass
 {
-$propsStr}
+{$bindingsStr}$propsStr}
 PHP;
         return $code;
       });

@@ -11,15 +11,6 @@ use Matisse\Properties\TypeSystem\type;
 class MacroCallProperties extends MetadataProperties
 {
   /**
-   * The name of the macro to be loaded at parse time and inserted on the current view, replacing the `MacroCall`
-   * component.
-   *
-   * > <p>You **can not** use databinding on this property, as the view model is not available at parse time.
-   *
-   * @var string
-   */
-  public $macro = '';
-  /**
    * Points to the component that defines the macro for these properties.
    *
    * @var Macro

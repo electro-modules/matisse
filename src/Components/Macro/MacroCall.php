@@ -32,7 +32,7 @@ class MacroCall extends CompositeComponent
     if (!empty($def)) {
       if (!$this->props->defines ($def))
         throw new ComponentException($this,
-          "Invalid value for <kbd>defaultParam</kbd> on <b>&lt;{$this->props->macro}></b>; parameter <kbd>$def</kbd> does not exist");
+          "Invalid value for <kbd>defaultParam</kbd> on <b>&lt;{$this->getTagName()}></b>; parameter <kbd>$def</kbd> does not exist");
 
       // Move children to default parameter.
       if ($this->hasChildren ()) {
@@ -86,6 +86,8 @@ class MacroCall extends CompositeComponent
    *
    * @param array|null $props
    * @param Component  $parent
+   * @throws ComponentException
+   * @throws \Matisse\Exceptions\MatisseException
    */
   protected function onCreate (array $props = null, Component $parent = null)
   {
