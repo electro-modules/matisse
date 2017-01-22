@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Components\Macro;
 
 use Electro\ViewEngine\Lib\ViewModel;
@@ -6,8 +7,6 @@ use Matisse\Components\Base\Component;
 use Matisse\Components\Base\CompositeComponent;
 use Matisse\Components\Metadata;
 use Matisse\Exceptions\ComponentException;
-use Matisse\Exceptions\FileIOException;
-use Matisse\Properties\Macro\MacroCallProperties;
 use Matisse\Properties\TypeSystem\type;
 
 /**
@@ -15,15 +14,8 @@ use Matisse\Properties\TypeSystem\type;
  */
 class MacroCall extends CompositeComponent
 {
-  const TAG_NAME        = 'Call';
-  const allowsChildren  = true;
-  const propertiesClass = MacroCallProperties::class;
-  /** @var MacroCallProperties */
-  public $props;
-  /** @var Macro Points to the component that defines the macro for this instance. */
-  protected $macroInstance;
-  /** @var string This is not the same as the constant with the same name! This is a dynamic version of it. */
-  private $propertiesClass;
+  const TAG_NAME       = 'Call';
+  const allowsChildren = true;
 
   function render ()
   {
@@ -55,23 +47,14 @@ class MacroCall extends CompositeComponent
     parent::render ();
   }
 
-  /**
-   * Overriden.
-   *
-   * @param array|null $props
-   */
-  function setProps (array $props = null)
+  function supportsProperties ()
   {
-    $class = $this->propertiesClass;
-    if ($class)
-      $this->props = new $class ($this);
-    if ($props)
-      $this->props->apply ($props);
+    return true;
   }
 
   protected function getDefaultParam ()
   {
-    return $this->macroInstance->props->defaultParam;
+    return $this->getMacro ()->props->defaultParam;
   }
 
 //  protected function setupViewModel ()
@@ -80,6 +63,15 @@ class MacroCall extends CompositeComponent
 //    foreach ($this->props->getPropertiesOf (type::content, type::metadata, type::collection) as $prop => $v)
 //      $this->props->$prop->preRun();
 //  }
+
+  /**
+   * @return Macro
+   */
+  protected function getMacro ()
+  {
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->getShadowDOM ()->getFirstChild ();
+  }
 
   /**
    * Loads the macro with the name specified by the `macro` property.
@@ -91,28 +83,17 @@ class MacroCall extends CompositeComponent
    */
   protected function onCreate (array $props = null, Component $parent = null)
   {
-//    inspect("Macro: ".get ($props, 'macro'));
-//    $z = get_object_vars($this);
-//    foreach ($z as &$v)
-//      $v = is_object($v) ? 'ID='.Debug::objectId($v) : $v;
-//    inspect ($z);
-
-    $this->parent = $parent;
-    $name         = get ($props, 'macro');
-    if (exists ($name)) {
-      try {
-        $macros              = $this->context->getMacrosService ();
-        $frag                = $macros->loadMacro ($name, $path);
-        $this->macroInstance = $frag->getFirstChild ();
-        $this->props->setMacro ($this->macroInstance);
-        $this->setShadowDOM ($this->macroInstance);
-        $this->propertiesClass = $macros->setupPropsClass ($name, $this->macroInstance, $path);
-      }
-      catch (FileIOException $e) {
-        /** @noinspection PhpUndefinedVariableInspection */
-        self::throwUnknownComponent ($this->context, $name, $parent, $path);
-      }
+//    $this->parent = $parent;
+    $tagName      = $this->getTagName ();
+    $propsClass   = $tagName . 'MacroProps';
+    if (!class_exists ($propsClass, false)) {
+      $this->context->getMacrosService ()->setupMacroProperties ($propsClass, $this->templateUrl,
+        function () {
+          $this->createView ();
+          return $this->getMacro ();
+        });
     }
+    $this->props = new $propsClass ($this);
     parent::onCreate ($props, $parent);
   }
 
@@ -121,7 +102,7 @@ class MacroCall extends CompositeComponent
     parent::viewModel ($viewModel);
     // Import the container's model (if any) to the macro's view model
     $viewModel->model = $this->context->getDataBinder ()->getViewModel ()->model;
-    $this->macroInstance->importServices ($viewModel);
+    $this->getMacro ()->importServices ($viewModel);
   }
 
 }

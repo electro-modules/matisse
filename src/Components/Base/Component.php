@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Components\Base;
 
 use Electro\Interfaces\DI\InjectorInterface;
@@ -103,8 +104,9 @@ abstract class Component implements RenderableInterface, \Serializable
     $s               = explode ('\\', $class);
     $this->className = end ($s);
     if ($this->supportsProperties ()) {
-      $propClass   = $class::propertiesClass;
-      $this->props = new $propClass ($this);
+      $propClass = $class::propertiesClass;
+      if ($propClass)
+        $this->props = new $propClass ($this);
     }
   }
 
@@ -213,6 +215,8 @@ abstract class Component implements RenderableInterface, \Serializable
       $o[MCHILDREN] = $this->children;
     if ($this->bindings)
       $o[MBINDINGS] = $this->bindings;
+    if ($this->tagName)
+      $o[MTAG] = $this->tagName;
     return $o;
   }
 
@@ -229,11 +233,7 @@ abstract class Component implements RenderableInterface, \Serializable
    */
   function getTagName ()
   {
-    if (isset($this->tagName))
-      return $this->tagName;
-    preg_match_all ('#[A-Z][a-z]*#', $this->className, $matches, PREG_PATTERN_ORDER);
-
-    return $this->tagName = ucfirst (strtolower (implode ('', $matches[0])));
+    return $this->tagName ?: $this->className;
   }
 
   /**
@@ -249,6 +249,8 @@ abstract class Component implements RenderableInterface, \Serializable
 
   /**
    * @param array $a Associative array of data to be imported.
+   * @throws ComponentException
+   * @throws \Auryn\InjectionException
    */
   public function import ($a)
   {
@@ -256,10 +258,13 @@ abstract class Component implements RenderableInterface, \Serializable
     /** @var InjectorInterface $usrlz_inj */
     global $usrlz_ctx, $usrlz_inj;
 
-    $parent   = isset($a[MPARENT]) ? $a[MPARENT] : null;
+//    $parent        = isset($a[MPARENT]) ? $a[MPARENT] : null;
+    $parent   = null;
     $props    = isset($a[MPROPS]) ? $a[MPROPS] : null;
     $children = isset($a[MCHILDREN]) ? $a[MCHILDREN] : null;
     $bindings = isset($a[MBINDINGS]) ? $a[MBINDINGS] : null;
+    if (isset($a[MTAG]))
+      $this->tagName = $a[MTAG];
 
     if ((new \ReflectionMethod(static::class, '__construct'))->getNumberOfParameters ())
       $usrlz_inj->execute ([$this, '__construct']);

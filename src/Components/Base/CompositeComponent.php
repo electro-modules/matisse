@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Components\Base;
 
 use Electro\Interfaces\RenderableInterface;
@@ -46,6 +47,8 @@ class CompositeComponent extends Component
    *
    * <p>If specified, it takes precedence over {@see $template}.
    * <p>The view engine to be used to handle the external template is selected based on the file name extension.
+   * <p>If the URL is a relative path, it will be mapped to one of the registered view directories, otherwise it must be
+   * an absolute file path.
    *
    * @var string
    */
@@ -70,6 +73,18 @@ class CompositeComponent extends Component
    * @var string
    */
   protected $viewEngineClass = MatisseEngine::class;
+
+  public function export ()
+  {
+    $a = parent::export ();
+
+    if ($this->template)
+      $a['@template'] = $this->template;
+    if ($this->templateUrl)
+      $a['@templateUrl'] = $this->templateUrl;
+
+    return $a;
+  }
 
   /**
    * Gets the Matisse component that implements this component's renderable view (if the view is a Matisse template).
@@ -103,6 +118,16 @@ class CompositeComponent extends Component
     return $this->view;
   }
 
+  public function import ($a)
+  {
+    if (isset($a['@template']))
+      $this->template = $a['@template'];
+    if (isset($a['@templateUrl']))
+      $this->templateUrl = $a['@templateUrl'];
+
+    parent::import ($a);
+  }
+
   /**
    * When the component's view is a matisse template, this returns the root of the parsed template, otherwise it returns
    * `null`.
@@ -128,7 +153,9 @@ class CompositeComponent extends Component
     if (!isset($this->shadowDOM)) {
       if ($this->templateUrl) {
         $this->assertContext ();
-        $path       = $this->context->viewService->resolveTemplatePath ($this->templateUrl);
+        $path = $this->templateUrl;
+        if ($path && $path[0] != '/' && $path[0] != '\\')
+          $path = $this->context->viewService->resolveTemplatePath ($path);
         $this->view = $this->context->viewService->loadFromFile ($path);
       }
       elseif ($this->template) {

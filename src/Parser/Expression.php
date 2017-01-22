@@ -323,7 +323,7 @@ REGEXP;
    * @return mixed
    * @throws DataBindingException
    */
-  function evaluate (DataBinderInterface $binder)
+  function __invoke (DataBinderInterface $binder)
   {
     if (!($fn = $this->compiled)) {
       $exp = $this->expression;

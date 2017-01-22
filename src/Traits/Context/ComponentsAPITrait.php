@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Traits\Context;
 
 use Electro\Interfaces\DI\InjectorInterface;
@@ -58,6 +59,8 @@ trait ComponentsAPITrait
    * @param array|null                    $bindings A map of attribute names and corresponding databinding
    *                                                expressions.
    * @return Component
+   * @throws ComponentException
+   * @throws \Auryn\InjectionException
    */
   function createComponent ($class, Component $parent, $props = null, array $bindings = null)
   {
@@ -84,6 +87,7 @@ trait ComponentsAPITrait
    * @return Component Component instance. For macros, an instance of Macro is returned.
    * @throws ComponentException
    * @throws MatisseException
+   * @throws \Auryn\InjectionException
    */
   function createComponentFromTag ($tagName, Component $parent, array $props = null, array $bindings = null,
                                    $generic = false, $strict = false)
@@ -112,8 +116,8 @@ trait ComponentsAPITrait
 
       if (is_null ($props))
         $props = [];
-      $props['macro'] = $tagName;
-      $component      = new MacroCall;
+      $component              = new MacroCall;
+      $component->templateUrl = $this->macrosService->findMacroFile ($tagName);
     }
 
     // Component class was found.

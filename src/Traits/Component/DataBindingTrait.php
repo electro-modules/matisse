@@ -198,7 +198,7 @@ trait DataBindingTrait
     }
     try {
       /** @var Component $this */
-      return $bindExp->evaluate ($binder);
+      return $bindExp ($binder);
     }
     catch (\Exception $e) {
       self::evalError ($e, $bindExp);

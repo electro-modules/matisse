@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Components;
 
 use Matisse\Components\Base\CompositeComponent;
@@ -63,7 +64,7 @@ class IncludeProperties extends MetadataProperties
   function getAll ()
   {
     $o = object_publicProps ($this);
-    foreach ($this->props as $k=>$v)
+    foreach ($this->props as $k => $v)
       $o["@$k"] = $v;
     return $o;
   }
@@ -99,49 +100,52 @@ class Include_ extends CompositeComponent
 
   protected function createView ()
   {
-    $prop       = $this->props;
-    $ctx        = $this->context;
-    $controller = $prop->class;
+    if (!$this->templateUrl) {
 
-    // Resolve controller for the view (if applicable).
+      $prop       = $this->props;
+      $ctx        = $this->context;
+      $controller = $prop->class;
 
-    if (!exists ($controller) && exists ($prop->view))
-      $controller = $ctx->findControllerForView ($prop->view);
+      // Resolve controller for the view (if applicable).
 
-    if (exists ($prop->template)) {
-      if (exists ($controller)) {
-        $subComponent           = $this->makeShadowController ($controller, $prop);
-        $subComponent->template = $prop->template;
-        $this->setShadowDOM ($subComponent);
+      if (!exists ($controller) && exists ($prop->view))
+        $controller = $ctx->findControllerForView ($prop->view);
+
+      if (exists ($prop->template)) {
+        if (exists ($controller)) {
+          $subComponent           = $this->makeShadowController ($controller, $prop);
+          $subComponent->template = $prop->template;
+          $this->setShadowDOM ($subComponent);
+        }
+        else $this->template = $prop->template;
       }
-      else $this->template = $prop->template;
-    }
 
-    elseif (exists ($prop->view)) {
-      if (exists ($controller)) {
-        $subComponent              = $this->makeShadowController ($controller, $prop);
-        $subComponent->templateUrl = $prop->view;
-        $this->setShadowDOM ($subComponent);
+      elseif (exists ($prop->view)) {
+        if (exists ($controller)) {
+          $subComponent              = $this->makeShadowController ($controller, $prop);
+          $subComponent->templateUrl = $prop->view;
+          $this->setShadowDOM ($subComponent);
+        }
+        else $this->templateUrl = $prop->view;
       }
-      else $this->templateUrl = $prop->view;
-    }
 
-    else if (exists ($prop->file)) {
-      $fileContent = loadFile ($prop->file);
-      if ($fileContent === false)
-        throw new FileIOException($prop->file, 'read', explode (PATH_SEPARATOR, get_include_path ()));
-      echo $fileContent;
-      return;
-    }
+      else if (exists ($prop->file)) {
+        $fileContent = loadFile ($prop->file);
+        if ($fileContent === false)
+          throw new FileIOException($prop->file, 'read', explode (PATH_SEPARATOR, get_include_path ()));
+        echo $fileContent;
+        return;
+      }
 
-    else if ($prop->styles) {
-      $ctx->getAssetsService ()->outputStyles ();
-      return;
-    }
+      else if ($prop->styles) {
+        $ctx->getAssetsService ()->outputStyles ();
+        return;
+      }
 
-    else if ($prop->scripts) {
-      $ctx->getAssetsService ()->outputScripts ();
-      return;
+      else if ($prop->scripts) {
+        $ctx->getAssetsService ()->outputScripts ();
+        return;
+      }
     }
 
     parent::createView ();
@@ -167,6 +171,15 @@ class Include_ extends CompositeComponent
           $prop->$o = $v;
           unset ($prop->$k);
         }
+    }
+
+    //TODO: use true baseDirectory
+    if ($prop->view) {
+      $path = $prop->view;
+      if ($path && $path[0] != '/' && $path[0] != '\\') {
+        $this->templateUrl = getcwd () . '/' . $this->context->viewService->resolveTemplatePath ($path);
+        $prop->view        = '';
+      }
     }
   }
 

@@ -7,6 +7,7 @@ const MPARENT       = '@parent';
 const MPROPS        = '@props';
 const MCHILDREN     = '@nodes';
 const MBINDINGS     = '@bind';
+const MTAG          = '@tag';
 
 /**
  * Represents text that should not be HTML-escaped when output.
