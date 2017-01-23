@@ -73,11 +73,11 @@ class MacrosService
 //  }
 
   /**
-   * Compiles (with caching) a class for the macro's properties and its name.
+   * Compiles (with caching) a properties class for a macro.
    *
    * @param string   $propsClass The fully qualified class name of the macro properties class to compile.
    * @param string   $path       The filesystem path of the macro's source file.
-   * @param callable $getMacro   A function that returns a macro instace. It will only be called if the properties
+   * @param callable $getMacro   A function that returns a macro instance. It will only be called if the properties
    *                             class is not yet cached.
    * @throws MatisseException
    */
@@ -118,14 +118,19 @@ class MacrosService
         if ($exp)
           $bindings[$name] = serialize ($exp);
       }
+
       $bindingsStr = $bindings ? sprintf ('  const bindings = %s;
 ', \PhpCode::dump ($bindings, 1)) : '';
+
+      $defParam = $macro->props->defaultParam;
+      $defParam = $defParam ? "  public \$defaultParam = '$defParam';
+" : '';
 
       $code = <<<PHP
 <?php
 class $propsClass extends $baseClass
 {
-{$bindingsStr}$propsStr}
+{$bindingsStr}{$defParam}$propsStr}
 PHP;
       return $code;
     });

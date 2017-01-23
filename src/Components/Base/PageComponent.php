@@ -380,8 +380,10 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
     // no op
   }
 
-  protected function viewModel (ViewModel $viewModel)
+  protected function baseViewModel (ViewModel $viewModel)
   {
+    parent::baseViewModel($viewModel);
+
     // Sets a reference to the model on the view model, allowing the view to access the model for rendering.
     if ($this->model)
       $this->getViewModel ()->model = $this->model;

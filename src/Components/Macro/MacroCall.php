@@ -17,10 +17,13 @@ class MacroCall extends CompositeComponent
   const TAG_NAME       = 'Call';
   const allowsChildren = true;
 
+  /** @var string */
+  private $propsClass;
+
   function render ()
   {
     // Validate defaultParam's value.
-    $def = $this->getDefaultParam ();
+    $def = isset($this->props->defaultParam) ? $this->props->defaultParam : null;
     if (!empty($def)) {
       if (!$this->props->defines ($def))
         throw new ComponentException($this,
@@ -52,9 +55,13 @@ class MacroCall extends CompositeComponent
     return true;
   }
 
-  protected function getDefaultParam ()
+  protected function databind ()
   {
-    return $this->getMacro ()->props->defaultParam;
+    $bp = "$this->propsClass::bindings";
+    if (defined ($bp))
+      foreach (constant ($bp) as $k => $v)
+        $this->bindings[$k] = unserialize ($v);
+    parent::databind ();
   }
 
 //  protected function setupViewModel ()
@@ -84,16 +91,16 @@ class MacroCall extends CompositeComponent
   protected function onCreate (array $props = null, Component $parent = null)
   {
 //    $this->parent = $parent;
-    $tagName      = $this->getTagName ();
-    $propsClass   = $tagName . 'MacroProps';
-    if (!class_exists ($propsClass, false)) {
-      $this->context->getMacrosService ()->setupMacroProperties ($propsClass, $this->templateUrl,
+    $tagName          = $this->getTagName ();
+    $this->propsClass = $tagName . 'MacroProps';
+    if (!class_exists ($this->propsClass, false)) {
+      $this->context->getMacrosService ()->setupMacroProperties ($this->propsClass, $this->templateUrl,
         function () {
           $this->createView ();
           return $this->getMacro ();
         });
     }
-    $this->props = new $propsClass ($this);
+    $this->props = new $this->propsClass ($this);
     parent::onCreate ($props, $parent);
   }
 
@@ -102,7 +109,7 @@ class MacroCall extends CompositeComponent
     parent::viewModel ($viewModel);
     // Import the container's model (if any) to the macro's view model
     $viewModel->model = $this->context->getDataBinder ()->getViewModel ()->model;
-    $this->getMacro ()->importServices ($viewModel);
+//    $this->getMacro ()->importServices ($viewModel);
   }
 
 }

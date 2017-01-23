@@ -41,7 +41,9 @@ trait ViewModelTrait
   {
     parent::afterPreRun ();
 
-    $this->viewModel ($this->getViewModel ());
+    $vm = $this->getViewModel ();
+    $this->baseViewModel ($vm);
+    $this->viewModel ($vm);
 
     /** @var \Matisse\Components\DocumentFragment $shadowDOM */
     $shadowDOM = $this->getShadowDOM ();
@@ -52,11 +54,24 @@ trait ViewModelTrait
   /**
    * Override to set data on the component's view model.
    *
-   * ><p>Don't forget to call `parent::viewModel` if you override this method.
+   * ><p>You should not need to call `parent::viewModel` if you override this method, as this is meant to be overridden
+   * only once, on your page controller.
    *
    * @param ViewModel $viewModel The view model where data can be stored for later access by the view renderer.
    */
   protected function viewModel (ViewModel $viewModel)
+  {
+    //override
+  }
+
+  /**
+   * Override to set data on the component's view model that will be set for component subclasses.
+   *
+   * ><p>Don't forget to call `parent::baseViewModel` if you override this method.
+   *
+   * @param ViewModel $viewModel The view model where data can be stored for later access by the view renderer.
+   */
+  protected function baseViewModel (ViewModel $viewModel)
   {
     //override
   }
