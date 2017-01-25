@@ -1,7 +1,7 @@
 <?php
 namespace Matisse\Traits\Component;
 
-use Electro\ViewEngine\Lib\ViewModel;
+use Electro\Interop\ViewModel;
 use Matisse\Components\DocumentFragment;
 
 trait ViewModelTrait
@@ -21,7 +21,7 @@ trait ViewModelTrait
    * (see {@see $shadowViewModel}).
    * ><p>This method overrides {@see DataBindingTrait} to implement that behavior.
    *
-   * @return ViewModel
+   * @return \Electro\Interop\ViewModel
    */
   function getViewModel ()
   {
@@ -69,7 +69,7 @@ trait ViewModelTrait
    *
    * ><p>Don't forget to call `parent::baseViewModel` if you override this method.
    *
-   * @param ViewModel $viewModel The view model where data can be stored for later access by the view renderer.
+   * @param \Electro\Interop\ViewModel $viewModel The view model where data can be stored for later access by the view renderer.
    */
   protected function baseViewModel (ViewModel $viewModel)
   {

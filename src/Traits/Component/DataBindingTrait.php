@@ -1,7 +1,7 @@
 <?php
 namespace Matisse\Traits\Component;
 
-use Electro\ViewEngine\Lib\ViewModel;
+use Electro\Interop\ViewModel;
 use Matisse\Components\Base\Component;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Exceptions\DataBindingException;
@@ -119,7 +119,7 @@ trait DataBindingTrait
    * **NOT** on the component's own view model!
    * ><p>This method is overridden on {@see ViewModelTrait} to implement that behavior.
    *
-   * @return ViewModel
+   * @return \Electro\Interop\ViewModel
    */
   function getViewModel ()
   {

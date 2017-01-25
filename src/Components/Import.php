@@ -80,12 +80,12 @@ class Import extends Component
             throw new ComponentException ($this,
               "When using the <kbd>as</kbd> property, you can only specify one value for the <kbd>service</kbd> property");
           $service = $injector->make ($services);
-          $vm->$as = $service;
+          $vm[$as] = $service;
         }
         else {
           foreach ($aliases as $alias) {
             $service    = $injector->get ($alias);
-            $vm->$alias = $service;
+            $vm[$alias] = $service;
           }
         }
       }

@@ -7,7 +7,7 @@ use Electro\Exceptions\FlashMessageException;
 use Electro\Exceptions\FlashType;
 use Electro\Http\Lib\Http;
 use Electro\Interfaces\Http\RequestHandlerInterface;
-use Electro\ViewEngine\Lib\ViewModel;
+use Electro\Interop\ViewModel;
 use PhpKit\WebConsole\Lib\Debug;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

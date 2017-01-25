@@ -14,9 +14,9 @@ use Electro\Interfaces\ModelControllerInterface;
 use Electro\Interfaces\Navigation\NavigationInterface;
 use Electro\Interfaces\Navigation\NavigationLinkInterface;
 use Electro\Interfaces\SessionInterface;
+use Electro\Interop\ViewModel;
 use Electro\Kernel\Config\KernelSettings;
 use Electro\Traits\PolymorphicInjectionTrait;
-use Electro\ViewEngine\Lib\ViewModel;
 use Exception;
 use Matisse\Parser\DocumentContext;
 use Matisse\Parser\Expression;
@@ -386,9 +386,9 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
 
     // Sets a reference to the model on the view model, allowing the view to access the model for rendering.
     if ($this->model)
-      $this->getViewModel ()->model = $this->model;
+      $viewModel['model'] = $this->model;
 
-    $viewModel->pageTitle = $this->pageTitle;
+    $viewModel['pageTitle'] = $this->pageTitle;
   }
 
 

@@ -1,11 +1,11 @@
 <?php
 namespace Matisse\Interfaces;
 
+use Electro\Interop\ViewModel;
 use Matisse\Exceptions\DataBindingException;
 use Matisse\Exceptions\FilterHandlerNotFoundException;
 use Matisse\Parser\DocumentContext;
 use Matisse\Properties\Base\AbstractProperties;
-use Electro\ViewEngine\Lib\ViewModel;
 
 /**
  * Provides a data context for evaluating expressions and methods to manage that context.

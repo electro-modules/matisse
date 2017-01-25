@@ -6,12 +6,12 @@ use Electro\Interfaces\Navigation\NavigationInterface;
 use Electro\Interfaces\Navigation\NavigationLinkInterface;
 use Electro\Interfaces\RenderableInterface;
 use Electro\Interfaces\SessionInterface;
+use Electro\Interop\ViewModel;
 use Electro\Kernel\Config\KernelSettings;
 use Matisse\Components\Base\Component;
 use Matisse\Interfaces\DataBinderInterface;
 use Matisse\Parser\DocumentContext;
 use Matisse\Properties\Base\AbstractProperties;
-use Electro\ViewEngine\Lib\ViewModel;
 use PhpKit\WebConsole\Lib\Debug;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -53,7 +53,7 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
 
   function get ($key)
   {
-    return $this->viewModel->$key;
+    return isset ($this->viewModel[$key]) ? $this->viewModel[$key] : null;
   }
 
   function getProps ()

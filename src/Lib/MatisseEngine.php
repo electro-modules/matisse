@@ -6,7 +6,6 @@ use Electro\Caching\Lib\CachingFileCompiler;
 use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\Views\ViewEngineInterface;
 use Electro\Interfaces\Views\ViewServiceInterface;
-use Electro\ViewEngine\Lib\ViewModel;
 use Matisse\Components\Base\CompositeComponent;
 use Matisse\Components\Base\PageComponent;
 use Matisse\Components\DocumentFragment;
@@ -98,14 +97,9 @@ class MatisseEngine implements ViewEngineInterface
     return $compiled;
   }
 
-  function render ($compiled, $data = null)
+  function render ($compiled, \Electro\Interop\ViewModel $data = null)
   {
     if ($data) {
-      if (is_array ($data))
-        $data = (new ViewModel)->set ($data);
-      else if (!is_object ($data) || !$data instanceof ViewModel)
-        throw new MatisseException("Argument must be an array or a <kbd>ViewModel</kbd> instance",
-          "Invalid data for view model.");
       $c = $compiled instanceof CompositeComponent ? $compiled->getShadowDom () : $compiled;
       $c->getDataBinder ()->setViewModel ($data);
     }
