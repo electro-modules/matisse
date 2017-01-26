@@ -61,8 +61,8 @@ class For_ extends Component
       $first = true;
       foreach ($for as $i => $v) {
         if ($idxVar)
-          $viewModel->$idxVar = $i;
-        $viewModel->$itVar = $v;
+          $viewModel[$idxVar] = $i;
+        $viewModel[$itVar] = $v;
         if ($first) {
           $first = false;
           $this->runChildren ('header');
@@ -78,7 +78,7 @@ class For_ extends Component
     }
     if ($count > 0) {
       for ($i = 0; $i < $count; ++$i) {
-        $viewModel->$idxVar = $viewModel->$itVar = $i;
+        $viewModel[$idxVar] = $viewModel[$itVar] = $i;
         if ($i == 0)
           $this->runChildren ('header');
         else $this->runChildren ('glue');

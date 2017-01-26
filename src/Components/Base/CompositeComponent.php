@@ -157,6 +157,8 @@ class CompositeComponent extends Component
         if ($path && $path[0] != '/' && $path[0] != '\\')
           $path = $this->context->viewService->resolveTemplatePath ($path);
         $this->view = $this->context->viewService->loadFromFile ($path);
+        $viewModel = $this->context->viewService->createViewModelFor ($this->view);
+        //TODO: do something with $viewModel
       }
       elseif ($this->template) {
         $this->assertContext ();

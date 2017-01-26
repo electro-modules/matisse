@@ -38,6 +38,7 @@ trait ViewsAPITrait
    *
    * @param string $viewName A view template absolute file path.
    * @return null|string null if no controller was found.
+   * @throws \Electro\Exceptions\Fatal\FileNotFoundException
    */
   function findControllerForView ($viewName)
   {

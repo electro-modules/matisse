@@ -5,6 +5,7 @@ namespace Matisse\Lib;
 use Electro\Caching\Lib\CachingFileCompiler;
 use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\Views\ViewEngineInterface;
+use Electro\Interfaces\Views\ViewModelInterface;
 use Electro\Interfaces\Views\ViewServiceInterface;
 use Matisse\Components\Base\CompositeComponent;
 use Matisse\Components\Base\PageComponent;
@@ -97,7 +98,7 @@ class MatisseEngine implements ViewEngineInterface
     return $compiled;
   }
 
-  function render ($compiled, \Electro\Interop\ViewModel $data = null)
+  function render ($compiled, ViewModelInterface $data = null)
   {
     if ($data) {
       $c = $compiled instanceof CompositeComponent ? $compiled->getShadowDom () : $compiled;

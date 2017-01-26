@@ -172,15 +172,6 @@ class Include_ extends CompositeComponent
           unset ($prop->$k);
         }
     }
-
-    //TODO: use true baseDirectory
-    if ($prop->view) {
-      $path = $prop->view;
-      if ($path && $path[0] != '/' && $path[0] != '\\') {
-        $this->templateUrl = getcwd () . '/' . $this->context->viewService->resolveTemplatePath ($path);
-        $prop->view        = '';
-      }
-    }
   }
 
   /**
@@ -188,6 +179,7 @@ class Include_ extends CompositeComponent
    * @param IncludeProperties $props
    * @return CompositeComponent
    * @throws ComponentException
+   * @throws \Auryn\InjectionException
    */
   protected function makeShadowController ($controller, IncludeProperties $props)
   {

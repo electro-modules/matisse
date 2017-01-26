@@ -1,6 +1,8 @@
 <?php
+
 namespace Matisse\Interfaces;
 
+use Electro\Interfaces\Views\ViewModelInterface;
 use Electro\Interop\ViewModel;
 use Matisse\Exceptions\DataBindingException;
 use Matisse\Exceptions\FilterHandlerNotFoundException;
@@ -86,7 +88,7 @@ interface DataBinderInterface
   /**
    * Assigns a view model to the binder.
    *
-   * @param ViewModel $viewModel
+   * @param ViewModelInterface $viewModel
    */
   function setViewModel ($viewModel);
 
