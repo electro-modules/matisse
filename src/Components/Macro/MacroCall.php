@@ -2,7 +2,7 @@
 
 namespace Matisse\Components\Macro;
 
-use Electro\Interop\ViewModel;
+use Electro\Interfaces\Views\ViewModelInterface;
 use Matisse\Components\Base\Component;
 use Matisse\Components\Base\CompositeComponent;
 use Matisse\Components\Metadata;
@@ -104,7 +104,7 @@ class MacroCall extends CompositeComponent
     parent::onCreate ($props, $parent);
   }
 
-  protected function viewModel (ViewModel $viewModel)
+  protected function viewModel (ViewModelInterface $viewModel)
   {
     parent::viewModel ($viewModel);
     // Import the container's model (if any) to the macro's view model

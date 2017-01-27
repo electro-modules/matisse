@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Config;
 
 use Electro\Kernel\Config\KernelSettings;
@@ -16,7 +17,7 @@ use PhpKit\Flow\FilesystemFlow;
  * @method $this|bool collapseWhitespace (bool $v = null) Enable to remove whitespace around raw markup blocks
  * @method $this|bool inspectDOM (bool $v = null) Enable to inspect the server-side view-DOM on a console panel
  * @method $this|bool devEnv (bool $v = null) When TRUE, whitespace between tags is not removed
- * @method $this|string moduleMacrosPath (string $v = null) The relative path of the macros folder inside a module
+ * @method $this|string moduleMacrosPath (string $v = null) The path of the macros folder relative to the views path
  * @method $this|string macrosExt (string $v = null) File extension of macro files
  */
 class MatisseSettings
@@ -61,7 +62,7 @@ class MatisseSettings
   /**
    * @var string
    */
-  private $moduleMacrosPath = 'resources/macros';
+  private $moduleMacrosPath = 'macros';
   /**
    * @var string[] A list of "preset" class names.
    */
@@ -176,10 +177,17 @@ class MatisseSettings
    */
   function registerMacros (ModuleInfo $moduleInfo)
   {
-    $path = "{$this->kernelSettings->baseDirectory}/$moduleInfo->path/{$this->moduleMacrosPath}";
+    $path =
+      "{$this->kernelSettings->baseDirectory}/$moduleInfo->path/{$this->viewEngineSettings->moduleViewsPath()}/$this->moduleMacrosPath";
     if (fileExists ($path)) {
-      $all = FilesystemFlow::from ($path)->onlyDirectories ()->keys ()->all ();
-      array_unshift ($all, $path);
+      $all = FilesystemFlow::from ($path)
+                           ->onlyDirectories ()
+                           ->map (function (\SplFileInfo $info, &$k) {
+                             $k = $info->getPathname ();
+                             return "$this->moduleMacrosPath/" . $info->getFilename ();
+                           })->all ();
+//      dump ($all);
+      $all = array_merge ([$path => $this->moduleMacrosPath], $all);
       $this->macrosDirectories = array_merge ($all, $this->macrosDirectories);
     }
     return $this;

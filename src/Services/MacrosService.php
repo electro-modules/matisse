@@ -45,11 +45,12 @@ class MacrosService
   {
     $tagName  = normalizeTagName ($tagName);
     $filename = $tagName . $this->matisseSettings->macrosExt ();
-    foreach ($this->matisseSettings->getMacrosDirectories () as $dir) {
+    foreach ($this->matisseSettings->getMacrosDirectories () as $dir => $viewPath) {
       $path = "$dir/$filename";
       if (file_exists ($path))
-        return $path;
+        return $viewPath ? "$viewPath/$filename" : $filename;
     }
+    inspect ($this->matisseSettings->getMacrosDirectories ());
     throw new FileIOException($filename);
   }
 

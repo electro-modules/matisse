@@ -153,17 +153,13 @@ class CompositeComponent extends Component
     if (!isset($this->shadowDOM)) {
       if ($this->templateUrl) {
         $this->assertContext ();
-        $path = $this->templateUrl;
-        if ($path && $path[0] != '/' && $path[0] != '\\')
-          $path = $this->context->viewService->resolveTemplatePath ($path);
-        $this->view = $this->context->viewService->loadFromFile ($path);
-        $viewModel = $this->context->viewService->createViewModelFor ($this->view);
-        //TODO: do something with $viewModel
+        $this->view = $this->context->viewService->loadFromFile ($this->templateUrl);
       }
       elseif ($this->template) {
         $this->assertContext ();
         $this->view = $this->context->viewService->loadFromString ($this->template, $this->viewEngineClass);
       }
+      $this->shadowViewModel = $this->context->viewService->createViewModelFor ($this->view, true);
     }
     // Else assume the shadowDOM is already attached to this; it will be, if set via setShadowDOM().
     // Either way, generate the template.

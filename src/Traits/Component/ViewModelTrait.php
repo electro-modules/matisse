@@ -1,13 +1,15 @@
 <?php
+
 namespace Matisse\Traits\Component;
 
+use Electro\Interfaces\Views\ViewModelInterface;
 use Electro\Interop\ViewModel;
 use Matisse\Components\DocumentFragment;
 
 trait ViewModelTrait
 {
   /**
-   * @var ViewModel|null This is only set if the view is not a Matisse template.
+   * @var ViewModelInterface|null This is only set if the view is not a Matisse template.
    */
   private $shadowViewModel = null;
 
@@ -21,7 +23,7 @@ trait ViewModelTrait
    * (see {@see $shadowViewModel}).
    * ><p>This method overrides {@see DataBindingTrait} to implement that behavior.
    *
-   * @return \Electro\Interop\ViewModel
+   * @return ViewModelInterface
    */
   function getViewModel ()
   {
@@ -29,7 +31,7 @@ trait ViewModelTrait
     $shadowDOM = $this->getShadowDOM ();
     return $shadowDOM
       ? $shadowDOM->getDataBinder ()->getViewModel ()
-      : ($this->shadowViewModel ?: $this->shadowViewModel = new ViewModel);
+      : $this->shadowViewModel;
   }
 
   /**
@@ -42,8 +44,10 @@ trait ViewModelTrait
     parent::afterPreRun ();
 
     $vm = $this->getViewModel ();
-    $this->baseViewModel ($vm);
-    $this->viewModel ($vm);
+    if ($vm) {
+      $this->baseViewModel ($vm);
+      $this->viewModel ($vm);
+    }
 
     /** @var \Matisse\Components\DocumentFragment $shadowDOM */
     $shadowDOM = $this->getShadowDOM ();
@@ -52,26 +56,26 @@ trait ViewModelTrait
   }
 
   /**
-   * Override to set data on the component's view model.
+   * Override to set data on the component's view model that will be set for component subclasses.
    *
-   * ><p>You should not need to call `parent::viewModel` if you override this method, as this is meant to be overridden
-   * only once, on your page controller.
+   * ><p>Don't forget to call `parent::baseViewModel` if you override this method.
    *
-   * @param ViewModel $viewModel The view model where data can be stored for later access by the view renderer.
+   * @param ViewModelInterface $viewModel The view model where data can be stored for later access by the view renderer.
    */
-  protected function viewModel (ViewModel $viewModel)
+  protected function baseViewModel (ViewModelInterface $viewModel)
   {
     //override
   }
 
   /**
-   * Override to set data on the component's view model that will be set for component subclasses.
+   * Override to set data on the component's view model.
    *
-   * ><p>Don't forget to call `parent::baseViewModel` if you override this method.
+   * ><p>You should not need to call `parent::viewModel` if you override this method, as this is meant to be overridden
+   * only once, on your page controller.
    *
-   * @param \Electro\Interop\ViewModel $viewModel The view model where data can be stored for later access by the view renderer.
+   * @param ViewModelInterface $viewModel The view model where data can be stored for later access by the view renderer.
    */
-  protected function baseViewModel (ViewModel $viewModel)
+  protected function viewModel (ViewModelInterface $viewModel)
   {
     //override
   }

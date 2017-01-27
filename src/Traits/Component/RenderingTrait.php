@@ -113,6 +113,7 @@ trait RenderingTrait
    * @param string|null $attrName [optional] A property name. If none, it renders all of the component's direct
    *                              children.
    * @return string
+   * @throws ComponentException
    */
   function renderChildren ($attrName = null)
   {

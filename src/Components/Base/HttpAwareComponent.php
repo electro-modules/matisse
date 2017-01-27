@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Components\Base;
 
 use Electro\Exceptions\FatalException;
@@ -7,7 +8,7 @@ use Electro\Exceptions\FlashMessageException;
 use Electro\Exceptions\FlashType;
 use Electro\Http\Lib\Http;
 use Electro\Interfaces\Http\RequestHandlerInterface;
-use Electro\Interop\ViewModel;
+use Electro\Interfaces\Views\ViewModelInterface;
 use PhpKit\WebConsole\Lib\Debug;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -227,7 +228,7 @@ class HttpAwareComponent extends CompositeComponent implements RequestHandlerInt
    * <p>Note:
    * > View models are available only on GET requests.
    */
-  protected function viewModel (ViewModel $viewModel)
+  protected function viewModel (ViewModelInterface $viewModel)
   {
     //Override.
   }

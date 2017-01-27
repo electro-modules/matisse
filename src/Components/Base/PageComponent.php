@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Components\Base;
 
 use Electro\Debugging\Config\DebugSettings;
@@ -14,7 +15,7 @@ use Electro\Interfaces\ModelControllerInterface;
 use Electro\Interfaces\Navigation\NavigationInterface;
 use Electro\Interfaces\Navigation\NavigationLinkInterface;
 use Electro\Interfaces\SessionInterface;
-use Electro\Interop\ViewModel;
+use Electro\Interfaces\Views\ViewModelInterface;
 use Electro\Kernel\Config\KernelSettings;
 use Electro\Traits\PolymorphicInjectionTrait;
 use Exception;
@@ -347,6 +348,17 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
     return $this->redirection->refresh ();
   }
 
+  protected function baseViewModel (ViewModelInterface $viewModel)
+  {
+    parent::baseViewModel ($viewModel);
+
+    // Sets a reference to the model on the view model, allowing the view to access the model for rendering.
+    if ($this->model)
+      $viewModel['model'] = $this->model;
+
+    $viewModel['pageTitle'] = $this->pageTitle;
+  }
+
   /**
    * Invokes the right controller method in response to the POST request's specified action.
    *
@@ -379,18 +391,6 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
   {
     // no op
   }
-
-  protected function baseViewModel (ViewModel $viewModel)
-  {
-    parent::baseViewModel($viewModel);
-
-    // Sets a reference to the model on the view model, allowing the view to access the model for rendering.
-    if ($this->model)
-      $viewModel['model'] = $this->model;
-
-    $viewModel['pageTitle'] = $this->pageTitle;
-  }
-
 
   /**
    * Utility method for retrieving the value of a form field submitted via a `application/x-www-form-urlencoded` or a
