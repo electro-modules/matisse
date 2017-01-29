@@ -135,5 +135,4 @@ class Metadata extends Component
       $this->runChildren ();
   }
 
-
 }

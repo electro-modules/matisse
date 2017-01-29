@@ -2,13 +2,14 @@
 
 namespace Matisse\Services;
 
-use Electro\Caching\Lib\FileSystemCache;
+use Electro\Interfaces\KernelInterface;
 use Electro\Interfaces\Views\ViewServiceInterface;
 use Matisse\Components\Macro\Macro;
 use Matisse\Config\MatisseSettings;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Exceptions\FileIOException;
 use Matisse\Exceptions\MatisseException;
+use Matisse\Lib\MacroPropertiesCache;
 use Matisse\Parser\Expression;
 use Matisse\Properties\Base\ComponentProperties;
 use Matisse\Properties\TypeSystem\type;
@@ -19,7 +20,7 @@ use Matisse\Properties\TypeSystem\type;
 class MacrosService
 {
   /**
-   * @var FileSystemCache
+   * @var \Matisse\Lib\MacroPropertiesCache
    */
   private $cache;
   /**
@@ -32,13 +33,11 @@ class MacrosService
   private $viewService;
 
   public function __construct (ViewServiceInterface $viewService, MatisseSettings $matisseSettings,
-                               FileSystemCache $cache)
+                               MacroPropertiesCache $cache)
   {
     $this->viewService     = $viewService;
     $this->matisseSettings = $matisseSettings;
-    $cache->setNamespace ('views/macros/props');
-    $cache->setOptions (['dataIsCode' => true]);
-    $this->cache = $cache;
+    $this->cache           = $cache;
   }
 
   function findMacroFile ($tagName)
@@ -50,7 +49,6 @@ class MacrosService
       if (file_exists ($path))
         return $viewPath ? "$viewPath/$filename" : $filename;
     }
-    inspect ($this->matisseSettings->getMacrosDirectories ());
     throw new FileIOException($filename);
   }
 
@@ -87,7 +85,7 @@ class MacrosService
     if (!$path)
       throw new MatisseException ("Invalid template path");
 
-    $this->cache->get ("$path.php", function () use ($propsClass, $path, $getMacro) {
+    $this->cache->get ("$propsClass.php", function () use ($propsClass, $path, $getMacro) {
       $baseClass = ComponentProperties::class;
       $typeClass = type::class;
       $propsStr  = '';
@@ -128,7 +126,6 @@ class MacrosService
 " : '';
 
       $code = <<<PHP
-<?php
 class $propsClass extends $baseClass
 {
 {$bindingsStr}{$defParam}$propsStr}

@@ -94,8 +94,9 @@ class MacroCall extends CompositeComponent
     $tagName          = $this->getTagName ();
     $this->propsClass = $tagName . 'MacroProps';
     if (!class_exists ($this->propsClass, false)) {
-      $this->context->getMacrosService ()->setupMacroProperties ($this->propsClass, $this->templateUrl,
-        function () {
+      $this->context
+        ->getMacrosService ()
+        ->setupMacroProperties ($this->propsClass, $this->templateUrl, function () {
           $this->createView ();
           return $this->getMacro ();
         });

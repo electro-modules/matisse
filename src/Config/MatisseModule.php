@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Config;
 
 use Electro\Interfaces\DI\InjectorInterface;
@@ -9,6 +10,7 @@ use Electro\Kernel\Lib\ModuleInfo;
 use Electro\Profiles\WebProfile;
 use Matisse\Interfaces\DataBinderInterface;
 use Matisse\Lib\DataBinder;
+use Matisse\Lib\MacroPropertiesCache;
 use Matisse\Lib\MatisseEngine;
 use Matisse\Parser\DocumentContext;
 use Matisse\Services\MacrosService;
@@ -31,7 +33,8 @@ class MatisseModule implements ModuleInterface
           ->alias (DataBinderInterface::class, DataBinder::class)
           ->prepare (ViewServiceInterface::class, function (ViewServiceInterface $viewService) {
             $viewService->register (MatisseEngine::class, '/\.html$/');
-          });
+          })
+          ->share (MacroPropertiesCache::class);
       });
   }
 
