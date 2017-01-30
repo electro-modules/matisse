@@ -116,7 +116,7 @@ trait ComponentsAPITrait
       // Convert the tag to a MacroInstance component instance that will attempt to load a macro with the same
       // name as the tag name.
 
-      $component = $this->macrosService->createMacroInstance ($tagName, $props);
+      $component = $this->macrosService->createMacroInstance ($tagName);
     }
 
     // Component class was found.

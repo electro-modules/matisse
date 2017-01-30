@@ -2,8 +2,6 @@
 
 namespace Matisse\Components\Macro;
 
-use Electro\Interfaces\Views\ViewModelInterface;
-use Matisse\Components\Base\Component;
 use Matisse\Components\Base\CompositeComponent;
 use Matisse\Components\Metadata;
 use Matisse\Exceptions\ComponentException;
@@ -14,13 +12,21 @@ use Matisse\Properties\TypeSystem\type;
  */
 class MacroCall extends CompositeComponent
 {
-  const TAG_NAME       = 'Call';
-  const allowsChildren = true;
+  const TAG_NAME        = 'Call';
+  const allowsChildren  = true;
+  const propertiesClass = null; // use dynamic properties class
 
   /** @var string */
   public $propsClass;
 
-  function render ()
+  /**
+   * Move children (if any) to the default property.
+   * This is done only once, when the component is parsed. Subsequent reads from the cache will create the component
+   * with the children already placed on the correct property.
+   *
+   * @throws ComponentException
+   */
+  function onParsingComplete ()
   {
     // Validate defaultParam's value.
     $def = isset($this->props->defaultParam) ? $this->props->defaultParam : null;
@@ -46,22 +52,39 @@ class MacroCall extends CompositeComponent
     elseif ($this->hasChildren ())
       throw new ComponentException ($this,
         'You may not specify content for this tag because it has no default property');
+  }
 
-    parent::render ();
+  /**
+   * Creates the properties object from the class generated for this macro type and copies the property values to it.
+   *
+   * If no properties class is generated yet, this method will compile it.
+   *
+   * @param array|null $props
+   * @throws ComponentException
+   * @throws \Matisse\Exceptions\MatisseException
+   */
+  function setProps (array $props = null)
+  {
+    if ($this->propsClass) {
+      if (!class_exists ($this->propsClass, false)) {
+        $this->context
+          ->getMacrosService ()
+          ->setupMacroProperties ($this->propsClass, $this->templateUrl, function () {
+            $this->createView ();
+            return $this->getMacro ();
+          });
+      }
+      $this->props = new $this->propsClass ($this);
+      if ($props)
+        $this->props->apply ($props);
+    }
+    elseif ($props)
+      throw new ComponentException($this, 'This component does not support properties.');
   }
 
   function supportsProperties ()
   {
-    return true;
-  }
-
-  protected function databind ()
-  {
-    $bp = "$this->propsClass::bindings";
-    if (defined ($bp))
-      foreach (constant ($bp) as $k => $v)
-        $this->bindings[$k] = unserialize ($v);
-    parent::databind ();
+    return isset($this->propsClass);
   }
 
 //  protected function setupViewModel ()
@@ -72,6 +95,22 @@ class MacroCall extends CompositeComponent
 //  }
 
   /**
+   * Extend the default binding procedure by also incorporating bindings for cmputed default property values.
+   *
+   * @throws ComponentException
+   */
+  protected function databind ()
+  {
+    $bp = "$this->propsClass::bindings";
+    if (defined ($bp))
+      foreach (constant ($bp) as $k => $v)
+        $this->bindings[$k] = unserialize ($v);
+    parent::databind ();
+  }
+
+  /**
+   * This is used when compiling the macro properties class.
+   *
    * @return Macro
    */
   protected function getMacro ()
@@ -80,37 +119,12 @@ class MacroCall extends CompositeComponent
     return $this->getShadowDOM ()->getFirstChild ();
   }
 
-  /**
-   * Loads the macro with the name specified by the `macro` property.
-   *
-   * @param array|null $props
-   * @param Component  $parent
-   * @throws ComponentException
-   * @throws \Matisse\Exceptions\MatisseException
-   */
-  protected function onCreate (array $props = null, Component $parent = null)
-  {
-//    $this->parent = $parent;
-    $tagName          = $this->getTagName ();
-    $this->propsClass = $tagName . 'Properties';
-    if (!class_exists ($this->propsClass, false)) {
-      $this->context
-        ->getMacrosService ()
-        ->setupMacroProperties ($this->propsClass, $this->templateUrl, function () {
-          $this->createView ();
-          return $this->getMacro ();
-        });
-    }
-    $this->props = new $this->propsClass ($this);
-    parent::onCreate ($props, $parent);
-  }
-
-  protected function viewModel (ViewModelInterface $viewModel)
-  {
-    parent::viewModel ($viewModel);
-    // Import the container's model (if any) to the macro's view model
-    $viewModel->model = get ($this->context->getDataBinder ()->getViewModel (), 'model');
-//    $this->getMacro ()->importServices ($viewModel);
-  }
+//  protected function viewModel (ViewModelInterface $viewModel)
+//  {
+//    parent::viewModel ($viewModel);
+//    // Import the container's model (if any) to the macro's view model
+//    $viewModel->model = get ($this->context->getDataBinder ()->getViewModel (), 'model');
+////    $this->getMacro ()->importServices ($viewModel);
+//  }
 
 }

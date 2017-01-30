@@ -262,7 +262,7 @@ class Parser
     else {
       $this->text_optimize ($current);
       $parent = $current->parent;
-      $current->onParsingComplete (); //Note: calling this method may unset the 'parent' property (ex. with macros, which are immediately removed from the DOM).
+      $current->onParsingComplete ();
 
       // Check if the metadata context is being closed.
       if (isset($this->metadataContainer) && $this->current === $this->metadataContainer)

@@ -3,7 +3,6 @@
 namespace Matisse\Services;
 
 use Electro\Interfaces\Views\ViewServiceInterface;
-use Matisse\Components\Macro\Macro;
 use Matisse\Components\Macro\MacroCall;
 use Matisse\Config\MatisseSettings;
 use Matisse\Exceptions\ComponentException;
@@ -40,6 +39,25 @@ class MacrosService
     $this->cache           = $cache;
   }
 
+  /**
+   * Loads and compiles the macro, or retrieves it from the cache.
+   *
+   * <p>This method returns a MacroInstance composite component containing the macro as its shadow DOM.
+   *
+   * @param string $tagName
+   * @return MacroCall
+   * @throws FileIOException
+   */
+  function createMacroInstance ($tagName)
+  {
+    $propsClass       = $tagName . 'Properties';
+    $path             = $this->findMacroFile ($tagName);
+    $com              = new MacroCall;
+    $com->propsClass  = $propsClass;
+    $com->templateUrl = $path;
+    return $com;
+  }
+
   function findMacroFile ($tagName)
   {
     $tagName  = normalizeTagName ($tagName);
@@ -51,41 +69,6 @@ class MacrosService
     }
     throw new FileIOException($filename);
   }
-
-  /**
-   * Loads and compiles the macro, or retrieves it from the cache.
-   *
-   * <p>This method returns a MacroInstance composite component containing the macro as its shadow DOM.
-   *
-   * @param string $tagName
-   * @return MacroCall
-   */
- function createMacroInstance ($tagName)
- {
-   $propsClass = $tagName . 'Properties';
-   if (class_exists ($propsClass, false)) {
-     $props = new $propsClass;
-     $com              = new MacroCall;
-     $com->templateUrl = $props->template;
-     return $com;
-       $this->findMacroFile ($tagName);
-     $path = ;
-
-
-     $this->context
-       ->getMacrosService ()
-       ->setupMacroProperties ($this->propsClass, $this->templateUrl, function () {
-         $this->createView ();
-         return $this->getMacro ();
-       });
-   }
-
-
-
-   $this->props = new $this->propsClass ($this);
-   parent::onCreate ($props, $parent);
-
- }
 
   /**
    * Compiles (with caching) a properties class for a macro.

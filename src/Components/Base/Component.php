@@ -104,6 +104,7 @@ abstract class Component implements RenderableInterface, \Serializable
     $s               = explode ('\\', $class);
     $this->className = end ($s);
     if ($this->supportsProperties ()) {
+      // For dynamic classes, set const propertiesClass to NULL
       $propClass = $class::propertiesClass;
       if ($propClass)
         $this->props = new $propClass ($this);
