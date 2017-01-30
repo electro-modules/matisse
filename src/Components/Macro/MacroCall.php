@@ -18,7 +18,7 @@ class MacroCall extends CompositeComponent
   const allowsChildren = true;
 
   /** @var string */
-  private $propsClass;
+  public $propsClass;
 
   function render ()
   {
@@ -92,7 +92,7 @@ class MacroCall extends CompositeComponent
   {
 //    $this->parent = $parent;
     $tagName          = $this->getTagName ();
-    $this->propsClass = $tagName . 'MacroProps';
+    $this->propsClass = $tagName . 'Properties';
     if (!class_exists ($this->propsClass, false)) {
       $this->context
         ->getMacrosService ()

@@ -2,9 +2,9 @@
 
 namespace Matisse\Services;
 
-use Electro\Interfaces\KernelInterface;
 use Electro\Interfaces\Views\ViewServiceInterface;
 use Matisse\Components\Macro\Macro;
+use Matisse\Components\Macro\MacroCall;
 use Matisse\Config\MatisseSettings;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Exceptions\FileIOException;
@@ -55,21 +55,37 @@ class MacrosService
   /**
    * Loads and compiles the macro, or retrieves it from the cache.
    *
-   * <p>This method returns a DocumentFragment containing the macro as its first child.
+   * <p>This method returns a MacroInstance composite component containing the macro as its shadow DOM.
    *
-   * @param string $filename The template's full file path.
-   * @return Macro
-   * @throws MatisseException
+   * @param string $tagName
+   * @return MacroCall
    */
-//  function loadMacro ($filename)
-//  {
-//    /** @var \Matisse\Components\DocumentFragment $doc */
-//    $doc = $this->loadMacroFile ($filename);
-//    $c   = $doc->getFirstChild ();
-//    if ($c instanceof Macro)
-//      return $c;
-//    throw new MatisseException("File <path>$filename</path> doesn't define a macro called <kbd>$tagName</kbd> right at the beginning of the file");
-//  }
+ function createMacroInstance ($tagName)
+ {
+   $propsClass = $tagName . 'Properties';
+   if (class_exists ($propsClass, false)) {
+     $props = new $propsClass;
+     $com              = new MacroCall;
+     $com->templateUrl = $props->template;
+     return $com;
+       $this->findMacroFile ($tagName);
+     $path = ;
+
+
+     $this->context
+       ->getMacrosService ()
+       ->setupMacroProperties ($this->propsClass, $this->templateUrl, function () {
+         $this->createView ();
+         return $this->getMacro ();
+       });
+   }
+
+
+
+   $this->props = new $this->propsClass ($this);
+   parent::onCreate ($props, $parent);
+
+ }
 
   /**
    * Compiles (with caching) a properties class for a macro.

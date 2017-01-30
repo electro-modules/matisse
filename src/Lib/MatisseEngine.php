@@ -82,7 +82,7 @@ class MatisseEngine implements ViewEngineInterface
       if ($root instanceof CompositeComponent)
         $root->templateUrl = $sourceFile;
       return $root;
-    });
+    }, str_match ($sourceFile, '#^.*?[\\/](.*)\.\w+$#')[1]);
 
     // Restore the current context.
     $usrlz_ctx = $prev_ctx;

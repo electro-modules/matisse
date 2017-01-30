@@ -96,6 +96,8 @@ trait ComponentsAPITrait
     if (count ($s) > 1)
       list ($prefix, $tagName) = $s;
     else $prefix = '';
+    if (is_null ($props))
+      $props = [];
 
     if ($prefix)
       throw new MatisseException ("XML namespaces are not yet supported.<p>Tag: <kbd>&lt;<b>$prefix:</b>$tagName&gt;</kbd>");
@@ -114,10 +116,7 @@ trait ComponentsAPITrait
       // Convert the tag to a MacroInstance component instance that will attempt to load a macro with the same
       // name as the tag name.
 
-      if (is_null ($props))
-        $props = [];
-      $component              = new MacroCall;
-      $component->templateUrl = $this->macrosService->findMacroFile ($tagName);
+      $component = $this->macrosService->createMacroInstance ($tagName, $props);
     }
 
     // Component class was found.
