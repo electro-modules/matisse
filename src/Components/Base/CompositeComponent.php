@@ -159,11 +159,21 @@ class CompositeComponent extends Component
         $this->assertContext ();
         $this->view = $this->context->viewService->loadFromString ($this->template, $this->viewEngineClass);
       }
-      $this->shadowViewModel = $this->context->viewService->createViewModelFor ($this->view, true);
+      $viewModel = $this->context->viewService->createViewModelFor ($this->view, true);
+
+      // For debugging:
+      // $viewModel['_class'] = typeOf ($viewModel);
+      // $viewModel['_keys'] = array_keys ($viewModel->getArrayCopy ());
+
+      $dom       = $this->provideShadowDOM ();
+      if ($dom)
+        $dom->getDataBinder ()->setViewModel ($viewModel);
+      else $this->shadowViewModel = $viewModel;
+      $this->setShadowDOM ($this->provideShadowDOM ());
     }
     // Else assume the shadowDOM is already attached to this; it will be, if set via setShadowDOM().
     // Either way, generate the template.
-    $this->setShadowDOM ($this->provideShadowDOM ());
+    else $this->setShadowDOM ($this->provideShadowDOM ());
   }
 
   /**
@@ -174,10 +184,11 @@ class CompositeComponent extends Component
    */
   protected function render ()
   {
-    if ($this->view)
+    if ($this->view) {
       // The view model is sent to render() because the view may not be a Matisse template, in which case the model must
       // be set explicitly.
       echo $this->view->render ($this->getViewModel ());
+    }
     elseif ($this->shadowDOM)
       $this->shadowDOM->run ();
     // Otherwise, do NOT render the component's content

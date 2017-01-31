@@ -3,7 +3,6 @@
 namespace Matisse\Traits\Component;
 
 use Electro\Interfaces\Views\ViewModelInterface;
-use Electro\Interop\ViewModel;
 use Matisse\Components\DocumentFragment;
 
 trait ViewModelTrait
@@ -27,11 +26,13 @@ trait ViewModelTrait
    */
   function getViewModel ()
   {
+    if (isset($this->shadowViewModel))
+      return $this->shadowViewModel;
     /** @var DocumentFragment $shadowDOM */
     $shadowDOM = $this->getShadowDOM ();
     return $shadowDOM
       ? $shadowDOM->getDataBinder ()->getViewModel ()
-      : $this->shadowViewModel;
+      : null;
   }
 
   /**
