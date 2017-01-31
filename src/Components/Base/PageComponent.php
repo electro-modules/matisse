@@ -166,8 +166,8 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
     $this->request  = $request;
     $this->response = $response;
     $this->redirection->setRequest ($request);
+    $this->navigation->setRequest ($request);
     $this->currentLink = $this->navigation->currentLink ();
-    $this->navigation->getCurrentTrail ();
     if (!$this->indexPage && $this->autoRedirectUp && $this->currentLink && $parent = $this->currentLink->parent ())
       $this->indexPage = $parent->url ();
 
