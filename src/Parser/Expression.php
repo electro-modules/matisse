@@ -190,7 +190,8 @@ REGEXP;
         return "$seg()";
     }
 
-    $exp = $unary = '';
+    $exp = '$b';
+    $unary = '';
     foreach ($segments as $i => $seg) {
       if ($i)
         $exp = "_g($exp,'$seg')";
@@ -199,9 +200,10 @@ REGEXP;
         // If not a constant value, convert it to a property access expression fragment.
         if ($seg[0] == '"' || $seg[0] == "'" || ctype_digit ($seg))
           $exp = $seg;
-        else $exp = $seg[0] == '@'
-          ? sprintf ("%s->prop('%s')", self::BINDER_PARAM, substr ($seg, 1))
-          : self::BINDER_PARAM . "->get('$seg')";
+        else $exp = "_g($exp,'$seg')";
+        // else $exp = $seg[0] == '@'
+        //   ? sprintf ("%s->prop('%s')", self::BINDER_PARAM, substr ($seg, 1))
+        //   : self::BINDER_PARAM . "->get('$seg')";
       }
     }
     $exp = "$unary$exp";

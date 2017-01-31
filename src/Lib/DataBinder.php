@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Lib;
 
 use Electro\Interfaces\CustomInspectionInterface;
@@ -51,11 +52,6 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
     return call_user_func_array ($filter, $args);
   }
 
-  function get ($key)
-  {
-    return isset ($this->viewModel[$key]) ? $this->viewModel[$key] : null;
-  }
-
   function getProps ()
   {
     return $this->props;
@@ -105,6 +101,37 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
     return new static;
   }
 
+  public function offsetExists ($offset)
+  {
+    if ($offset[0] == '@')
+      return !is_null ($this->prop (substr ($offset, 1)));
+    return isset ($this->viewModel[$offset]) || method_exists ($this->viewModel, $offset) || $offset == 'this';
+  }
+
+  public function offsetGet ($offset)
+  {
+    $vm = $this->viewModel;
+    if (isset ($vm[$offset]))
+      return $vm[$offset];
+    if ($offset[0] == '@')
+      return $this->prop (substr ($offset, 1));
+    if (method_exists ($vm, $offset))
+      return $vm->$offset ();
+    if ($offset == 'this')
+      return $vm;
+    return null;
+  }
+
+  public function offsetSet ($offset, $value)
+  {
+    $this->viewModel[$offset] = $value;
+  }
+
+  public function offsetUnset ($offset)
+  {
+    unset ($this->viewModel[$offset]);
+  }
+
   function prop ($key)
   {
     if (!$this->props) return null;
@@ -123,4 +150,5 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
   {
     $this->context = $context;
   }
+
 }

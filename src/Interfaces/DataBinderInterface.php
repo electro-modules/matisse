@@ -12,7 +12,7 @@ use Matisse\Properties\Base\AbstractProperties;
 /**
  * Provides a data context for evaluating expressions and methods to manage that context.
  */
-interface DataBinderInterface
+interface DataBinderInterface extends \ArrayAccess
 {
   /**
    * Executes a filter with the given arguments.
@@ -25,18 +25,9 @@ interface DataBinderInterface
   function filter ($name, ...$args);
 
   /**
-   * Gets a value with the given name from the view model.
-   *
-   * @param string $key
-   * @return mixed null if not found.
-   * @throws DataBindingException
-   */
-  function get ($key);
-
-  /**
    * Gets the bound component properties.
    *
-   * @return $this|null|AbstractProperties
+   * @return AbstractProperties|null
    */
   function getProps ();
 

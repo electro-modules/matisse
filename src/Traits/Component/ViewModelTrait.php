@@ -3,7 +3,9 @@
 namespace Matisse\Traits\Component;
 
 use Electro\Interfaces\Views\ViewModelInterface;
+use Matisse\Components\Base\Component;
 use Matisse\Components\DocumentFragment;
+use Matisse\Interfaces\DataBinderInterface;
 
 trait ViewModelTrait
 {
@@ -65,7 +67,24 @@ trait ViewModelTrait
    */
   protected function baseViewModel (ViewModelInterface $viewModel)
   {
-    //override
+    /** @var DataBinderInterface $binder */
+    $binder = $this->getDataBinder ();
+    $props  = $binder->getProps ();
+    if ($props)
+      $viewModel['props'] = $props->getAll ();
+  }
+
+  protected function setViewModel (ViewModelInterface $viewModel)
+  {
+    // For debugging:
+    // $viewModel['_class'] = typeOf ($viewModel);
+    // $viewModel['_keys'] = array_keys ($viewModel->getArrayCopy ());
+
+    /** @var Component $dom */
+    $dom = $this->provideShadowDOM ();
+    if ($dom)
+      $dom->getDataBinder ()->setViewModel ($viewModel);
+    else $this->shadowViewModel = $viewModel;
   }
 
   /**

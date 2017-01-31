@@ -159,21 +159,11 @@ class CompositeComponent extends Component
         $this->assertContext ();
         $this->view = $this->context->viewService->loadFromString ($this->template, $this->viewEngineClass);
       }
-      $viewModel = $this->context->viewService->createViewModelFor ($this->view, true);
-
-      // For debugging:
-      // $viewModel['_class'] = typeOf ($viewModel);
-      // $viewModel['_keys'] = array_keys ($viewModel->getArrayCopy ());
-
-      $dom       = $this->provideShadowDOM ();
-      if ($dom)
-        $dom->getDataBinder ()->setViewModel ($viewModel);
-      else $this->shadowViewModel = $viewModel;
-      $this->setShadowDOM ($this->provideShadowDOM ());
+      $this->setViewModel ($this->context->viewService->createViewModelFor ($this->view, true));
     }
     // Else assume the shadowDOM is already attached to this; it will be, if set via setShadowDOM().
     // Either way, generate the template.
-    else $this->setShadowDOM ($this->provideShadowDOM ());
+    $this->setShadowDOM ($this->provideShadowDOM ());
   }
 
   /**
