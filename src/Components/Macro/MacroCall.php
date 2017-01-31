@@ -19,6 +19,24 @@ class MacroCall extends CompositeComponent
   /** @var string */
   public $propsClass;
 
+  public function export ()
+  {
+    $a = parent::export ();
+
+    if ($this->propsClass)
+      $a['@propsClass'] = $this->propsClass;
+
+    return $a;
+  }
+
+  public function import ($a)
+  {
+    if (isset($a['@propsClass']))
+      $this->propsClass = $a['@propsClass'];
+
+    parent::import ($a);
+  }
+
   /**
    * Move children (if any) to the default property.
    * This is done only once, when the component is parsed. Subsequent reads from the cache will create the component
@@ -54,6 +72,13 @@ class MacroCall extends CompositeComponent
         'You may not specify content for this tag because it has no default property');
   }
 
+//  protected function setupViewModel ()
+//  {
+//    parent::setupViewModel ();
+//    foreach ($this->props->getPropertiesOf (type::content, type::metadata, type::collection) as $prop => $v)
+//      $this->props->$prop->preRun();
+//  }
+
   /**
    * Creates the properties object from the class generated for this macro type and copies the property values to it.
    *
@@ -86,13 +111,6 @@ class MacroCall extends CompositeComponent
   {
     return isset($this->propsClass);
   }
-
-//  protected function setupViewModel ()
-//  {
-//    parent::setupViewModel ();
-//    foreach ($this->props->getPropertiesOf (type::content, type::metadata, type::collection) as $prop => $v)
-//      $this->props->$prop->preRun();
-//  }
 
   /**
    * Extend the default binding procedure by also incorporating bindings for cmputed default property values.

@@ -65,7 +65,8 @@ class MacrosService
     foreach ($this->matisseSettings->getMacrosDirectories () as $dir => $viewPath) {
       $path = "$dir/$filename";
       if (file_exists ($path))
-        return $viewPath ? "$viewPath/$filename" : $filename;
+        return substr($path, strlen(getcwd()) + 1);
+//        return $viewPath ? "$viewPath/$filename" : $filename;
     }
     throw new FileIOException($filename);
   }
