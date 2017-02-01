@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Components\Macro;
 
 use Matisse\Components\Base\Component;
@@ -30,12 +31,12 @@ class MacroParam extends Component
 
   protected function render ()
   {
-    $prop       = $this->props;
-    $scopeProps = $this->getDataBinder ()->getProps ();
-    $name       = $prop->name;
+    $viewModel  = $this->getDataBinder ()->getViewModel ();
+    $scopeProps =& $viewModel['props'];
+    $name       = $this->props->name;
 
-    if (isset($scopeProps) && !exists ($scopeProps->$name))
-      $scopeProps->$name = $prop->default;
+    if (isset($scopeProps) && !get ($scopeProps, $name))
+      $scopeProps[$name] = $this->props->default;
   }
 
 }

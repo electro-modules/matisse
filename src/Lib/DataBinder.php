@@ -52,16 +52,6 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
     return call_user_func_array ($filter, $args);
   }
 
-  function getProps ()
-  {
-    return $this->props;
-  }
-
-  function setProps (AbstractProperties $props = null)
-  {
-    $this->props = $props;
-  }
-
   function getViewModel ()
   {
     return $this->viewModel;
@@ -103,8 +93,6 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
 
   public function offsetExists ($offset)
   {
-    if ($offset[0] == '@')
-      return !is_null ($this->prop (substr ($offset, 1)));
     return isset ($this->viewModel[$offset]) || method_exists ($this->viewModel, $offset) || $offset == 'this';
   }
 
@@ -113,8 +101,6 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
     $vm = $this->viewModel;
     if (isset ($vm[$offset]))
       return $vm[$offset];
-    if ($offset[0] == '@')
-      return $this->prop (substr ($offset, 1));
     if (method_exists ($vm, $offset))
       return $vm->$offset ();
     if ($offset == 'this')

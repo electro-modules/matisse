@@ -4,7 +4,6 @@ namespace Matisse\Interfaces;
 
 use Electro\Interfaces\Views\ViewModelInterface;
 use Electro\Interop\ViewModel;
-use Matisse\Exceptions\DataBindingException;
 use Matisse\Exceptions\FilterHandlerNotFoundException;
 use Matisse\Parser\DocumentContext;
 use Matisse\Properties\Base\AbstractProperties;
@@ -25,13 +24,6 @@ interface DataBinderInterface extends \ArrayAccess
   function filter ($name, ...$args);
 
   /**
-   * Gets the bound component properties.
-   *
-   * @return AbstractProperties|null
-   */
-  function getProps ();
-
-  /**
    * Gets the binder's view model.
    *
    * @return ViewModel
@@ -44,15 +36,6 @@ interface DataBinderInterface extends \ArrayAccess
    * @return DataBinderInterface
    */
   function makeNew ();
-
-  /**
-   * Gets a value with the given name from the bound component properties, performing data binding as needed.
-   *
-   * @param string $key
-   * @return mixed null if not found.
-   * @throws DataBindingException
-   */
-  function prop ($key);
 
   /**
    * Renders a content block for a {#block} reference on an expression.
@@ -68,13 +51,6 @@ interface DataBinderInterface extends \ArrayAccess
    * @param DocumentContext $context
    */
   function setContext (DocumentContext $context);
-
-  /**
-   * Assigns properties to the binder.
-   *
-   * @param AbstractProperties|null $props
-   */
-  function setProps (AbstractProperties $props = null);
 
   /**
    * Assigns a view model to the binder.

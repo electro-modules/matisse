@@ -2,10 +2,12 @@
 
 namespace Matisse\Components\Base;
 
+use Auryn\InjectionException;
 use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\RenderableInterface;
 use Matisse\Debug\ComponentInspector;
 use Matisse\Exceptions\ComponentException;
+use Matisse\Exceptions\ReflectionPropertyException;
 use Matisse\Interfaces\PresetsInterface;
 use Matisse\Parser\DocumentContext;
 use Matisse\Properties\Base\AbstractProperties;
@@ -118,6 +120,8 @@ abstract class Component implements RenderableInterface, \Serializable
    * @param array|null $props
    * @param array|null $bindings
    * @return string The rendered output.
+   * @throws ComponentException
+   * @throws ReflectionPropertyException
    */
   static function _ (Component $parent, array $props = null, array $bindings = null)
   {
@@ -136,6 +140,7 @@ abstract class Component implements RenderableInterface, \Serializable
    * @param array|null $bindings A map of attribute names and corresponding databinding expressions.
    * @return Component Component instance.
    * @throws ComponentException
+   * @throws ReflectionPropertyException
    */
   static function create (Component $parent, array $props = null, array $bindings = null)
   {
@@ -251,7 +256,8 @@ abstract class Component implements RenderableInterface, \Serializable
   /**
    * @param array $a Associative array of data to be imported.
    * @throws ComponentException
-   * @throws \Auryn\InjectionException
+   * @throws ReflectionPropertyException
+   * @throws InjectionException
    */
   public function import ($a)
   {
@@ -318,6 +324,7 @@ abstract class Component implements RenderableInterface, \Serializable
    *
    * @param array|null $props A map of the component instance's properties being applied.
    * @throws ComponentException
+   * @throws ReflectionPropertyException
    */
   function setProps (array $props = null)
   {
@@ -345,6 +352,7 @@ abstract class Component implements RenderableInterface, \Serializable
    *                                                expressions.
    * @return Component Component instance.
    * @throws ComponentException
+   * @throws ReflectionPropertyException
    */
   function setup (Component $parent = null, DocumentContext $context, $props = null, array $bindings = null)
   {

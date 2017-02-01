@@ -5,8 +5,11 @@ namespace Matisse\Traits\Component;
 use Electro\Interfaces\Views\ViewModelInterface;
 use Matisse\Components\Base\Component;
 use Matisse\Components\DocumentFragment;
-use Matisse\Interfaces\DataBinderInterface;
+use Matisse\Properties\Base\AbstractProperties;
 
+/**
+ * @property AbstractProperties $props
+ */
 trait ViewModelTrait
 {
   /**
@@ -17,12 +20,15 @@ trait ViewModelTrait
   /**
    * Returns the component's view model.
    *
-   * >#####Important
-   * >On a composite component, the view model data is set on the shadow DOM's view model,
-   * **NOT** on the component's own view model!
+   * #####Important
+   * On a composite component, the view model data is set on the shadow DOM's view model, **NOT** on the component's
+   * own view model, so that bindings on the component's properties (which may hold DOMs themselves) are computed on the
+   * current binding context, not on the shadow DOM's context, which is a subdocument with its own isolated context.
+   *
    * <p>If the view is not a Matisse template (and therefore there is no shadow DOM), an alternate view model is used
    * (see {@see $shadowViewModel}).
-   * ><p>This method overrides {@see DataBindingTrait} to implement that behavior.
+   *
+   * ><p>This method overrides {@see DataBindingTrait}.
    *
    * @return ViewModelInterface
    */
@@ -50,12 +56,8 @@ trait ViewModelTrait
     if ($vm) {
       $this->baseViewModel ($vm);
       $this->viewModel ($vm);
+      $vm->init ();
     }
-
-    /** @var \Matisse\Components\DocumentFragment $shadowDOM */
-    $shadowDOM = $this->getShadowDOM ();
-    if ($shadowDOM)
-      $shadowDOM->getDataBinder ()->setProps ($this->props ?: $this->getDataBinder ()->getProps ());
   }
 
   /**
@@ -67,19 +69,13 @@ trait ViewModelTrait
    */
   protected function baseViewModel (ViewModelInterface $viewModel)
   {
-    /** @var DataBinderInterface $binder */
-    $binder = $this->getDataBinder ();
-    $props  = $binder->getProps ();
+    $props = $this->props ? $this->props->getAll () : null;
     if ($props)
-      $viewModel['props'] = $props->getAll ();
+      $viewModel['props'] = $props;
   }
 
   protected function setViewModel (ViewModelInterface $viewModel)
   {
-    // For debugging:
-    // $viewModel['_class'] = typeOf ($viewModel);
-    // $viewModel['_keys'] = array_keys ($viewModel->getArrayCopy ());
-
     /** @var Component $dom */
     $dom = $this->provideShadowDOM ();
     if ($dom)

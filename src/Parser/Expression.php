@@ -190,7 +190,7 @@ REGEXP;
         return "$seg()";
     }
 
-    $exp = '$b';
+    $exp = self::BINDER_PARAM;
     $unary = '';
     foreach ($segments as $i => $seg) {
       if ($i)
@@ -200,10 +200,9 @@ REGEXP;
         // If not a constant value, convert it to a property access expression fragment.
         if ($seg[0] == '"' || $seg[0] == "'" || ctype_digit ($seg))
           $exp = $seg;
-        else $exp = "_g($exp,'$seg')";
-        // else $exp = $seg[0] == '@'
-        //   ? sprintf ("%s->prop('%s')", self::BINDER_PARAM, substr ($seg, 1))
-        //   : self::BINDER_PARAM . "->get('$seg')";
+         else $exp = $seg[0] == '@'
+           ? sprintf ("_g(_g(%s,'props'),'%s')", $exp, substr ($seg, 1))
+           : $exp = "_g($exp,'$seg')";
       }
     }
     $exp = "$unary$exp";
@@ -229,6 +228,7 @@ REGEXP;
    *
    * @param string $expression
    * @return string
+   * @throws DataBindingException
    */
   static private function translate ($expression)
   {

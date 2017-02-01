@@ -5,6 +5,8 @@ use Matisse\Components\Base\Component;
 use Matisse\Components\Metadata;
 use Matisse\Components\Text;
 use Matisse\Exceptions\ComponentException;
+use Matisse\Exceptions\DataBindingException;
+use Matisse\Exceptions\ReflectionPropertyException;
 use Matisse\Interfaces\ComponentPropertiesInterface;
 use Matisse\Properties\TypeSystem\type;
 use PhpKit\WebConsole\Lib\Debug;
@@ -47,14 +49,14 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
   /**
    * @param string $propName Property name.
    * @return mixed
-   * @throws \Matisse\Exceptions\ReflectionPropertyException
+   * @throws ReflectionPropertyException
    */
   abstract function getDefaultValue ($propName);
 
   /**
    * @param string $propName Property name.
    * @return array Always returns an array, even if no enumeration is defined for the target property.
-   * @throws \Matisse\Exceptions\ReflectionPropertyException
+   * @throws ReflectionPropertyException
    */
   abstract function getEnumOf ($propName);
 
@@ -98,6 +100,8 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
    * Mass-assigns a set of properties.
    *
    * @param array $props
+   * @throws ComponentException
+   * @throws ReflectionPropertyException
    */
   function apply (array $props)
   {
@@ -110,6 +114,8 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
    * Mass-assigns a set of properties, but only to those properties that are not yet modified.
    *
    * @param array $props
+   * @throws ComponentException
+   * @throws ReflectionPropertyException
    */
   function applyDefaults (array $props)
   {
@@ -186,6 +192,8 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
    * @param string $propName
    * @param mixed  $default [optional]
    * @return mixed
+   * @throws ComponentException
+   * @throws DataBindingException
    */
   function getComputed ($propName, $default = null)
   {
@@ -250,6 +258,7 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
    *
    * @param string $propName Property name.
    * @return bool
+   * @throws ReflectionPropertyException
    */
   function isModified ($propName)
   {
@@ -284,6 +293,8 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
    *
    * @param string $propName
    * @param mixed  $value
+   * @throws ComponentException
+   * @throws ReflectionPropertyException
    */
   function set ($propName, $value)
   {
@@ -323,6 +334,7 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
    * @param mixed  $v
    * @return bool|float|int|null|string|\Traversable
    * @throws ComponentException
+   * @throws ReflectionPropertyException
    */
   function typecastPropertyValue ($name, $v)
   {
@@ -368,6 +380,7 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
    * @param string $name
    * @param mixed  $v
    * @throws ComponentException
+   * @throws ReflectionPropertyException
    */
   protected function validateEnum ($name, $v)
   {

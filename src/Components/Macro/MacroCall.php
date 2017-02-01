@@ -5,6 +5,8 @@ namespace Matisse\Components\Macro;
 use Matisse\Components\Base\CompositeComponent;
 use Matisse\Components\Metadata;
 use Matisse\Exceptions\ComponentException;
+use Matisse\Exceptions\MatisseException;
+use Matisse\Exceptions\ReflectionPropertyException;
 use Matisse\Properties\TypeSystem\type;
 
 /**
@@ -72,13 +74,6 @@ class MacroCall extends CompositeComponent
         'You may not specify content for this tag because it has no default property');
   }
 
-//  protected function setupViewModel ()
-//  {
-//    parent::setupViewModel ();
-//    foreach ($this->props->getPropertiesOf (type::content, type::metadata, type::collection) as $prop => $v)
-//      $this->props->$prop->preRun();
-//  }
-
   /**
    * Creates the properties object from the class generated for this macro type and copies the property values to it.
    *
@@ -86,7 +81,8 @@ class MacroCall extends CompositeComponent
    *
    * @param array|null $props
    * @throws ComponentException
-   * @throws \Matisse\Exceptions\MatisseException
+   * @throws MatisseException
+   * @throws ReflectionPropertyException
    */
   function setProps (array $props = null)
   {
@@ -96,7 +92,8 @@ class MacroCall extends CompositeComponent
           ->getMacrosService ()
           ->setupMacroProperties ($this->propsClass, $this->templateUrl, function () {
             $this->createView ();
-            return $this->getMacro ();
+            // Return the Macro instance.
+            return $this->getShadowDOM ()->getFirstChild ();
           });
       }
       $this->props = new $this->propsClass ($this);
@@ -113,7 +110,7 @@ class MacroCall extends CompositeComponent
   }
 
   /**
-   * Extend the default binding procedure by also incorporating bindings for cmputed default property values.
+   * Extend the default binding procedure by also incorporating bindings for computed default property values.
    *
    * @throws ComponentException
    */
@@ -125,24 +122,5 @@ class MacroCall extends CompositeComponent
         $this->bindings[$k] = unserialize ($v);
     parent::databind ();
   }
-
-  /**
-   * This is used when compiling the macro properties class.
-   *
-   * @return Macro
-   */
-  protected function getMacro ()
-  {
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    return $this->getShadowDOM ()->getFirstChild ();
-  }
-
-//  protected function viewModel (ViewModelInterface $viewModel)
-//  {
-//    parent::viewModel ($viewModel);
-//    // Import the container's model (if any) to the macro's view model
-//    $viewModel->model = get ($this->context->getDataBinder ()->getViewModel (), 'model');
-////    $this->getMacro ()->importServices ($viewModel);
-//  }
 
 }

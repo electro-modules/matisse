@@ -1,6 +1,7 @@
 <?php
 use Electro\Interfaces\RenderableInterface;
 use Matisse\Exceptions\MatisseException;
+use Matisse\Lib\DataBinder;
 use PhpKit\WebConsole\Lib\Debug;
 
 const MPARENT       = '@parent';
@@ -50,6 +51,7 @@ class RawText
  *
  * @param string|RawText $s
  * @return string
+ * @throws MatisseException
  */
 function _e ($s)
 {
@@ -106,6 +108,8 @@ function normalizeAttributeName ($name)
 function _g ($data, $key, $default = null)
 {
   if (is_object ($data)) {
+    if ($data instanceof DataBinder || ($data instanceof \ArrayAccess && $data->offsetExists ($key)))
+      return $data[$key];
     if (isset($data->$key))
       return $data->$key;
     // Property may be private/protected or virtual, try to call a getter method with the same name
@@ -118,9 +122,6 @@ function _g ($data, $key, $default = null)
     // No getter was found, so if the property exists, it is either inaccessible or it is null, either way return the default
     if (property_exists ($data, $key))
       return $default;
-    // There's no property, but the object may be indexable
-    if ($data instanceof \ArrayAccess && $data->offsetExists ($key))
-      return $data[$key];
   }
   elseif (is_array ($data))
     return array_key_exists ($key, $data) ? $data[$key] : $default;

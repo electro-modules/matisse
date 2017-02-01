@@ -315,7 +315,8 @@ trait DOMNodeTrait
   {
     $children       = $this->children;
     $this->children = [];
-    self::detachAll ($children);
+    if ($children)
+      self::detachAll ($children);
     return $children;
   }
 

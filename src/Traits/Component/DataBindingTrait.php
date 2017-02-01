@@ -1,7 +1,7 @@
 <?php
 namespace Matisse\Traits\Component;
 
-use Electro\Interop\ViewModel;
+use Matisse\Parser\DocumentContext;
 use Matisse\Components\Base\Component;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Exceptions\DataBindingException;
@@ -16,6 +16,7 @@ use PhpKit\WebConsole\Lib\Debug;
  * It's applicable to the Component class.
  *
  * @property ComponentProperties $props The component's attributes.
+ * @property DocumentContext $context
  */
 trait DataBindingTrait
 {
@@ -91,6 +92,7 @@ trait DataBindingTrait
    *
    * @param string $name
    * @return mixed
+   * @throws ComponentException
    * @throws DataBindingException
    */
   function getComputedPropValue ($name)
@@ -115,9 +117,9 @@ trait DataBindingTrait
    * Returns the component's view model (its own or an inherited one).
    *
    * >#####Important
-   * >On a composite component, the view model data is set on the shadow DOM's view model,
-   * **NOT** on the component's own view model!
-   * ><p>This method is overridden on {@see ViewModelTrait} to implement that behavior.
+   * >On a composite component, the view model data is set on the shadow DOM's view model, **NOT** on the component's
+   * own view model!
+   * ><p>This method is overridden on {@see ViewModelTrait}.
    *
    * @return \Electro\Interop\ViewModel
    */
@@ -206,6 +208,7 @@ trait DataBindingTrait
     catch (\Error $e) {
       self::evalError ($e, $bindExp);
     }
+    return null;
   }
 
   /**

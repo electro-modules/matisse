@@ -11,6 +11,7 @@ trait RenderingTrait
    *
    * @param Component[] $components The set of components to be rendered.
    * @return string
+   * @throws ComponentException
    */
   static function getRenderingOfSet (array $components = null)
   {
@@ -25,6 +26,7 @@ trait RenderingTrait
    * Renders a set of components.
    *
    * @param Component[] $components The set of components to be rendered.
+   * @throws ComponentException
    */
   static function renderSet (array $components = null)
   {
@@ -39,6 +41,7 @@ trait RenderingTrait
    * <p>**Warning:** the component will **not** be detached after begin rendered.
    *
    * @param Component $c
+   * @throws ComponentException
    */
   function attachAndRender (Component $c)
   {
@@ -52,6 +55,7 @@ trait RenderingTrait
    * <p>**Warning:** the components will **not** br detached after begin rendered.
    *
    * @param Component[] $components A set of external, non-attached, components.
+   * @throws ComponentException
    */
   function attachAndRenderSet (array $components)
   {
@@ -67,6 +71,7 @@ trait RenderingTrait
    *
    * @param Component[] $components A set of external, non-attached, components.
    * @return string
+   * @throws ComponentException
    */
   function attachSetAndGetContent (array $components)
   {
@@ -156,6 +161,7 @@ trait RenderingTrait
    *
    * @param string|null $attrName [optional] A property name. If none, it renders all of the component's direct
    *                              children.
+   * @throws ComponentException
    * @see runContent()
    */
   function runChildren ($attrName = null)
