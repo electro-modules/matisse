@@ -2,13 +2,16 @@
 
 namespace Matisse\Traits\Context;
 
+use Auryn\InjectionException;
 use Electro\Interfaces\DI\InjectorInterface;
 use Matisse\Components;
 use Matisse\Components\Base\Component;
 use Matisse\Components\GenericHtmlComponent;
 use Matisse\Components\Macro\MacroCall;
 use Matisse\Exceptions\ComponentException;
+use Matisse\Exceptions\FileIOException;
 use Matisse\Exceptions\MatisseException;
+use Matisse\Exceptions\ReflectionPropertyException;
 use Matisse\Parser\DocumentContext;
 use Matisse\Properties\Base\AbstractProperties;
 
@@ -32,8 +35,9 @@ trait ComponentsAPITrait
     'If'                => Components\If_::class,
     'Include'           => Components\Include_::class,
     'Macro'             => Components\Macro\Macro::class,
-    'MacroParam'        => Components\Macro\MacroParam::class,
+    'Defaults'          => Components\Defaults::class,
     'Script'            => Components\Script::class,
+    'Set'               => Components\Set::class,
     'Style'             => Components\Style::class,
     'For'               => Components\For_::class,
     'Import'            => Components\Import::class,
@@ -60,7 +64,8 @@ trait ComponentsAPITrait
    *                                                expressions.
    * @return Component
    * @throws ComponentException
-   * @throws \Auryn\InjectionException
+   * @throws InjectionException
+   * @throws ReflectionPropertyException
    */
   function createComponent ($class, Component $parent, $props = null, array $bindings = null)
   {
@@ -86,8 +91,10 @@ trait ComponentsAPITrait
    *                             If false, an attempt is made to load a macro with the same name,
    * @return Component Component instance. For macros, an instance of Macro is returned.
    * @throws ComponentException
+   * @throws InjectionException
    * @throws MatisseException
-   * @throws \Auryn\InjectionException
+   * @throws ReflectionPropertyException
+   * @throws FileIOException
    */
   function createComponentFromTag ($tagName, Component $parent, array $props = null, array $bindings = null,
                                    $generic = false, $strict = false)
