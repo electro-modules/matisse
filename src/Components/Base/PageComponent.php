@@ -277,59 +277,6 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
   {
     parent::afterRender ();
 
-    //----------------------------------------------------------------------------------------
-    // View Model panel
-    //
-    // (MUST run before the DOM panel to capture the data-binding stack at its current state)
-    //----------------------------------------------------------------------------------------
-    if ($this->debugSettings->logView) {
-      $VMFilter = function ($k, $v, $o) {
-        if (
-          $v instanceof DocumentContext ||
-          $v instanceof Component ||
-          $k === 'parent' ||
-          $k === 'model'
-        ) return '...';
-        return true;
-      };
-      $expMap   = Expression::$translationCache;
-      ksort ($expMap);
-
-      DebugConsole::logger ('view')
-                  ->withFilter ($VMFilter, $this->context)
-                  ->write ('<#section|Compiled expressions>')
-                  ->inspect ($expMap)
-                  ->write ('</#section>');
-    }
-
-    //------------
-    // Model panel
-    //------------
-    if ($this->debugSettings->logModel) {
-      $shadowDOM = $this->getShadowDOM ();
-      if ($shadowDOM) {
-
-        $VMFilter = function ($k, $v, $o) {
-          if ($v instanceof KernelSettings ||
-              $v instanceof NavigationInterface ||
-              $v instanceof NavigationLinkInterface ||
-              $v instanceof SessionInterface ||
-              $v instanceof ServerRequestInterface ||
-              $v instanceof DocumentContext ||
-              $v instanceof Component
-          ) return '...';
-          return true;
-        };
-
-        $binder = $shadowDOM->getDataBinder ();
-        DebugConsole::logger ('model')
-                    ->write ('<#i>PAGE DATA BINDER: ' . Debug::getType ($binder) . "</#i>")
-                    ->write ("<#section|PAGE VIEW MODEL>")
-                    ->withFilter ($VMFilter, $binder->getViewModel ())
-                    ->write ("</#section>");
-      }
-    }
-
     //-----------
     // DOM panel
     //-----------
