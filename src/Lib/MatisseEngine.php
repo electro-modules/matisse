@@ -64,7 +64,7 @@ class MatisseEngine implements ViewEngineInterface
   function configure (array $options = [])
   {
     $this->rootClass = get ($options, 'rootClass')
-      ?: (get ($options, 'page') ? PageComponent::class : DocumentFragment::class);
+      ?: (get ($options, 'page') ? PageComponent::class : null);
   }
 
   function loadFromCache (CachingFileCompiler $cache, $sourceFile)
