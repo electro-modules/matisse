@@ -22,7 +22,7 @@
   "require": {
     "php": ">=5.6",
     "electro/installers": "^1.0.0",
-    "electro/interop": "^0.9.0",
+    "electro/interop": "^0.10",
     "php-kit/flow": "^1.0.0",
     "php-kit/html5-tools": "^1.0.0",
     "php-kit/power-primitives": "^1.0.0",
