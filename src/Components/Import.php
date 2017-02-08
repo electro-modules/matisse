@@ -6,7 +6,7 @@ use Matisse\Components\Base\Component;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Properties\Base\ComponentProperties;
 
-class UseProperties extends ComponentProperties
+class ImportProperties extends ComponentProperties
 {
   /**
    * @var string The key under which to store the imported service class/interface.
@@ -60,9 +60,9 @@ class UseProperties extends ComponentProperties
  */
 class Import extends Component
 {
-  const propertiesClass = UseProperties::class;
+  const propertiesClass = ImportProperties::class;
 
-  /** @var UseProperties */
+  /** @var ImportProperties */
   public $props;
 
   protected function render ()

@@ -24,8 +24,4 @@ class MacroProperties extends ComponentProperties
    * @var Metadata[]
    */
   public $style = [type::collection, is::of, type::content];
-  /**
-   * @var \Matisse\Components\Metadata
-   */
-  public $import = type::metadata;
 }
