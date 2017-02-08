@@ -118,7 +118,7 @@ class MatisseSettings
     $ctx->controllers          = $this->controllers;
     $ctx->controllerNamespaces = $this->controllerNamespaces;
     $ctx->registerTags ($this->tags);
-    $ctx->setFilterHandler (new FilterHandler (new DefaultFilters));
+    $ctx->setFilterHandler (new FilterHandler (new DefaultFilters ($ctx->injector)));
     $ctx->getDataBinder ()->setContext ($ctx);
   }
 
@@ -187,7 +187,7 @@ class MatisseSettings
                              return "$this->moduleMacrosPath/" . $info->getFilename ();
                            })->all ();
 //      dump ($all);
-      $all = array_merge ([$path => $this->moduleMacrosPath], $all);
+      $all                     = array_merge ([$path => $this->moduleMacrosPath], $all);
       $this->macrosDirectories = array_merge ($all, $this->macrosDirectories);
     }
     return $this;

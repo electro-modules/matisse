@@ -1,5 +1,10 @@
 <?php
+
 namespace Matisse\Lib;
+
+use Auryn\InjectionException;
+use Electro\Interfaces\ContentRepositoryInterface;
+use Electro\Interfaces\DI\InjectorInterface;
 
 /**
  * Predefined filters provided by Matisse.
@@ -9,6 +14,14 @@ namespace Matisse\Lib;
  */
 class DefaultFilters
 {
+  /** @var InjectorInterface */
+  private $injector;
+
+  public function __construct (InjectorInterface $injector)
+  {
+    $this->injector = $injector;
+  }
+
   /**
    * Alternating values for iterator indexes (0 or 1); allows for specific formatting of odd/even rows.
    *
@@ -27,6 +40,17 @@ class DefaultFilters
   function filter_currency ($v)
   {
     return formatMoney ($v) . ' €';
+  }
+
+  /**
+   * @param string $v
+   * @param int    $maxSize
+   * @param string $marker
+   * @return string
+   */
+  function filter_cut ($v, $maxSize, $marker = '…')
+  {
+    return str_cut ($v, $maxSize, $marker);
   }
 
   /**
@@ -76,6 +100,20 @@ class DefaultFilters
   }
 
   /**
+   * Converts an assets file's path to a full relative URL.
+   *
+   * @param string $v An asset path.
+   * @return string
+   * @throws InjectionException
+   */
+  function filter_fileUrl ($v)
+  {
+    /** @var ContentRepositoryInterface $repo */
+    $repo = $this->injector->make (ContentRepositoryInterface::class);
+    return $repo->getFileUrl ($v);
+  }
+
+  /**
    * Joins a list of strings into a string.
    *
    * @param array|\Traversable $v    The list of strings to be joined.
@@ -94,6 +132,28 @@ class DefaultFilters
   function filter_json ($v)
   {
     return json_encode ($v, JSON_PRETTY_PRINT);
+  }
+
+  /**
+   * @param string $v
+   * @param int    $maxSize
+   * @param string $marker
+   * @return string
+   */
+  function filter_limit ($v, $maxSize, $marker = '…')
+  {
+    return str_truncate ($v, $maxSize, $marker);
+  }
+
+  /**
+   * @param string $v
+   * @param int    $maxSize
+   * @param string $marker
+   * @return string
+   */
+  function filter_limitHtml ($v, $maxSize, $marker = '…')
+  {
+    return trimHTMLText ($v, $maxSize, $marker);
   }
 
   /**
@@ -117,7 +177,7 @@ class DefaultFilters
    */
   function filter_nl2br ($v)
   {
-    return nl2br ($v);
+    return nl2br ($v, false);
   }
 
   /**
@@ -140,6 +200,17 @@ class DefaultFilters
   function filter_ord ($v)
   {
     return $v + 1;
+  }
+
+  /**
+   * Strips HTML tags and returns plain text. Converts <p> and <br> to line returns.
+   *
+   * @param string $v
+   * @return string
+   */
+  function filter_plain ($v)
+  {
+    return strip_tags (preg_replace('#<br\s*/?>|(?=\S\s*\<p[\s>])#', "\n", $v));
   }
 
   /**

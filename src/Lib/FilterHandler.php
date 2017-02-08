@@ -61,8 +61,8 @@ class FilterHandler
       if (method_exists ($this->fallbackHandler, $method))
         return call_user_func_array ([$this->fallbackHandler, $method], $args);
     }
-    throw new FilterHandlerNotFoundException(sprintf ("<p><p>Handler method: <kbd>%s</kbd><p>Arguments: <kbd>%s</kbd>",
-      $method, print_r (map ($args, function ($e) { return Debug::typeInfoOf ($e); }), true)));
+    throw new FilterHandlerNotFoundException(sprintf ("<p><p>Filter: <kbd>%s</kbd><p>Handler method: <kbd>%s</kbd><p>Arguments: <kbd>%s</kbd>",
+      $name, $method, print_r (map ($args, function ($e) { return Debug::typeInfoOf ($e); }), true)));
   }
 
   function registerFallbackHandler ($handler)
