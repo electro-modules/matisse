@@ -210,7 +210,7 @@ class DefaultFilters
    */
   function filter_plain ($v)
   {
-    return strip_tags (preg_replace('#<br\s*/?>|(?=\S\s*\<p[\s>])#', "\n", $v));
+    return strip_tags (preg_replace('#<br\s*/?>|(?=</(p|h.)>)#i', "\n", $v));
   }
 
   /**
