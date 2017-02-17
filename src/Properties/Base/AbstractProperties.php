@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Properties\Base;
 
 use Matisse\Components\Base\Component;
@@ -90,6 +91,14 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
    * @return bool
    */
   abstract function isEnum ($propName);
+
+  /**
+   * Tells whether a property value is required or can be null.
+   *
+   * @param string $propName
+   * @return bool
+   */
+  abstract function isRequired ($propName);
 
   function __debugInfo ()
   {
@@ -385,6 +394,8 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
   protected function validateEnum ($name, $v)
   {
     $enum = $this->getEnumOf ($name);
+    if (is_null ($v) && !$this->isRequired($name))
+      return;
     if (array_search ($v, $enum) === false) {
       $list = implode ('</b>, <b>', $enum);
       throw new ComponentException ($this->component,

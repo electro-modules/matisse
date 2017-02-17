@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Properties\Base;
 
 use Matisse\Exceptions\ComponentException;
@@ -97,6 +98,11 @@ class MetadataProperties extends AbstractProperties
   }
 
   function isEnum ($name)
+  {
+    return false;
+  }
+
+  function isRequired ($propName)
   {
     return false;
   }

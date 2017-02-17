@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Properties\Base;
 
 use Matisse\Components\Base\Component;
@@ -73,6 +74,11 @@ class ComponentProperties extends AbstractProperties
   function isEnum ($propName)
   {
     return isset($this->metadata->getProperty ($propName)->enum);
+  }
+
+  function isRequired ($propName)
+  {
+    return $this->metadata->getProperty ($propName)->required;
   }
 
 }
