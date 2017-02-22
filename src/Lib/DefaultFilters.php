@@ -5,6 +5,7 @@ namespace Matisse\Lib;
 use Auryn\InjectionException;
 use Electro\Interfaces\ContentRepositoryInterface;
 use Electro\Interfaces\DI\InjectorInterface;
+use Electro\Interfaces\Navigation\NavigationLinkInterface;
 
 /**
  * Predefined filters provided by Matisse.
@@ -86,7 +87,8 @@ class DefaultFilters
   }
 
   /**
-   * Extracts a field from a list of arrays or objects and returns an array with the same cardinality.
+   * Extracts a field from a list of arrays or objects and returns an array, with the same cardinality, containing that
+   * field's values.
    *
    * ><p>You may use the `join` filter to generate a string from the resulting array.
    *
@@ -122,7 +124,7 @@ class DefaultFilters
    */
   function filter_join ($v, $glue = ', ')
   {
-    return implode ($glue . $v);
+    return implode ($glue, $v);
   }
 
   /**
@@ -154,6 +156,25 @@ class DefaultFilters
   function filter_limitHtml ($v, $maxSize, $marker = '…')
   {
     return trimHTMLText ($v, $maxSize, $marker);
+  }
+
+  /**
+   * Generates an URL for the current link, replacing all URL parameters by the given argument values at the same
+   * ordinal position.
+   *
+   * ###### Ex:
+   * <p><kbd>myLink.url = 'products/&#64;categoryId/&#64;typeId/&#64;prodId'</kbd></p><br>
+   * <p>On the template: <kbd>{navigation.myLink|link 32,27,5}</kbd></p>
+   * <p>Outputs: <kbd>'products/32/27/5'</kbd>
+   * </kbd>
+   *
+   * @param NavigationLinkInterface $link
+   * @param array                   ...$params
+   * @return string
+   */
+  function filter_link (NavigationLinkInterface $link, ...$params)
+  {
+    return $link->urlOf (...$params);
   }
 
   /**
@@ -210,7 +231,7 @@ class DefaultFilters
    */
   function filter_plain ($v)
   {
-    return strip_tags (preg_replace('#<br\s*/?>|(?=</(p|h.)>)#i', "\n", $v));
+    return strip_tags (preg_replace ('#<br\s*/?>|(?=</(p|h.)>)#i', "\n", $v));
   }
 
   /**
@@ -234,12 +255,23 @@ class DefaultFilters
   }
 
   /**
+   * Returns the type name of the argument. Useful for debugging.
+   *
    * @param mixed $v
    * @return string
    */
   function filter_type ($v)
   {
     return typeOf ($v);
+  }
+
+  /**
+   * @param array|\Countable $v
+   * @return int
+   */
+  function filter_count ($v)
+  {
+    return count ($v);
   }
 
 }
