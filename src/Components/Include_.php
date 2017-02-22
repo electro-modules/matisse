@@ -65,7 +65,7 @@ class IncludeProperties extends MetadataProperties
   {
     $o = object_publicProps ($this);
     foreach ($this->props as $k => $v)
-      $o["@$k"] = $v;
+      $o[$k] = $v;
     return $o;
   }
 }
