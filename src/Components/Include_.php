@@ -151,29 +151,6 @@ class Include_ extends CompositeComponent
     parent::createView ();
   }
 
-  protected function init ()
-  {
-    parent::init ();
-    $prop = $this->props;
-
-    // Validate dynamic properties and rename them.
-
-    $extra = $prop->getDynamic ();
-    if ($extra) {
-      foreach ($extra as $k => $v)
-        if ($k[0] != '@')
-          throw new ComponentException ($this, "Invalid property name: <kbd>$k</kbd>");
-        else {
-          $o = substr ($k, 1);
-          if (isset($prop->$o))
-            throw new ComponentException ($this,
-              "Dynamic property <kbd>$k</kbd> conflicts with predefined property <kbd>$o</kbd>.");
-          $prop->$o = $v;
-          unset ($prop->$k);
-        }
-    }
-  }
-
   /**
    * @param string            $controller
    * @param IncludeProperties $props
