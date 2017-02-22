@@ -124,7 +124,7 @@ class DefaultFilters
    */
   function filter_join ($v, $glue = ', ')
   {
-    return implode ($glue, $v);
+    return implode ($glue, $v ?: []);
   }
 
   /**
