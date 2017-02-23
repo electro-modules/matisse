@@ -296,7 +296,8 @@ REGEXP;
       $segs[]     = $seg;
       if ($op == '.') continue;
       if ($op == '|' || $op == ',') break;
-      if ($op == '+') $op = '.';
+      // Use + to concatenate strings, except for `number+any` expressions (ex: 1+page).
+      if ($op == '+' && !is_numeric ($seg)) $op = '.';
       $subExp .= self::translateSimpleExpSegs ($segs) . $op;
       $segs = [];
     }
