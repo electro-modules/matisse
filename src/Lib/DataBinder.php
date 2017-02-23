@@ -98,13 +98,15 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
 
   public function offsetGet ($offset)
   {
-    $vm = $this->viewModel;
-    if (isset ($vm[$offset]))
-      return $vm[$offset];
-    if (method_exists ($vm, $offset))
-      return $vm->$offset ();
-    if ($offset == 'this')
-      return $vm;
+    if (isset($offset)) {
+      $vm = $this->viewModel;
+      if (isset ($vm[$offset]))
+        return $vm[$offset];
+      if (method_exists ($vm, $offset))
+        return $vm->$offset ();
+      if ($offset == 'this')
+        return $vm;
+    }
     return null;
   }
 

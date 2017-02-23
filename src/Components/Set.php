@@ -29,7 +29,6 @@ class Set extends Component
       }
       else $viewModel[$k] = $v;
     }
-
   }
 
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Parser;
 
 use Electro\Traits\InspectionTrait;
@@ -127,10 +128,6 @@ REGEXP;
    */
   public $compiled = null;
   /**
-   * @var string|null The original expression translated to PHP code. Read-only.
-   */
-  public $translated = null;
-  /**
    * The original, unparsed, expression.
    *
    * <p>To read this, cast the instance to `string` or call {@see __toString()}.
@@ -138,6 +135,10 @@ REGEXP;
    * @var string
    */
   public $expression;
+  /**
+   * @var string|null The original expression translated to PHP code. Read-only.
+   */
+  public $translated = null;
 
   function __construct ($expression)
   {
@@ -190,25 +191,93 @@ REGEXP;
         return "$seg()";
     }
 
-    $exp = self::BINDER_PARAM;
+    $exp   = self::BINDER_PARAM;
     $unary = '';
     foreach ($segments as $i => $seg) {
       if ($i)
-        $exp = "_g($exp,'$seg')";
+        $exp = $seg[0] == '@'
+          ? sprintf ('_g(%s,%s)', $exp, self::compileReadProp ($seg))
+          : "_g($exp,'$seg')";
       else {
         list (, $unary, $seg) = str_match ($seg, '/^(!*)(.*)/', 2);
         // If not a constant value, convert it to a property access expression fragment.
         if ($seg[0] == '"' || $seg[0] == "'" || ctype_digit ($seg))
           $exp = $seg;
-         else $exp = $seg[0] == '@'
-           ? sprintf ("_g(_g(%s,'props'),'%s')", $exp, substr ($seg, 1))
-           : $exp = "_g($exp,'$seg')";
+        else $exp = $seg[0] == '@'
+          ? self::compileReadProp ($seg)
+          : $exp = "_g($exp,'$seg')";
       }
     }
     $exp = "$unary$exp";
     if (!PhpCode::validateExpression ($exp))
       throw new DataBindingException(sprintf ("Invalid expression <kbd>%s</kbd>.", implode ('.', $segments)));
     return $exp;
+  }
+
+  /**
+   * Computes the expression's value applied on the context of the given component.
+   *
+   * <p>This automatically compiles and caches the expression, if it's not already so.
+   *
+   * @param DataBinderInterface $binder The data binder that provides a data context as a starting point for resolving
+   *                                    property accesses.
+   * @return mixed
+   * @throws DataBindingException
+   */
+  function __invoke (DataBinderInterface $binder)
+  {
+    if (!($fn = $this->compiled)) {
+      $exp = $this->expression;
+      $fn  = get (self::$cache, $exp);
+      if ($fn) {
+        $this->translated = self::$translationCache[$exp];
+        $this->compiled   = $fn;
+      }
+      else {
+        // translate to PHP.
+        if (!$this->translated) // if the expression was unserialized, this will already be set
+          $this->translated = self::translate ($exp);
+        // Compile to native code.
+        try {
+          $fn = $this->compiled = PhpCode::compile ($this->translated,
+            sprintf ('%s %s',
+              DataBinderInterface::class, self::BINDER_PARAM
+            ));
+        }
+        catch (RuntimeException $e) {
+          self::filterSyntaxError ($exp, '<hr>' . $e->getMessage ());
+        }
+        // Cache the compiled expression.
+        self::$cache[$exp]            = $fn;
+        self::$translationCache[$exp] = $this->translated;
+      }
+    }
+    return $fn ($binder);
+  }
+
+  /**
+   * Returns the original, unparsed, expression.
+   *
+   * @return string
+   */
+  function __toString ()
+  {
+    return "{{$this->expression}}";
+  }
+
+  public function serialize ()
+  {
+    return serialize ([$this->expression, $this->translated ?: self::translate ($this->expression)]);
+  }
+
+  public function unserialize ($serialized)
+  {
+    list ($this->expression, $this->translated) = unserialize ($serialized);
+  }
+
+  static private function compileReadProp ($prop)
+  {
+    return sprintf ("_g(_g(%s,'props'),'%s')", self::BINDER_PARAM, substr ($prop, 1));
   }
 
   /**
@@ -299,72 +368,11 @@ REGEXP;
       // Use + to concatenate strings, except for `number+any` expressions (ex: 1+page).
       if ($op == '+' && !is_numeric ($seg)) $op = '.';
       $subExp .= self::translateSimpleExpSegs ($segs) . $op;
-      $segs = [];
+      $segs   = [];
     }
     if ($segs)
       $subExp .= self::translateSimpleExpSegs ($segs);
     return [$subExp, $op];
-  }
-
-  /**
-   * Returns the original, unparsed, expression.
-   *
-   * @return string
-   */
-  function __toString ()
-  {
-    return "{{$this->expression}}";
-  }
-
-  /**
-   * Computes the expression's value applied on the context of the given component.
-   *
-   * <p>This automatically compiles and caches the expression, if it's not already so.
-   *
-   * @param DataBinderInterface $binder The data binder that provides a data context as a starting point for resolving
-   *                                    property accesses.
-   * @return mixed
-   * @throws DataBindingException
-   */
-  function __invoke (DataBinderInterface $binder)
-  {
-    if (!($fn = $this->compiled)) {
-      $exp = $this->expression;
-      $fn  = get (self::$cache, $exp);
-      if ($fn) {
-        $this->translated = self::$translationCache[$exp];
-        $this->compiled   = $fn;
-      }
-      else {
-        // translate to PHP.
-        if (!$this->translated) // if the expression was unserialized, this will already be set
-          $this->translated = self::translate ($exp);
-        // Compile to native code.
-        try {
-          $fn = $this->compiled = PhpCode::compile ($this->translated,
-            sprintf ('%s %s',
-              DataBinderInterface::class, self::BINDER_PARAM
-            ));
-        }
-        catch (RuntimeException $e) {
-          self::filterSyntaxError ($exp, '<hr>' . $e->getMessage ());
-        }
-        // Cache the compiled expression.
-        self::$cache[$exp]            = $fn;
-        self::$translationCache[$exp] = $this->translated;
-      }
-    }
-    return $fn ($binder);
-  }
-
-  public function serialize ()
-  {
-    return serialize ([$this->expression, $this->translated ?: self::translate ($this->expression)]);
-  }
-
-  public function unserialize ($serialized)
-  {
-    list ($this->expression, $this->translated) = unserialize ($serialized);
   }
 
 }
