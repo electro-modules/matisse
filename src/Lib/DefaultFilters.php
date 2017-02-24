@@ -35,6 +35,15 @@ class DefaultFilters
   }
 
   /**
+   * @param array|\Countable $v
+   * @return int
+   */
+  function filter_count ($v)
+  {
+    return count ($v);
+  }
+
+  /**
    * @param string $v
    * @return string
    */
@@ -191,6 +200,17 @@ class DefaultFilters
   }
 
   /**
+   * Converts a value to lower case.
+   *
+   * @param string $v
+   * @return string
+   */
+  function filter_lower ($v)
+  {
+    return mb_strtolower ($str) ($v);
+  }
+
+  /**
    * Converts line breaks to `<br>` tags.
    *
    * @param $v
@@ -266,12 +286,14 @@ class DefaultFilters
   }
 
   /**
-   * @param array|\Countable $v
-   * @return int
+   * Converts a value to upper case.
+   *
+   * @param string $v
+   * @return string
    */
-  function filter_count ($v)
+  function filter_upper ($v)
   {
-    return count ($v);
+    return mb_strtoupper ($str) ($v);
   }
 
 }
