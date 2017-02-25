@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Components;
 
 use Matisse\Components\Base\Component;
@@ -7,6 +8,12 @@ use Matisse\Properties\TypeSystem\type;
 
 class ScriptProperties extends ComponentProperties
 {
+  /**
+   * If set, the given value will be output as a javascript variable whose name is defined by the `to` property.
+   *
+   * @var mixed
+   */
+  public $export = [type::any, null];
   /**
    * If set, allows inline scripts deduplication by ignoring Script instances with the same name as a previously run
    * Script.
@@ -26,6 +33,12 @@ class ScriptProperties extends ComponentProperties
    * @var string
    */
   public $src = '';
+  /**
+   * If set, the javascript variable name that will receive the value exportyed by the `export` property.
+   *
+   * @var string
+   */
+  public $var = '';
 }
 
 class Script extends Component
@@ -42,13 +55,17 @@ class Script extends Component
    */
   protected function render ()
   {
-    $prop = $this->props;
-    if (exists ($prop->src))
-      $this->context->getAssetsService ()->addScript ($prop->src, $this->props->prepend);
-    else if ($this->hasChildren ())
-      $this->context->getAssetsService ()
-                    ->addInlineScript (self::getRenderingOfSet ($this->getChildren ()), $prop->name,
-                      $this->props->prepend);
+    $prop   = $this->props;
+    $assets = $this->context->getAssetsService ();
+
+    if (exists ($prop->var))
+      $assets->addInlineScript (sprintf ('var %s=%s;', $prop->var, javascriptLiteral ($prop->export, false)));
+
+    elseif (exists ($prop->src))
+      $assets->addScript ($prop->src, $this->props->prepend);
+
+    elseif ($this->hasChildren ())
+      $assets->addInlineScript (self::getRenderingOfSet ($this->getChildren ()), $prop->name, $this->props->prepend);
   }
 }
 
