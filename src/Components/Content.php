@@ -1,8 +1,6 @@
 <?php
-
 namespace Matisse\Components;
 
-use Electro\Interfaces\Http\Shared\CurrentRequestInterface;
 use Matisse\Components\Base\Component;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Properties\Base\ComponentProperties;
@@ -22,15 +20,6 @@ class ContentProperties extends ComponentProperties
    * @var bool
    */
   public $byDefault = false;
-  /**
-   * Makes the block auto-renderable for FETCH requests.
-   *
-   * <p>When true, the content is automatically output to a `<section id=blockName>` tag when
-   * <kbd>request&#64;isFetch</kbd> is true.
-   *
-   * @var bool
-   */
-  public $fetchable = false;
   /**
    * The block name. If you set it via this property, the new content will overwrite the saved content (if any).
    *
@@ -70,11 +59,8 @@ class ContentProperties extends ComponentProperties
  *   <!-- Now output the block by name -->
  *   {#header|*}
  * ```
- * <p>You can also use the `{#name}` syntax to putput a block, but note that it escapes its output, which is, usually,
+ * <p>You can also use the `{#name}` syntax to output a block, but note that it escapes its output, which is, usually,
  * not what you intend, if you are sure the content being output is safe HTML.
- *
- * <p>Content blocks are also used for Fetch (aka. AJAX) requests, to render only the parts of a page that changed.
- * <br>For that purpose, enable the `fetchable` property and it will work automatically.
  */
 class Content extends Component
 {
@@ -84,14 +70,6 @@ class Content extends Component
 
   /** @var ContentProperties */
   public $props;
-  /** @var CurrentRequestInterface */
-  private $request;
-
-  public function __construct (CurrentRequestInterface $request)
-  {
-    parent::__construct ();
-    $this->request = $request;
-  }
 
   /**
    * Adds (or replaces) the content of the `value` property (or the component's content) to a named block on the page.
@@ -101,11 +79,6 @@ class Content extends Component
     $prop          = $this->props;
     $content       = exists ($prop->value) ? $prop->value : $this->getChildren ();
     $blocksService = $this->context->getBlocksService ();
-    $isFetch       = $this->request->getAttribute ('isFetch');
-
-    // Non-fetchable blocks are not processed on Fetch requests.
-    if ($isFetch && !$prop->fetchable)
-      return;
 
     if ($prop->preRender && is_array ($content))
       $content = $this->attachSetAndGetContent ($content);
@@ -129,10 +102,6 @@ class Content extends Component
     }
     else throw new ComponentException($this,
       "One of these properties must be set:<p><kbd>of | appendTo | prependTo</kbd>");
-
-    // If on Fetch mode, render the block immediately as a `<section>` element.
-    if ($isFetch && $prop->fetchable)
-      echo "<section id='$name'>" . $blocksService->getBlock ($name)->render () . "</section>";
   }
 
 }
