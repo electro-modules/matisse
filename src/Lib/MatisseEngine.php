@@ -53,7 +53,9 @@ class MatisseEngine implements ViewEngineInterface
     // Create a compiled template.
 
     $root = new DocumentFragment;
-    $root->setContext ($this->context->makeSubcontext ());
+    $root->setContext ($context = $this->context->makeSubcontext ());
+    if (!$context->rootComponent)
+      $context->rootComponent = $root;
 
     $parser = new Parser;
     $parser->parse ($src, $root);

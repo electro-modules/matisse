@@ -157,7 +157,7 @@ trait RenderingTrait
   }
 
   /**
-   * Invokes doRender() recursively on the component's children (or a subset of).
+   * Invokes {@see run()} recursively on the component's children or on the content of a given property.
    *
    * @param string|null $attrName [optional] A property name. If none, it renders all of the component's direct
    *                              children.

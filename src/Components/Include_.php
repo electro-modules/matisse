@@ -116,7 +116,7 @@ class Include_ extends CompositeComponent
 
   protected function render ()
   {
-    if ($this->request->getAttribute ('isFetch'))
+    if ($this->props->nonFetchable && $this->request->getAttribute ('isFetch'))
       return;
 
     parent::render ();

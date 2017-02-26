@@ -1,8 +1,8 @@
 <?php
+
 namespace Matisse\Traits\Component;
 
 use Matisse\Components\Base\Component;
-use Matisse\Components\DocumentFragment;
 use Matisse\Components\Metadata;
 use Matisse\Debug\ComponentInspector;
 use Matisse\Exceptions\ComponentException;
@@ -15,7 +15,6 @@ use Matisse\Properties\TypeSystem\type;
  *
  * It's applicable to the Component class.
  *
- * @property DocumentFragment    $root
  * @property ComponentProperties $props
  */
 trait DOMNodeTrait
@@ -321,7 +320,7 @@ trait DOMNodeTrait
   }
 
   /**
-   * Replaces the component by the specified componentes in the parent's child list.
+   * Replaces the component by the specified componentes, on the parent's child list.
    * The component itself is discarded from the components tree.
    *
    * @param array $components

@@ -31,6 +31,7 @@ trait ComponentsAPITrait
   private static $coreTags = [
     'Presets'           => Components\Presets::class,
     'AssetsGroup'       => Components\AssetsGroup::class,
+    'Channel'           => Components\Channel::class,
     'Content'           => Components\Content::class,
     'If'                => Components\If_::class,
     'Include'           => Components\Include_::class,

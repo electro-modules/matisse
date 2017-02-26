@@ -1,4 +1,5 @@
 <?php
+
 namespace Matisse\Parser;
 
 use Electro\Interfaces\DI\InjectorInterface;
@@ -6,6 +7,7 @@ use Electro\Interfaces\Views\ViewServiceInterface;
 use Electro\Traits\InspectionTrait;
 use Electro\ViewEngine\Services\AssetsService;
 use Electro\ViewEngine\Services\BlocksService;
+use Matisse\Components\Base\Component;
 use Matisse\Config\MatisseSettings;
 use Matisse\Interfaces\DataBinderInterface;
 use Matisse\Interfaces\PresetsInterface;
@@ -71,6 +73,10 @@ class DocumentContext
    * @var PresetsInterface[]|object[]
    */
   public $presets = [];
+  /**
+   * @var Component|null The first component of the first template that was loaded/compiled for a given page.
+   */
+  public $rootComponent = null;
   /**
    * @var AssetsService
    */
