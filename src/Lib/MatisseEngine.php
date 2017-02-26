@@ -54,8 +54,6 @@ class MatisseEngine implements ViewEngineInterface
 
     $root = new DocumentFragment;
     $root->setContext ($context = $this->context->makeSubcontext ());
-    if (!$context->rootComponent)
-      $context->rootComponent = $root;
 
     $parser = new Parser;
     $parser->parse ($src, $root);

@@ -5,7 +5,6 @@ namespace Matisse\Lib;
 use Electro\Interfaces\CustomInspectionInterface;
 use Electro\Interfaces\Navigation\NavigationInterface;
 use Electro\Interfaces\Navigation\NavigationLinkInterface;
-use Electro\Interfaces\RenderableInterface;
 use Electro\Interfaces\SessionInterface;
 use Electro\Interop\ViewModel;
 use Electro\Kernel\Config\KernelSettings;
@@ -28,10 +27,6 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
    */
   private $context = null;
   /**
-   * @var AbstractProperties|null
-   */
-  private $props;
-  /**
    * @var ViewModel
    */
   private $viewModel;
@@ -40,10 +35,9 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
    * @param ViewModel|null          $viewModel [optional] If not set, a new, blank view model will be assigned.
    * @param AbstractProperties|null $props     [optional] If not set, no properties will be available.
    */
-  public function __construct (ViewModel $viewModel = null, AbstractProperties $props = null)
+  public function __construct (ViewModel $viewModel = null)
   {
     $this->viewModel = $viewModel ?: new ViewModel;
-    $this->props     = $props;
   }
 
   function filter ($name, ...$args)
@@ -79,10 +73,6 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
     return _log ()->getTable ([
       Debug::getType ($this->viewModel) => Debug::RAW_TEXT .
                                            _log ()->getTable ($this->viewModel, '', true, true, 2, $VMFilter),
-      is_null ($this->props) ? 'Properties'
-        : Debug::getType ($this->props) => Debug::RAW_TEXT .
-                                           _log ()->getTable ($this->props, '', true, true, 1,
-                                             ['props', 'component', 'hidden']),
     ], Debug::getType ($this));
   }
 
@@ -118,15 +108,6 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
   public function offsetUnset ($offset)
   {
     unset ($this->viewModel[$offset]);
-  }
-
-  function prop ($key)
-  {
-    if (!$this->props) return null;
-    $v = $this->props->getComputed ($key);
-    if ($v && $v instanceof RenderableInterface)
-      return $v->getRendering ();
-    return $v;
   }
 
   function renderBlock ($name)

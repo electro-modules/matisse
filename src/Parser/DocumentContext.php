@@ -8,6 +8,7 @@ use Electro\Traits\InspectionTrait;
 use Electro\ViewEngine\Services\AssetsService;
 use Electro\ViewEngine\Services\BlocksService;
 use Matisse\Components\Base\Component;
+use Matisse\Components\Fetchable;
 use Matisse\Config\MatisseSettings;
 use Matisse\Interfaces\DataBinderInterface;
 use Matisse\Interfaces\PresetsInterface;
@@ -74,9 +75,9 @@ class DocumentContext
    */
   public $presets = [];
   /**
-   * @var Component|null The first component of the first template that was loaded/compiled for a given page.
+   * @var Fetchable|null The root component for rendering responses to Fetch requests.
    */
-  public $rootComponent = null;
+  public $fetchableRoot = null;
   /**
    * @var AssetsService
    */

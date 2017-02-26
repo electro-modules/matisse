@@ -33,6 +33,7 @@ trait ComponentsAPITrait
     'AssetsGroup'       => Components\AssetsGroup::class,
     'Channel'           => Components\Channel::class,
     'Content'           => Components\Content::class,
+    'Fetchable'         => Components\Fetchable::class,
     'If'                => Components\If_::class,
     'Include'           => Components\Include_::class,
     'Macro'             => Components\Macro\Macro::class,

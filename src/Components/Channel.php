@@ -8,6 +8,7 @@ use Matisse\Exceptions\ComponentException;
 use Matisse\Parser\Expression;
 use Matisse\Properties\Base\ComponentProperties;
 use Matisse\Properties\TypeSystem\type;
+use PhpKit\WebConsole\Lib\Debug;
 
 class ChannelProperties extends ComponentProperties
 {
@@ -28,7 +29,7 @@ class ChannelProperties extends ComponentProperties
    *
    * @var string
    */
-  public $tag = 'section';
+  public $tag = 'div';
 }
 
 /**
@@ -55,8 +56,7 @@ class ChannelProperties extends ComponentProperties
  */
 class Channel extends Component
 {
-  const allowsChildren = true;
-
+  const allowsChildren  = true;
   const propertiesClass = ChannelProperties::class;
 
   /** @var ChannelProperties */
@@ -80,14 +80,23 @@ class Channel extends Component
       throw new ComponentException($this, "Invalid block name: <kbd>$name</kbd>");
 
     $this->channelId = 'channel' . ucfirst ($name);
-    $exp             = sprintf ("{'<%s id=%s%s>'+#%s+'</%s>'|*}", $prop->tag, $name,
+    $exp             = sprintf ("{'<%s id=\"%s\"%s>'+#%s+'</%s>'|*}", $prop->tag, htmlspecialchars ($name),
       $prop->attributes ? " $prop->attributes" : '', $this->channelId, $prop->tag);
-    $root            = $this->context->rootComponent;
     $text            = Text::from ($this->context);
     $text->addBinding ('value', new Expression($exp));
     $this->replaceBy ([$text]);
 
-    $root->addChild ($this);
+    /** @var Fetchable $root */
+    $root = $this->context->fetchableRoot;
+    if (!$root)
+      throw new ComponentException($this,
+        sprintf ("To use <kbd>%s</kbd> components you must enclose them on a <kbd>%s</kbd> component",
+          $this->getTagName (), Debug::shortenType (Fetchable::class)));
+
+    if (!$root->props->channels)
+      $root->props->channels = new Metadata ($root->context, 'Channels', type::content);
+
+    $root->props->channels->addChild ($this);
     $this->setContext ($root->context);
   }
 
@@ -107,8 +116,8 @@ class Channel extends Component
 
     // If on Fetch mode, render the block immediately as a `<section>` element.
     if ($isFetch) {
-      echo "<section id='$prop->name'>
-";
+      echo sprintf ('<section id="%s">
+', htmlspecialchars ($prop->name));
       $this->runChildren ();
       echo "
 </section>
