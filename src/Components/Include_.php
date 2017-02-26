@@ -2,7 +2,6 @@
 
 namespace Matisse\Components;
 
-use Electro\Interfaces\Http\Shared\CurrentRequestInterface;
 use Matisse\Components\Base\CompositeComponent;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Exceptions\FileIOException;
@@ -29,12 +28,6 @@ class IncludeProperties extends MetadataProperties
    * @var string
    */
   public $file = '';
-  /**
-   * Makes the include inoperative for FETCH requests.
-   *
-   * @var bool
-   */
-  public $nonFetchable = false;
   /**
    * When true, the component outputs all script imports and embedded scripts for the current document.
    *
@@ -104,24 +97,6 @@ class Include_ extends CompositeComponent
 
   /** @var IncludeProperties */
   public $props;
-
-  /** @var CurrentRequestInterface */
-  private $request;
-
-  public function __construct (CurrentRequestInterface $request)
-  {
-    parent::__construct ();
-    $this->request = $request;
-  }
-
-  protected function render ()
-  {
-    if ($this->props->nonFetchable && $this->request->getAttribute ('isFetch'))
-      return;
-
-    parent::render ();
-  }
-
 
   protected function createView ()
   {
