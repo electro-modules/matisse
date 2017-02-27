@@ -40,9 +40,13 @@ class Parser
   const PARSE_TAG            = '#
    (<) (/?)
    (
-     [A-Z][\w\-]+ (?: :[\w\-]+)?
+     Literal>.*?</Literal
+     |
+     [A-Z][\w\-]+
      |
      [a-z]+:[\w\-]+
+     |
+     !-- .*? --(?= >)
    )
    \s* (.*?) (/?) (>)
    #sxu';
@@ -128,6 +132,14 @@ class Parser
       if ($term) {
         if ($attrs) $this->parsingError ('Closing tags must not have attributes.');
         $this->parse_closingTag ($tag);
+      }
+      elseif (substr ($tag, 0, 8) == 'Literal>') {
+        // HANDLE LITERAL TAGS
+
+        $this->parse_text (substr ($tag, 8, -9));
+      }
+      elseif ($tag[0] == '!') {
+        // SKIP COMMENT TAGS
       }
       else {
         // OPEN TAG
