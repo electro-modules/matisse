@@ -296,4 +296,15 @@ class DefaultFilters
     return mb_strtoupper ($str) ($v);
   }
 
+  /**
+   * Encodes an URL segment.
+   *
+   * @param string $v
+   * @return string
+   */
+  function filter_urlencode ($v)
+  {
+    return urlencode ($v);
+  }
+
 }
