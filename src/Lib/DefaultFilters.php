@@ -6,6 +6,7 @@ use Auryn\InjectionException;
 use Electro\Interfaces\ContentRepositoryInterface;
 use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\Navigation\NavigationLinkInterface;
+use Electro\Interfaces\Views\ViewServiceInterface;
 
 /**
  * Predefined filters provided by Matisse.
@@ -32,6 +33,22 @@ class DefaultFilters
   function filter_alt ($v)
   {
     return $v % 2;
+  }
+
+  /**
+   * Converts a module asset's file path to a full relative URL.
+   *
+   * @param string $v An asset path.
+   * @return string
+   * @throws InjectionException
+   */
+  function filter_assetUrl ($v)
+  {
+    /** @var ViewServiceInterface $viewService */
+    $viewService = $this->injector->make (ViewServiceInterface::class);
+    $view        = $viewService->currentView ();
+    $path        = $view ? str_segmentsFirst ($view->getPath (), '/', 2) : '';
+    return "modules/$path/$v";
   }
 
   /**
@@ -111,7 +128,7 @@ class DefaultFilters
   }
 
   /**
-   * Converts an assets file's path to a full relative URL.
+   * Converts a repository asset's file path to a full relative URL.
    *
    * @param string $v An asset path.
    * @return string
@@ -252,6 +269,18 @@ class DefaultFilters
   function filter_plain ($v)
   {
     return strip_tags (preg_replace ('#<br\s*/?>|(?=</(p|h.)>)#i', "\n", $v));
+  }
+
+  /**
+   * Extracts a field from each record of an array or iterable sequence.
+   *
+   * @param array|\Iterable $v
+   * @param string          $field
+   * @return string
+   */
+  function filter_pluck ($v, $field)
+  {
+    return map ($v, pluck ($field));
   }
 
   /**
