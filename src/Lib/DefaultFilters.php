@@ -36,7 +36,10 @@ class DefaultFilters
   }
 
   /**
-   * Converts a module asset's file path to a full relative URL.
+   * Converts an asset file path, which is relative to the current module's public directory, to an URL path relative
+   * to the application's root.
+   *
+   * ><p>Note: the current module is the module where the template was loaded from.
    *
    * @param string $v An asset path.
    * @return string
@@ -47,7 +50,7 @@ class DefaultFilters
     /** @var ViewServiceInterface $viewService */
     $viewService = $this->injector->make (ViewServiceInterface::class);
     $view        = $viewService->currentView ();
-    $path        = $view ? str_segmentsFirst ($view->getPath (), '/', 2) : '';
+    $path        = $viewService->getModuleOfPath ($view->getPath ());
     return "modules/$path/$v";
   }
 
