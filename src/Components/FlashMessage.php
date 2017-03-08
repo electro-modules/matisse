@@ -4,14 +4,15 @@ namespace Matisse\Components;
 
 use Electro\Exceptions\FlashType;
 use Electro\Interfaces\SessionInterface;
-use Matisse\Components\Base\Component;
+use Matisse\Components\Base\HtmlComponent;
+use Matisse\Properties\Base\HtmlComponentProperties;
 
 /**
  * Displays the flash message currently stored on the session, if any.
  */
-class FlashMessage extends Component
+class FlashMessage extends HtmlComponent
 {
-
+  const propertiesClass = HtmlComponentProperties::class;
   /**
    * @var SessionInterface
    */
@@ -23,13 +24,20 @@ class FlashMessage extends Component
     $this->session = $session;
   }
 
+  protected function isVisible ()
+  {
+    return exists ($this->session->getFlashMessage ()) && parent::isVisible ();
+  }
+
   protected function render ()
   {
-    $msg = $this->session->getFlashMessage ();
-    if ($msg) {
-      $class = FlashType::getLabel ($msg['type']);
-      echo "<div class='alert $class'>{$msg['message']}</div>";
-    }
+    if (!$this->props->class)
+      $this->addClass ('alert');
+    $msg   = $this->session->getFlashMessage ();
+    $class = FlashType::getLabel ($msg['type']);
+    $this->addClass ($class);
+    $this->beginContent ();
+    echo $msg['message'];
   }
 
 }
