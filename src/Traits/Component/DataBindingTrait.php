@@ -1,11 +1,12 @@
 <?php
+
 namespace Matisse\Traits\Component;
 
-use Matisse\Parser\DocumentContext;
 use Matisse\Components\Base\Component;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Exceptions\DataBindingException;
 use Matisse\Interfaces\DataBinderInterface;
+use Matisse\Parser\DocumentContext;
 use Matisse\Parser\Expression;
 use Matisse\Properties\Base\ComponentProperties;
 use PhpKit\WebConsole\Lib\Debug;
@@ -16,7 +17,7 @@ use PhpKit\WebConsole\Lib\Debug;
  * It's applicable to the Component class.
  *
  * @property ComponentProperties $props The component's attributes.
- * @property DocumentContext $context
+ * @property DocumentContext     $context
  */
 trait DataBindingTrait
 {
@@ -140,14 +141,16 @@ trait DataBindingTrait
   }
 
   /**
-   * Indicates if either a constant value or a databinding expression were specified for the given property.
+   * Indicates if either a non-empty constant value or a databinding expression were specified for the given property.
    *
    * @param string $fieldName
    * @return boolean
    */
   function isPropertySet ($fieldName)
   {
-    return isset($this->props->$fieldName) || $this->isBound ($fieldName);
+    return isset($this->props->$fieldName)
+      ? $this->props->$fieldName !== ''
+      : $this->isBound ($fieldName);
   }
 
   /**
