@@ -72,6 +72,24 @@ class Channel extends Component
     $this->request = $request;
   }
 
+  public function export ()
+  {
+    $a = parent::export ();
+
+    if ($this->channelId)
+      $a['@channelId'] = $this->channelId;
+
+    return $a;
+  }
+
+  public function import ($a)
+  {
+    if (isset($a['@channelId']))
+      $this->channelId = $a['@channelId'];
+
+    parent::import ($a);
+  }
+
   function onParsingComplete ()
   {
     $prop = $this->props;
@@ -99,7 +117,6 @@ class Channel extends Component
     $root->props->channels->addChild ($this);
     $this->setContext ($root->context);
   }
-
 
   /**
    * Adds (or replaces) the content of the `value` property (or the component's content) to a named block on the page.

@@ -34,9 +34,9 @@ class Fetchable extends Component
   /** @var FetchableProperties */
   public $props;
   /** @var KernelSettings */
-  private $kernelSettings;
+  // private $kernelSettings;
   /** @var NavigationInterface */
-  private $navigation;
+  // private $navigation;
   /** @var CurrentRequestInterface */
   private $request;
 
@@ -45,7 +45,7 @@ class Fetchable extends Component
   public function __construct (CurrentRequestInterface $request)
   {
     parent::__construct ();
-    $this->request        = $request;
+    $this->request = $request;
     // $this->navigation     = $navigation;
     // $this->kernelSettings = $kernelSettings;
   }
@@ -60,10 +60,10 @@ class Fetchable extends Component
   protected function render ()
   {
     $isFetch = $this->request->getAttribute ('isFetch');
-/*    if ($isFetch)
-      echo sprintf ('<title>%s - %s</title>
+    /*    if ($isFetch)
+          echo sprintf ('<title>%s - %s</title>
 
-', $this->navigation->currentLink ()->title (), $this->kernelSettings->appName);*/
+    ', $this->navigation->currentLink ()->title (), $this->kernelSettings->appName);*/
     $this->runChildren ('channels');
     if (!$isFetch)
       $this->runChildren ();
