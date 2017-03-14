@@ -227,7 +227,7 @@ class DefaultFilters
    */
   function filter_lower ($v)
   {
-    return mb_strtolower ($str) ($v);
+    return mb_strtolower ($v);
   }
 
   /**
@@ -325,7 +325,7 @@ class DefaultFilters
    */
   function filter_upper ($v)
   {
-    return mb_strtoupper ($str) ($v);
+    return mb_strtoupper ($v);
   }
 
   /**
