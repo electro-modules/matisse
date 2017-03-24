@@ -65,6 +65,38 @@ class Expression implements \Serializable
    */
   const BINDER_PARAM = '$b';
   /**
+   * Finds binding expressions and extracts information from them.
+   * > Note: the u modifier allows unicode white space to be properly matched.
+   */
+  const PARSE_BINDING_EXP = '/
+    \{              # opens with {
+    \x20*           # ignore spaces (but not line breaks)
+    (?= \S)         # assert that next char is not white space
+    (               # begin capture
+      (?:           # begin loop
+        (?! \s*\})  # if not white space followed by a }
+        .           # consume character
+      )*            # repeat
+    )               # end capture
+    \s*             # ignore white space
+    \}              # closes with }
+  /sxu';
+  /**
+   * Finds binding expressions.
+   * > Note: this reg.exp. has no delimiters so that it may be embedded on another reg.exp. (with sxu modifiers)
+   */
+  const PARSE_BINDING_EXP_INNER = '
+    \{              # opens with {
+    \x20*           # ignore spaces (but not line breaks)
+    (?= \S)         # assert that next char is not white space
+    (?:             # begin loop
+      (?! \s*\})    # if not white space followed by a }
+      .             # consume character
+    )*              # repeat
+    \s*             # ignore white space
+    \}              # closes with }
+';
+  /**
    * Splits the filters part of an expression into a sequential list of filter expressions.
    */
   const PARSE_FILTER = '/\s*(?<!\|)\|(?!\|)\s*/';
@@ -91,7 +123,6 @@ class Expression implements \Serializable
   )?
 /xu
 REGEXP;
-
   public static $INSPECTABLE = ['expression', 'translated'];
   /**
    * A map of databinding expressions to compiled PHP code.
@@ -107,22 +138,6 @@ REGEXP;
    * @var string[] [string => string]
    */
   public static $translationCache = [];
-  /**
-   * Finds binding expressions and extracts information from them.
-   * > Note: the u modifier allows unicode white space to be properly matched.
-   */
-  static private $PARSE_BINDING_EXP = '/
-    \{              # opens with {
-    \s*             # ignore white space
-    (               # begin capture
-      (?:           # begin loop
-        (?! \s*\})  # if not white space followed by a }
-        .           # consume character
-      )*            # repeat
-    )               # end capture
-    \s*             # ignore white space
-    \}              # closes with }
-  /xu';
   /**
    * @var \Closure|null A function that receives a context argument and returns the evaluated value. Read-only.
    */
@@ -142,11 +157,7 @@ REGEXP;
 
   function __construct ($expression)
   {
-    if (Expression::isCompositeBinding ($expression))
-      throw new DataBindingException("Multiple binding expressions on a string are not supported: <kbd>$expression</kbd>
-<p>Convert it to a single expression using the <kbd>+</kbd> string concatenation operator.");
-
-    if (!preg_match (self::$PARSE_BINDING_EXP, $expression, $matches))
+    if (!preg_match (self::PARSE_BINDING_EXP, $expression, $matches))
       throw new DataBindingException("Invalid databinding expression: $expression");
 
     list ($full, $this->expression) = $matches;
@@ -154,12 +165,7 @@ REGEXP;
 
   public static function isBindingExpression ($exp)
   {
-    return is_string ($exp) ? strpos ($exp, '{') !== false : false;
-  }
-
-  public static function isCompositeBinding ($exp)
-  {
-    return $exp[0] != '{' || substr ($exp, -1) != '}' || strpos ($exp, '{', 1) > 0;
+    return is_string ($exp) && strlen ($exp) > 2 ? $exp[0] == '{' && substr ($exp, -1) == '}' : false;
   }
 
   /**

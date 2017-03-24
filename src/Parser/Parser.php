@@ -12,31 +12,36 @@ class Parser
   const NAMELESS_PROP        = 'nameless';
   const NO_TRIM              = 0;
   const PARSE_ATTRS          = '%
-   (                            # capture attribute name
-    (?= \{)                     # skip attribute name if it is a nameless attribute expression (capture an empty name)
-    |                           # or
-    [^\s=]+                     # match anything up to a space or an =
+   (                              # capture attribute name
+    (?= \{)                       # skip attribute name if it is a nameless attribute expression (capture an empty name)
+    |                             # or
+    [^\s=]+                       # match anything up to a space or an =
    )
    \s*
-   (?:                          # match optional value
-     (?: = \s* | (?= \{))       # either match an = or continue if it is a nameless attribute expression
-     (?|                        # capture on of:
-       "([^"]*)"                # a double quoted value
+   (?:                            # match optional value
+     (?: = \s* | (?= \{))         # either match an = or continue if it is a nameless attribute expression
+     (?|                          # capture one of:
+       (                          # a quoteless data-binding expression
+         ' . Expression::PARSE_BINDING_EXP_INNER . '
+       )  
        |
-       \'([^\']*)\'             # a single quoted value
+       "(                         # a quoted data-binding expression
+         ' . Expression::PARSE_BINDING_EXP_INNER . '
+       )"  
        |
-       (\{ \s* [^\}]+? \s* \})  # a quoteless data-binding expression
+       \'(                        # a quoted data-binding expression
+         ' . Expression::PARSE_BINDING_EXP_INNER . '
+       )\'
        |
-       ([^>\s]+)                # a quoteless constant (up to the next white space)
+       "([^"]*)"                  # a double quoted value
+       |
+       \'([^\']*)\'               # a single quoted value
+       |
+       ([^>\s]+)                  # a quoteless constant (up to the next white space)
      )
    )?
    (\s | @)
    %sxu';
-  const PARSE_DATABINDINGS   = '#
-   \{
-   ( .*? )
-   \}
-   #xu';
   const PARSE_TAG            = '#
    (<) (/?)
    (
@@ -337,7 +342,7 @@ does not support the specified parameter <b>$tag</b>.
       if ($this->current->allowsChildren ()) {
         $sPos = 0;
         //process data bindings
-        while (preg_match (self::PARSE_DATABINDINGS, $text, $match, PREG_OFFSET_CAPTURE, $sPos)) {
+        while (preg_match (Expression::PARSE_BINDING_EXP, $text, $match, PREG_OFFSET_CAPTURE, $sPos)) {
           list(list($brData, $brPos)) = $match;
           if ($brPos > $sPos) //append previous literal content
             $this->text_addComponent (substr ($text, $sPos, $brPos - $sPos), self::TRIM_LEFT);
