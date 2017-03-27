@@ -80,8 +80,7 @@ class HttpAwareComponent extends CompositeComponent implements RequestHandlerInt
         }
       case 'GET':
         // Render the component.
-        $out = $this->getRendering ();
-        $response->getBody ()->write ($out);
+        $response->getBody ()->write ((string)$this);
     }
     $this->finalize ($response);
     return $response;

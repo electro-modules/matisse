@@ -125,7 +125,7 @@ abstract class Component implements RenderableInterface, \Serializable
    */
   static function _ (Component $parent, array $props = null, array $bindings = null)
   {
-    return static::create ($parent, $props, $bindings)->getRendering ();
+    return (string)static::create ($parent, $props, $bindings);
   }
 
   /**
@@ -186,7 +186,7 @@ abstract class Component implements RenderableInterface, \Serializable
     );
   }
 
-  function __toString ()
+  function dump ()
   {
     try {
       return $this->inspect (true);

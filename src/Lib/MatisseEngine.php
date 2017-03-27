@@ -106,7 +106,7 @@ class MatisseEngine implements ViewEngineInterface
     }
 
     /** @var DocumentFragment $compiled */
-    return $compiled->getRendering ();
+    return (string)$compiled;
   }
 
 }

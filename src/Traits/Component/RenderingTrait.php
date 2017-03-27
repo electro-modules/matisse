@@ -80,7 +80,7 @@ trait RenderingTrait
     return ob_get_clean ();
   }
 
-  function getRendering ()
+  function __toString ()
   {
     ob_start (null, 0);
     $this->run ();

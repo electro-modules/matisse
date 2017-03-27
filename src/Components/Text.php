@@ -39,7 +39,6 @@ final class Text extends Component
 
   public function import ($a)
   {
-
     // Expand the string content into a properties array
     if (isset($a[0]))
       $a[MPROPS] = ['value' => $a[0]];

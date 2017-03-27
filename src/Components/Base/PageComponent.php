@@ -200,8 +200,7 @@ class PageComponent extends CompositeComponent implements RequestHandlerInterfac
       // Fall through.
       case 'GET':
         // Render the component.
-        $out = $this->getRendering ();
-        $response->getBody ()->write ($out);
+        $response->getBody ()->write ((string)$this);
     }
     $this->finalize ($response);
     return $response;

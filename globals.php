@@ -2,46 +2,12 @@
 use Electro\Interfaces\RenderableInterface;
 use Matisse\Exceptions\MatisseException;
 use Matisse\Lib\DataBinder;
-use PhpKit\WebConsole\Lib\Debug;
 
-const MPARENT       = '@parent';
-const MPROPS        = '@props';
-const MCHILDREN     = '@nodes';
-const MBINDINGS     = '@bind';
-const MTAG          = '@tag';
-
-/**
- * Represents text that should not be HTML-escaped when output.
- */
-class RawText
-{
-  private $s;
-
-  function __construct ($s)
-  {
-    if (is_null ($s))
-      $this->s = '';
-    elseif ($s instanceof RenderableInterface) {
-      $this->s = $s->getRendering ();
-      return;
-    }
-    elseif (!is_string ($s))
-      throw new MatisseException ("A <kbd>RawText</kbd> instance must hold a <kbd>string</kbd> or a <kbd>RenderableInterface</kbd> value, not a " .
-                                  Debug::typeInfoOf ($s));
-    $this->s = $s;
-  }
-
-  /**
-   * Note: this is not `__toString` on purpose.
-   *
-   * @return string
-   * @throws MatisseException
-   */
-  function toString ()
-  {
-    return $this->s;
-  }
-}
+const MPARENT   = '@parent';
+const MPROPS    = '@props';
+const MCHILDREN = '@nodes';
+const MBINDINGS = '@bind';
+const MTAG      = '@tag';
 
 /**
  * Extracts and escapes text from the given value, for outputting to the HTTP client.
@@ -57,11 +23,10 @@ function _e ($s)
 {
   if (!is_scalar ($s)) {
     if (is_null ($s)) return '';
-    if ($s instanceof RawText) return $s->toString ();
-    if ($s instanceof RenderableInterface)
-      $s = $s->getRendering ();
-    elseif (is_object ($s) && method_exists ($s, '__toString'))
-      $s = (string)$s;
+    if (is_object ($s) &&
+        ($s instanceof RawText || $s instanceof RenderableInterface || method_exists ($s, '__toString'))
+    )
+      return (string)$s;
     else {
       if (is_iterable ($s))
         return iteratorOf ($s)->current ();
