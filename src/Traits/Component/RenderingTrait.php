@@ -36,6 +36,26 @@ trait RenderingTrait
   }
 
   /**
+   * Renders the component.
+   *
+   * @return string
+   */
+  function __toString ()
+  {
+    try {
+      ob_start (null, 0);
+      $this->run ();
+      return ob_get_clean ();
+    }
+    catch (\Exception $e) {
+      return $this->dumpError ($e);
+    }
+    catch (\Error $e) {
+      return $this->dumpError ($e);
+    }
+  }
+
+  /**
    * Runs a private child component that does not belong to the hierarchy.
    *
    * <p>**Warning:** the component will **not** be detached after begin rendered.
@@ -77,13 +97,6 @@ trait RenderingTrait
   {
     ob_start (null, 0);
     $this->attachAndRenderSet ($components);
-    return ob_get_clean ();
-  }
-
-  function __toString ()
-  {
-    ob_start (null, 0);
-    $this->run ();
     return ob_get_clean ();
   }
 
@@ -282,6 +295,27 @@ trait RenderingTrait
   protected function setupView ()
   {
     // override
+  }
+
+  /**
+   * For exclusive use by {@see __toString()}.
+   *
+   * <p>Calling this method when an error/exception occurs avoids a `"__tostring must not throw an exception"` error.
+   *
+   * @param \Throwable $e
+   * @return string
+   */
+  private function dumpError ($e)
+  {
+    $previousHandler = set_exception_handler (function () { });
+    restore_error_handler ();
+    if (!$previousHandler)
+      return sprintf ('%s at %s, line %d\n%s', $e->getMessage (), $e->getFile (), $e->getLine (),
+        $e->getTraceAsString ());
+    else {
+      ob_get_clean ();
+      call_user_func ($previousHandler, $e);
+    }
   }
 
 }
