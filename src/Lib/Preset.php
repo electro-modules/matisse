@@ -54,14 +54,19 @@ class Preset
    * Apply the preset to the given component.
    *
    * @param Component $component
+   * @throws \Matisse\Exceptions\ComponentException
+   * @throws \Matisse\Exceptions\ReflectionPropertyException
    */
   function apply (Component $component)
   {
-    if ($this->props)
-      $component->props->applyDefaults ($this->props);
-    if ($this->unset)
-      foreach ($this->unset as $prop)
-        unset ($component->props->$prop);
+    if ($component->supportsProperties()) {
+      if ($this->props)
+        $component->props->applyDefaults ($this->props);
+      if ($this->unset)
+        foreach ($this->unset as $prop)
+          unset ($component->props->$prop);
+    }
+
     if ($this->content) {
       $component->removeChildren();
       Metadata::compile ($this->content, $component);
@@ -77,6 +82,8 @@ class Preset
    *
    * @param Component $component
    * @return bool true if the preset was applied.
+   * @throws \Matisse\Exceptions\ComponentException
+   * @throws \Matisse\Exceptions\ReflectionPropertyException
    */
   function ifMatchesApply (Component $component)
   {

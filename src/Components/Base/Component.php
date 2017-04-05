@@ -5,12 +5,14 @@ namespace Matisse\Components\Base;
 use Auryn\InjectionException;
 use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\RenderableInterface;
+use Matisse\Components\Metadata;
 use Matisse\Debug\ComponentInspector;
 use Matisse\Exceptions\ComponentException;
 use Matisse\Exceptions\ReflectionPropertyException;
 use Matisse\Interfaces\PresetsInterface;
 use Matisse\Parser\DocumentContext;
 use Matisse\Properties\Base\AbstractProperties;
+use Matisse\Properties\TypeSystem\type;
 use Matisse\Traits\Component\DataBindingTrait;
 use Matisse\Traits\Component\DOMNodeTrait;
 use Matisse\Traits\Component\MarkupBuilderTrait;
@@ -186,6 +188,16 @@ abstract class Component implements RenderableInterface, \Serializable
     );
   }
 
+  function applyPresetsOnSelf ()
+  {
+    if ($this->context)
+      foreach (array_reverse_iterator ($this->context->presets) as $preset)
+        if ($preset instanceof PresetsInterface)
+          $preset->applyPresets ($this);
+        elseif (method_exists ($preset, $this->className))
+          $preset->{$this->className} ($this);
+  }
+
   function dump ()
   {
     try {
@@ -195,16 +207,6 @@ abstract class Component implements RenderableInterface, \Serializable
       inspect ($e->getTraceAsString ());
       return '';
     }
-  }
-
-  function applyPresetsOnSelf ()
-  {
-    if ($this->context)
-      foreach (array_reverse_iterator ($this->context->presets) as $preset)
-        if ($preset instanceof PresetsInterface)
-          $preset->applyPresets ($this);
-        elseif (method_exists ($preset, $this->className))
-          $preset->{$this->className} ($this);
   }
 
   /**
@@ -334,6 +336,23 @@ abstract class Component implements RenderableInterface, \Serializable
     }
     else if ($props)
       throw new ComponentException($this, 'This component does not support properties.');
+  }
+
+  /**
+   * Creates a {@see Metadata} component holding the given content and assigns it to the specified property.
+   * Compiles the content if the slot-type property is of `type::content`.
+   *
+   * @param string      $propName The property name, which will determine the sub-tag name.
+   * @param Component[] $content
+   */
+  function setSlot ($propName, array $content)
+  {
+    $type = $this->props->getTypeOf ($propName);
+    $meta = new Metadata ($this->context, ucfirst ($propName), $type);
+    if ($type == type::content)
+      Metadata::compile ($content, $meta);
+    else $meta->setChildren ($content);
+    $this->props->$propName = $meta;
   }
 
   /**

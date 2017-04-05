@@ -2,6 +2,7 @@
 namespace Matisse\Components;
 
 use Matisse\Components\Base\Component;
+use Matisse\Exceptions\ComponentException;
 use Matisse\Interfaces\PresetsInterface;
 use Matisse\Lib\Preset;
 use Matisse\Properties\Base\ComponentProperties;
@@ -25,6 +26,12 @@ class PresetsProperties extends ComponentProperties
  * <Preset>
  *   <Where match="selector">
  *     <Set prop1="value1" ... propN="valueN"/>
+ *     <Set name="prop1" type="content">
+ *        <div>some content</div>
+ *     </Set>
+ *     <Set name="prop1" type="metadata">
+ *        <Column title="Test" width=100/>
+ *     </Set>
  *     <Unset prop1 ... propN/>
  *     <Prepend>
  *       optional content to be prepended to the target
@@ -35,7 +42,7 @@ class PresetsProperties extends ComponentProperties
  *     optional content to be replaced on the target
  *   </Where>
  *   <Where...>...</Where>
- *   content to be precessed
+ *   target content to be processed
  * </Apply>
  *  ```
  * <p>If no filter is provided, no children will be affected.
@@ -90,7 +97,20 @@ class Presets extends Component implements PresetsInterface
         switch ($subTag->getTagName ()) {
           case 'Set':
             $subTag->databind ();
-            $newProps      = $subTag->props->getAll ();
+            if ($subTag->hasChildren ()) {
+              $name = $subTag->props->name;
+              if (!$name)
+                throw new ComponentException($this,
+                  "A <kbd>Set</kbd> subtag with content must define a <kbd>name</kbd> attribute");
+              $type = $subTag->props->type;
+              if ($type != 'content' && $type != 'metadata')
+                throw new ComponentException($this,
+                  "A <kbd>Set</kbd> subtag with content must define a <kbd>type</kbd> attribute with <kbd>content|metadata</kbd> for value");
+              $newMeta = new Metadata($this->context, $name, $type == 'content' ? type::content : type::metadata);
+              Metadata::compile ($subTag->getChildren(), $newMeta);
+              $newProps = [$name => $newMeta];
+            }
+            else $newProps = $subTag->props->getAll ();
             $preset->props = isset($preset->props) ? array_merge ($preset->props, $newProps) : $newProps;
             break;
           case 'Unset':
