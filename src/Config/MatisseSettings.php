@@ -2,6 +2,7 @@
 
 namespace Matisse\Config;
 
+use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Kernel\Config\KernelSettings;
 use Electro\Kernel\Lib\ModuleInfo;
 use Electro\Traits\ConfigurationTrait;
@@ -46,6 +47,14 @@ class MatisseSettings
    */
   private $controllers = [];
   /**
+   * @var FilterHandler
+   */
+  private $filterHandler;
+  /**
+   * @var InjectorInterface
+   */
+  private $injector;
+  /**
    * @var KernelSettings
    */
   private $kernelSettings;
@@ -78,10 +87,23 @@ class MatisseSettings
    */
   private $viewEngineSettings;
 
-  public function __construct (KernelSettings $kernelSettings, ViewEngineSettings $viewEngineSettings)
+  public function __construct (KernelSettings $kernelSettings, ViewEngineSettings $viewEngineSettings,
+                               InjectorInterface $injector)
   {
     $this->kernelSettings     = $kernelSettings;
     $this->viewEngineSettings = $viewEngineSettings;
+    $this->filterHandler      = new FilterHandler (new DefaultFilters ($injector));
+    $this->injector           = $injector;
+  }
+
+  /**
+   * Returns the shared filter handler.
+   *
+   * @return FilterHandler
+   */
+  function getFilterHandler ()
+  {
+    return $this->filterHandler;
   }
 
   /**
@@ -118,7 +140,7 @@ class MatisseSettings
     $ctx->controllers          = $this->controllers;
     $ctx->controllerNamespaces = $this->controllerNamespaces;
     $ctx->registerTags ($this->tags);
-    $ctx->setFilterHandler (new FilterHandler (new DefaultFilters ($ctx->injector)));
+    $ctx->setFilterHandler ($this->filterHandler);
     $ctx->getDataBinder ()->setContext ($ctx);
   }
 
@@ -167,6 +189,21 @@ class MatisseSettings
     $this->controllerNamespaces ["$moduleInfo->path/{$this->viewEngineSettings->moduleViewsPath()}$basePath"] =
       $namespace;
     return $this;
+  }
+
+  /**
+   * Registers custom filters.
+   *
+   * @param array|object|string $filters A map of filter names to filter implementation functions, or an object whose
+   *                                     methods implement the filters (methods are named filter_xxx) or a class name
+   *                                     to be instantiated via the injector.
+   * @throws \Auryn\InjectionException
+   */
+  function registerFilters ($filters)
+  {
+    if (is_string ($filters))
+      $filters = $this->injector->make ($filters);
+    $this->filterHandler->set ($filters);
   }
 
   /**
