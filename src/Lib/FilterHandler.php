@@ -1,8 +1,8 @@
 <?php
 namespace Matisse\Lib;
 
-use Matisse\Exceptions\FilterHandlerNotFoundException;
 use Electro\Traits\InspectionTrait;
+use Matisse\Exceptions\FilterHandlerNotFoundException;
 use PhpKit\WebConsole\Lib\Debug;
 
 /**
@@ -65,9 +65,25 @@ class FilterHandler
       $name, $method, print_r (map ($args, function ($e) { return Debug::typeInfoOf ($e); }), true)));
   }
 
+  /**
+   * Chains another filter handler to handle filters that are not handled by the current filter.
+   *
+   * @param object $handler
+   */
   function registerFallbackHandler ($handler)
   {
     $this->fallbackHandler = $handler;
+  }
+
+  /**
+   * Registers a custom filter.
+   *
+   * @param string   $name     The filter's name.
+   * @param callable $filterFn The filter's implementation.
+   */
+  function set ($name, callable $filterFn)
+  {
+    $this->filters[$name] = $filterFn;
   }
 
 }
