@@ -112,14 +112,19 @@ class MacroCall extends CompositeComponent
   /**
    * Extend the default binding procedure by also incorporating bindings for computed default property values.
    *
+   * <p>Binding will be applied as default values, which means that they will be set only for properties that have no
+   * defined value.
+   *
    * @throws ComponentException
    */
   protected function databind ()
   {
     $bp = "$this->propsClass::bindings";
     if (defined ($bp))
-      foreach (constant ($bp) as $k => $v)
-        $this->bindings[$k] = unserialize ($v);
+      foreach (constant ($bp) as $k => $v) {
+        if (!exists($this->getComputedPropValue ($k)))
+          $this->bindings[$k] = unserialize ($v);
+      }
     parent::databind ();
   }
 

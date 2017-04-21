@@ -25,6 +25,19 @@ class DefaultFilters
   }
 
   /**
+   * Calls a method on an object with the given arguments.
+   *
+   * @param object $instance
+   * @param string $method
+   * @param array  ...$args
+   * @return mixed
+   */
+  function filter_call ($instance, $method, ...$args)
+  {
+    return is_object ($instance) && method_exists ($instance, $method) ? $instance->$method (...$args) : null;
+  }
+
+  /**
    * Alternating values for iterator indexes (0 or 1); allows for specific formatting of odd/even rows.
    *
    * @param int $v
