@@ -33,5 +33,11 @@ class HtmlComponentProperties extends ComponentProperties
    * @var string
    */
   public $id = [type::id, null];
+  /**
+   * @var string One or more CSS class names to prepend to the component's own class property.
+   *             <blockquote><b>Note:</b> this is for exclusive use by theming via presets. Do not use this property as
+   *             a tag attribute on a template as it may be overridden by the installed theme (if any).</blockquote>
+   */
+  public $themeClass = '';
 
 }

@@ -68,6 +68,7 @@ class HtmlComponent extends Component
     $this->attr ('id', either ($this->props->containerId, $this->props->id));
     $this->attr ('class', enum (' ',
       rtrim ($this->className, '_'),
+      $this->props->themeClass,
       $this->props->class,
       $this->cssClassName,
       $this->props->disabled ? 'disabled' : null
