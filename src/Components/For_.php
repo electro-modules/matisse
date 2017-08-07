@@ -12,6 +12,10 @@ class ForProperties extends ComponentProperties
    */
   public $count = 0;
   /**
+   * @var int
+   */
+  public $start = 0;
+  /**
    * @var string Syntax: 'index:var' or 'var' or not set
    */
   public $each = '';
@@ -54,6 +58,7 @@ class For_ extends Component
     $viewModel = $this->getViewModel ();
     $prop      = $this->props;
     $count     = $prop->get ('count', -1);
+    $start     = $prop->get ('start', -1);
     if (exists ($prop->each))
       $this->parseIteratorExp ($prop->each, $idxVar, $itVar);
     else $idxVar = $itVar = null;
@@ -77,7 +82,7 @@ class For_ extends Component
       return;
     }
     if ($count > 0) {
-      for ($i = 0; $i < $count; ++$i) {
+      for ($i = $start; $i < $count; ++$i) {
         $viewModel[$idxVar] = $viewModel[$itVar] = $i;
         if ($i == 0)
           $this->runChildren ('header');
