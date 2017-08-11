@@ -203,7 +203,7 @@ REGEXP;
       if ($i)
         $exp = $seg[0] == '@'
           ? sprintf ('_g(%s,%s)', $exp, self::compileReadProp ($seg))
-          : "_g($exp,'$seg')";
+          : "_g($exp, '" . trim ($seg, "'\"") . "')";
       else {
         list (, $unary, $seg) = str_match ($seg, '/^(!*)(.*)/', 2);
         // If not a constant value, convert it to a property access expression fragment.
@@ -216,7 +216,7 @@ REGEXP;
     }
     $exp = "$unary$exp";
     if (!PhpCode::validateExpression ($exp))
-      throw new DataBindingException(sprintf ("Invalid expression <kbd>%s</kbd>.", implode ('.', $segments)));
+      throw new DataBindingException(sprintf ("Invalid expression <kbd>%s</kbd>.<p>Evaluating <kbd>%s</kbd></p>", implode ('.', $segments), $exp));
     return $exp;
   }
 
