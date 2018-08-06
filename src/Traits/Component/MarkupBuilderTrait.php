@@ -35,7 +35,9 @@ trait MarkupBuilderTrait
 
   protected function attr ($name, $value = '')
   {
-    echo isset($value) && $value !== false ? (strlen ($value) && $value !== true ? " $name=\"$value\"" : " $name") : '';
+    echo isset($value) && $value !== false ? (strlen ($value) && $value !== true
+      ? " $name=\"" . htmlspecialchars ($value, ENT_QUOTES) . "\""
+      : " $name") : '';
   }
 
   protected function attr2 ($name, $value1, $value2)
