@@ -222,7 +222,7 @@ class DefaultFilters
   }
 
   /**
-   * Generates an URL for the current link, replacing all URL parameters by the given argument values at the same
+   * Generates an URL for the given link, replacing all URL parameters by the given argument values at the same
    * ordinal position.
    *
    * ###### Ex:
@@ -237,7 +237,7 @@ class DefaultFilters
    */
   function filter_link (NavigationLinkInterface $link, ...$params)
   {
-    return $link->urlOf (...$params);
+    return $link->urlOf ($params);
   }
 
   /**
@@ -370,6 +370,17 @@ class DefaultFilters
   function filter_urlencode ($v)
   {
     return urlencode ($v);
+  }
+
+  /**
+   * Encodes an URL segment.
+   *
+   * @param string $v
+   * @return string
+   */
+  function filter_concat ($v, ...$args)
+  {
+    return $v . implode ('', $args);
   }
 
 }
