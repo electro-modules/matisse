@@ -5,9 +5,11 @@ namespace Matisse\Components\Base;
 use Auryn\InjectionException;
 use Electro\Interfaces\DI\InjectorInterface;
 use Electro\Interfaces\RenderableInterface;
+use Electro\Plugins\MatisseComponents\RadioButton;
 use Matisse\Components\Metadata;
 use Matisse\Debug\ComponentInspector;
 use Matisse\Exceptions\ComponentException;
+use Matisse\Exceptions\DataBindingException;
 use Matisse\Exceptions\ReflectionPropertyException;
 use Matisse\Interfaces\PresetsInterface;
 use Matisse\Parser\DocumentContext;
@@ -428,9 +430,16 @@ abstract class Component implements RenderableInterface, \Serializable
 
   /**
    * @return bool Returns false if the component's rendering is disabled via the `hidden` property.
+   * @throws ComponentException
+   * @throws DataBindingException
    */
   protected function isVisible ()
   {
+    if (isset($this->bindings) && isset($this->bindings['hidden'])) {
+      // Evaluate the 'hidden' property binding immediately, as at this stage, data binding may have not yet occurred.
+      $this->props->hidden = $this->evalBinding ($this->bindings['hidden']);
+    }
+
     return !$this->hidden && (!isset($this->props) || !isset($this->props->hidden) || !$this->props->hidden);
   }
 
