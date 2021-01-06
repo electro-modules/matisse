@@ -1,30 +1,6 @@
 <?php
 
 /**
- * An array containing the names of the HTML tags which must not have a closing tag.
- *
- * @var array
- */
-$VOID_ELEMENTS = [
-  'area'    => 1,
-  'base'    => 1,
-  'br'      => 1,
-  'col'     => 1,
-  'command' => 1,
-  'embed'   => 1,
-  'hr'      => 1,
-  'img'     => 1,
-  'input'   => 1,
-  'keygen'  => 1,
-  'link'    => 1,
-  'meta'    => 1,
-  'param'   => 1,
-  'source'  => 1,
-  'track'   => 1,
-  'wbr'     => 1,
-];
-
-/**
  * Creates an array representation of an html tag.
  *
  * @param string       $selector Syntax: 'tag#id.class1.class2...classN', all elements are optional. Default tag is
@@ -80,7 +56,30 @@ function h ($selector, $attrs = [], $content = [])
  */
 function html ($e, $d = 0)
 {
-  global $VOID_ELEMENTS;
+  /**
+   * An array containing the names of the HTML tags which must not have a closing tag.
+   *
+   * @var array
+   */
+  static $VOID_ELEMENTS = [
+    'area'    => 1,
+    'base'    => 1,
+    'br'      => 1,
+    'col'     => 1,
+    'command' => 1,
+    'embed'   => 1,
+    'hr'      => 1,
+    'img'     => 1,
+    'input'   => 1,
+    'keygen'  => 1,
+    'link'    => 1,
+    'meta'    => 1,
+    'param'   => 1,
+    'source'  => 1,
+    'track'   => 1,
+    'wbr'     => 1,
+  ];
+
   if (is_null ($e)) return '';
   if (is_string ($e)) return $e;
   if (isset($e['<'])) {
