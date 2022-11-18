@@ -217,7 +217,7 @@ class MatisseSettings
     $path =
       "{$this->kernelSettings->baseDirectory}/$moduleInfo->path/{$this->viewEngineSettings->moduleViewsPath()}/$this->moduleMacrosPath";
     if (fileExists ($path)) {
-      $all = FilesystemFlow::from ($path)
+      $all = FilesystemFlow::recursiveFrom ($path)
                            ->onlyDirectories ()
                            ->map (function (\SplFileInfo $info, &$k) {
                              $k = $info->getPathname ();
