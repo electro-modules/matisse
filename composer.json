@@ -21,12 +21,12 @@
   ],
   "require": {
     "php": ">=5.6",
-    "electro/installers": "^1.0.0",
-    "electro/interop": "^1.0.0",
-    "php-kit/flow": "^1.0.0",
-    "php-kit/html5-tools": "^1.0.0",
-    "php-kit/power-primitives": "^1.0.0",
-    "php-kit/tools": "^2.0.0"
+    "electro/installers": "dev-latest",
+    "electro/interop": "dev-latest",
+    "php-kit/flow": "dev-latest",
+    "php-kit/html5-tools": "dev-latest",
+    "php-kit/power-primitives": "dev-latest",
+    "php-kit/tools": "dev-latest"
   },
   "autoload": {
     "psr-4": {
@@ -36,10 +36,5 @@
       "globals.php",
       "htmlBuilder.php"
     ]
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0.x-dev"
-    }
   }
 }
