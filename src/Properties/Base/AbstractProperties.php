@@ -292,8 +292,8 @@ abstract class AbstractProperties implements ComponentPropertiesInterface, \Json
    *
    * @return array
    */
-  function jsonSerialize ()
-  {
+  function jsonSerialize(): mixed
+	{
     return $this->getAll ();
   }
 

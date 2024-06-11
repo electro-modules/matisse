@@ -81,13 +81,13 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
     return new static;
   }
 
-  public function offsetExists ($offset)
-  {
+  public function offsetExists($offset): bool
+	{
     return isset ($this->viewModel[$offset]) || method_exists ($this->viewModel, $offset) || $offset == 'this';
   }
 
-  public function offsetGet ($offset)
-  {
+  public function offsetGet($offset): mixed
+	{
     if (isset($offset)) {
       $vm = $this->viewModel;
       if (isset ($vm[$offset]))
@@ -100,13 +100,13 @@ class DataBinder implements DataBinderInterface, CustomInspectionInterface
     return null;
   }
 
-  public function offsetSet ($offset, $value)
-  {
+  public function offsetSet($offset, $value): void
+	{
     $this->viewModel[$offset] = $value;
   }
 
-  public function offsetUnset ($offset)
-  {
+  public function offsetUnset($offset): void
+	{
     unset ($this->viewModel[$offset]);
   }
 

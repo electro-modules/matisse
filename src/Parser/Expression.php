@@ -276,12 +276,22 @@ REGEXP;
     return serialize ([$this->expression, $this->translated ?: self::translate ($this->expression)]);
   }
 
-  public function unserialize ($serialized)
+	public function __serialize()
+	{
+		return [$this->expression, $this->translated ?: self::translate($this->expression)];
+	}
+
+	public function unserialize ($serialized)
   {
     list ($this->expression, $this->translated) = unserialize ($serialized);
   }
 
-  static private function compileReadProp ($prop)
+	public function __unserialize($data)
+	{
+		list ($this->expression, $this->translated) = $data;
+	}
+
+	static private function compileReadProp ($prop)
   {
     return sprintf ("_g(_g(%s,'props'),'%s')", self::BINDER_PARAM, substr ($prop, 1));
   }

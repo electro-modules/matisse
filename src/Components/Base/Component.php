@@ -309,7 +309,12 @@ abstract class Component implements RenderableInterface, \Serializable
     return serialize ($this->export ());
   }
 
-  function setContext ($context)
+	public function __serialize()
+	{
+		return $this->export();
+	}
+
+	function setContext ($context)
   {
     $this->context = $context;
   }
@@ -404,7 +409,12 @@ abstract class Component implements RenderableInterface, \Serializable
     $this->import (unserialize ($s));
   }
 
-  protected function getUniqueId ()
+	public function __unserialize($s)
+	{
+		$this->import($s);
+	}
+
+	protected function getUniqueId ()
   {
     if (array_key_exists ($this->className, self::$uniqueIDs))
       return ++self::$uniqueIDs[$this->className];
