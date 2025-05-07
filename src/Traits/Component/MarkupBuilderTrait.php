@@ -110,7 +110,7 @@ trait MarkupBuilderTrait
 
   protected function beginAttr ($name, $value = null, $attrSep = ' ')
   {
-    if (strlen ($value) == 0) {
+    if ($value !== null && strlen ($value) == 0) {
       $this->tag->attrName     = " $name=\"";
       $this->tag->isFirstValue = true;
     }
